@@ -6,6 +6,7 @@ import { AutenticacionStorageGateway } from "./autenticacion.storage.gateway";
 import { ResponseApi } from 'src/kernel/types';
 import { autenticado } from '../entities/autenticado';
 import { validarError } from 'src/kernel/error-handler';
+import { registrarCodigoUsuarioDto } from './dtos/registrar-codigo-usuario.dto';
 
 
 const autenticacionRouter = Router();
@@ -14,12 +15,12 @@ export class AutenticacionController {
 
     inicioSesion = async (req: Request, res: Response) => {
         try {
-            const porAutenticar = req.body as inicioSesionDto;
+            const payload = req.body as inicioSesionDto;
 
             const repositorio: AutenticacionRepository = new AutenticacionStorageGateway;
             const inicioSesionInteractor = new InicioSesionInteractor(repositorio);
 
-            const autenticado = await inicioSesionInteractor.execute(porAutenticar);
+            const autenticado = await inicioSesionInteractor.execute(payload);
 
             const body: ResponseApi<autenticado> = {
                 data: autenticado,
@@ -36,7 +37,15 @@ export class AutenticacionController {
         }
     }
 
+    //RECUPERACION DE CONTRASEÑA = RC
+    registrarCodigoRC = async (req: Request, res: Response) => {
+        try {
+            const payload = req.body as registrarCodigoUsuarioDto;
 
-    buscarUsuarioParaRecuperarContrasena = async (req: Request, res: Response) => {
+
+            
+        } catch (error) {
+            
+        }
     }
 }
