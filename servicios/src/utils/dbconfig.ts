@@ -2,21 +2,20 @@ import * as mysql from 'mysql2';
 import 'dotenv/config';
 
 
-const dbconfig = {
+const client = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME
-}
+});
+
 
 
 export const ConexionBD = <T>(query:string, params:any[]) =>{
-    const conexion = mysql.createConnection(dbconfig);
     
     return new Promise<T>((resolve,reject)=>{
         
-        conexion.query(query,params, (err, resultados:any, arr)=>{
-            conexion.destroy();
+        client.query(query,params, (err, resultados:any, arr)=>{
             if(err){
                 reject(err);
             }else{
@@ -29,4 +28,3 @@ export const ConexionBD = <T>(query:string, params:any[]) =>{
         });
     });
 }
-

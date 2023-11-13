@@ -1,4 +1,4 @@
-import { ConexionBD } from "src/utils/dbconfig";
+import { ConexionBD } from "../../../utils/dbconfig";
 import { autenticado } from "../entities/autenticado";
 import { AutenticacionRepository } from "../use-cases/ports/autenticacion.repository";
 import { inicioSesionDto } from "./dtos/inicio-sesion.dto";
@@ -10,15 +10,15 @@ import { compararEncriptado } from "../utils/bcrypt";
 export class AutenticacionStorageGateway implements AutenticacionRepository {
     async inicioSesion(parametros: inicioSesionDto): Promise<autenticado> {
         try {
-            const resultado = await ConexionBD<autenticado[]>('select usuario, contraseña as salt from usuarios where usuario = ?',[parametros.usuario]);
+            const resultado = await ConexionBD<autenticado[]>('select usuario, contraseña as salt, rol, nombre_municipio as municipio from usuarios join personas on fk_idPersona = id_persona join municipios on fk_idMunicipio = id_municipio where usuario = ?',[parametros.usuario]);
 
-            if (resultado.length > 0) {
+            if (resultado.length === 0) {
                 throw new Error('Usuario o contraseña incorrectos');
             }
 
             const usuario = resultado[0];
 
-            if (!(await compararEncriptado(parametros.contrasena, usuario.salt as string))) {
+            if (!(await compararEncriptado(parametros.contraseña, usuario.salt as string))) {
                 throw new Error('Usuario o contraseña incorrectos');
             }
 
@@ -31,8 +31,28 @@ export class AutenticacionStorageGateway implements AutenticacionRepository {
     }
 
 
-    buscarUsuario(parametros: registrarCodigoUsuarioDto): Promise<autenticado> {
-        throw new Error("Method not implemented.");
+    async buscarUsuario(parametros: registrarCodigoUsuarioDto): Promise<registrarCodigoUsuarioDto> {
+        try {
+            const resultado = await ConexionBD<registrarCodigoUsuarioDto[]>('select id_usuario, usuario, correo_electronico from usuarios join personas on fk_idPersona = id_persona where usuario = ?',[parametros.usuario]);
+
+            if(resultado.length === 0) {
+                throw new Error('Usuario no encontrado');
+            }
+
+            return resultado[0];
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async registrarCodigo(parametros: registrarCodigoUsuarioDto): Promise<boolean> {
+        try {
+            const resultado = await ConexionBD<registrarCodigoUsuarioDto[]>('update usuarios set codigo = ? where id_usuario = ?',[parametros.codigo, parametros.id_usuario]);
+
+            return true;
+        } catch (error) {
+            throw error;
+        }
     }
 }
 

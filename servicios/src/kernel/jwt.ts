@@ -11,8 +11,8 @@ export const verificarToken = (token: string) => {
 }
 
 
-export const Autenticador = (rolRequerido: string[]) => {
-    return (req: Request, res: Response, next: NextFunction) => {
+export const Autenticador = (rolRequerido: string[], req: Request, res: Response, next: NextFunction) => {
+    
         // Saca el token del header
         const token = req.headers.authorization?.split(' ')[1];
         
@@ -39,11 +39,13 @@ export const Autenticador = (rolRequerido: string[]) => {
                 });
             }
 
+            
         } catch (error) {
             return res.status(401).json({
                 message: 'No autorizado',
                 error: true
             });
         }
-    };
+    return
 };
+

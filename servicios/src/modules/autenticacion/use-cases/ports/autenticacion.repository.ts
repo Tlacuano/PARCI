@@ -5,5 +5,8 @@ import { autenticado } from "../../entities/autenticado";
 
 export interface AutenticacionRepository {
     inicioSesion(parametros: inicioSesionDto): Promise<autenticado>;
-    buscarUsuario(parametros: registrarCodigoUsuarioDto): Promise<autenticado>;
+
+    buscarUsuario(parametros: registrarCodigoUsuarioDto): Promise<registrarCodigoUsuarioDto>;
+    registrarCodigo(parametros: registrarCodigoUsuarioDto): Promise<boolean>;
+
 }
