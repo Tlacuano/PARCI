@@ -50,41 +50,9 @@ AxiosClient.interceptors.response.use(
                         let titleAlert = "";
                         // Agregar swtich con los mensajes genéricos
                         switch (message) {
-                            case "Missing fields":
-                                messageAlert = "Campos obligatorios";
-                                titleAlert = "Faltan campos obligatorios por llenar";
-                                break;
-                            case "Incorrect credentials":
+                            case "Usuario o contraseña incorrectos":
                                 messageAlert = "Credenciales incorrectas";
                                 titleAlert = "Usuario y/o contraseña erróneos";
-                                break;
-                            case "Already exists":
-                                messageAlert = "El registro ya existe o cuenta con campos duplicados en otro registro";
-                                titleAlert = "Registro ya existente";
-                                break;
-                            case "Invalid fields":
-                                messageAlert = "Los campos ingresados son inválidos";
-                                titleAlert = "Campos inválidos";
-                                break;
-                            case "User occupied":                                
-                                messageAlert = "El usuario ingresado ya se encuentra ocupado";
-                                titleAlert = "Usuario no disponible";
-                                break;
-                            case "Email occupied":
-                                messageAlert = "El correo electrónico ingresado ya se encuentra ocupado";
-                                titleAlert = "Correo electrónico no disponible";
-                                break;
-                            case 'cannot be deleted':                                
-                                messageAlert = "Por motivos de integridad, la eliminación no es posible";
-                                titleAlert = "Eliminación no permitida";
-                                break;
-                            case "Bad Request":
-                                messageAlert = "El servidor no pudo dar respuesta a la solicitud.";
-                                titleAlert = "Petición incorrecta";
-                                break;
-                            case "Invalid sort by fields":
-                                messageAlert = "El ordenamiento por campo ingresado es inválido";
-                                titleAlert = "Ordenamiento por campo inválido";
                                 break;
                         }                        
                         Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning" });
@@ -94,13 +62,10 @@ AxiosClient.interceptors.response.use(
                 }
                 case 401: {
                     Vue.swal.fire({
-                        title: "Credenciales incorrectas",
-                        text: "Usuario y/o contraseña incorrectos",
+                        title: "No autorizado",
+                        text: "La operación no está autorizada",
                         icon: "error",
-                        confirmButtonColor: 'var(--color-secondary)',
                     });
-                    // sessionStorage.removeItem("token");
-                    // router.push('/');
                     break;
                 }
                 case 403: {

@@ -10,20 +10,20 @@ const dbconfig = {
 }
 
 
-export const databaseConnection = <T>(query:string, params:any[]) =>{
-    const connection = mysql.createConnection(dbconfig);
+export const ConexionBD = <T>(query:string, params:any[]) =>{
+    const conexion = mysql.createConnection(dbconfig);
     
     return new Promise<T>((resolve,reject)=>{
         
-        connection.query(query,params,(err,results:any,arr)=>{
-            connection.destroy();
+        conexion.query(query,params, (err, resultados:any, arr)=>{
+            conexion.destroy();
             if(err){
                 reject(err);
             }else{
-                if (results.insertId) {
-                    resolve(results.insertId);
+                if (resultados.insertId) {
+                    resolve(resultados.insertId);
                 } else {
-                    resolve(results);
+                    resolve(resultados);
                 }
             }
         });
