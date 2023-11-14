@@ -23,32 +23,30 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.databaseConnection = void 0;
+exports.ConexionBD = void 0;
 const mysql = __importStar(require("mysql2"));
 require("dotenv/config");
-const dbconfig = {
+const client = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME
-};
-const databaseConnection = (query, params) => {
-    const connection = mysql.createConnection(dbconfig);
+});
+const ConexionBD = (query, params) => {
     return new Promise((resolve, reject) => {
-        connection.query(query, params, (err, results, arr) => {
-            connection.destroy();
+        client.query(query, params, (err, resultados, arr) => {
             if (err) {
                 reject(err);
             }
             else {
-                if (results.insertId) {
-                    resolve(results.insertId);
+                if (resultados.insertId) {
+                    resolve(resultados.insertId);
                 }
                 else {
-                    resolve(results);
+                    resolve(resultados);
                 }
             }
         });
     });
 };
-exports.databaseConnection = databaseConnection;
+exports.ConexionBD = ConexionBD;

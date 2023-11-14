@@ -2,31 +2,29 @@ import * as mysql from 'mysql2';
 import 'dotenv/config';
 
 
-const dbconfig = {
+const client = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME
-}
+});
 
 
-export const databaseConnection = <T>(query:string, params:any[]) =>{
-    const connection = mysql.createConnection(dbconfig);
+
+export const ConexionBD = <T>(query:string, params:any[]) =>{
     
     return new Promise<T>((resolve,reject)=>{
         
-        connection.query(query,params,(err,results:any,arr)=>{
-            connection.destroy();
+        client.query(query,params, (err, resultados:any, arr)=>{
             if(err){
                 reject(err);
             }else{
-                if (results.insertId) {
-                    resolve(results.insertId);
+                if (resultados.insertId) {
+                    resolve(resultados.insertId);
                 } else {
-                    resolve(results);
+                    resolve(resultados);
                 }
             }
         });
     });
 }
-
