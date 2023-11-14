@@ -43,9 +43,7 @@ export class AutenticacionController {
 
             res.status(body.status).json(body);
 
-        } catch (error) {
-            console.log(error);
-            
+        } catch (error) {            
             const errorBody = validarError(error as Error);
             res.status(errorBody.status).json(errorBody);
         }
