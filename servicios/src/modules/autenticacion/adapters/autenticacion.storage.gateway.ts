@@ -4,6 +4,7 @@ import { AutenticacionRepository } from "../use-cases/ports/autenticacion.reposi
 import { inicioSesionDto } from "./dtos/inicio-sesion.dto";
 import { registrarCodigoUsuarioDto } from "./dtos/registrar-codigo-usuario.dto";
 import { compararEncriptado } from "../utils/bcrypt";
+import { recuperarContraseñaDto } from "./dtos/recuperar-contraseña.dto";
 
 
 
@@ -48,6 +49,26 @@ export class AutenticacionStorageGateway implements AutenticacionRepository {
     async registrarCodigo(parametros: registrarCodigoUsuarioDto): Promise<boolean> {
         try {
             const resultado = await ConexionBD<registrarCodigoUsuarioDto[]>('update usuarios set codigo = ? where id_usuario = ?',[parametros.codigo, parametros.id_usuario]);
+
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async verificarCodigo(parametros: registrarCodigoUsuarioDto): Promise<registrarCodigoUsuarioDto> {
+        try {
+            const resultado = await ConexionBD<registrarCodigoUsuarioDto[]>('select codigo from usuarios where usuario = ?',[parametros.usuario]);
+
+            return resultado[0];
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async recuperarContraseña(parametros: recuperarContraseñaDto): Promise<boolean> {
+        try {
+            const resultado = await ConexionBD<registrarCodigoUsuarioDto[]>('update usuarios set contraseña = ? where usuario = ?',[parametros.nueva_contraseña, parametros.usuario]);
 
             return true;
         } catch (error) {

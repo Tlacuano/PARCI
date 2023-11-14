@@ -57,5 +57,27 @@ class AutenticacionStorageGateway {
             }
         });
     }
+    verificarCodigo(parametros) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const resultado = yield (0, dbconfig_1.ConexionBD)('select codigo from usuarios where usuario = ?', [parametros.usuario]);
+                return resultado[0];
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    recuperarContraseña(parametros) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const resultado = yield (0, dbconfig_1.ConexionBD)('update usuarios set contraseña = ? where usuario = ?', [parametros.nueva_contraseña, parametros.usuario]);
+                return true;
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
 }
 exports.AutenticacionStorageGateway = AutenticacionStorageGateway;

@@ -19,6 +19,9 @@ const error_handler_1 = require("../../../kernel/error-handler");
 const codigo_aleatorio_1 = require("../utils/codigo-aleatorio");
 const jwt_1 = require("../../../kernel/jwt");
 const nodemailer_1 = require("../../../kernel/nodemailer");
+const verificar_codigo_rc_interactor_1 = require("../use-cases/verificar-codigo-rc.interactor");
+const bcrypt_1 = require("../utils/bcrypt");
+const recuperar_contrase_a_interactor_1 = require("../use-cases/recuperar-contrase\u00F1a.interactor");
 const autenticacionRouter = (0, express_1.Router)();
 class AutenticacionController {
     constructor() {
@@ -71,10 +74,57 @@ class AutenticacionController {
                 res.status(errorBody.status).json(errorBody);
             }
         });
+        //Comparar codigos RC
+        this.verificarCodigoRC = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const payload = req.body;
+                const repositorio = new autenticacion_storage_gateway_1.AutenticacionStorageGateway;
+                const verificarCodigoInteractor = new verificar_codigo_rc_interactor_1.VerificarCodigoInteractor(repositorio);
+                const resultado = yield verificarCodigoInteractor.execute(payload);
+                if (resultado.codigo !== payload.codigo) {
+                    throw new Error('Código incorrecto');
+                }
+                const body = {
+                    data: true,
+                    message: 'Código correcto',
+                    status: 200,
+                    error: false
+                };
+                res.status(body.status).json(body);
+            }
+            catch (error) {
+                const errorBody = (0, error_handler_1.validarError)(error);
+                res.status(errorBody.status).json(errorBody);
+            }
+        });
+        this.recuperarContraseña = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const payload = req.body;
+                if (payload.nueva_contraseña !== payload.confirmar_contraseña) {
+                    throw new Error('Las contraseñas no coinciden');
+                }
+                payload.nueva_contraseña = yield (0, bcrypt_1.encriptar)(payload.nueva_contraseña);
+                const repositorio = new autenticacion_storage_gateway_1.AutenticacionStorageGateway;
+                const recuperarContraseñaInteractor = new recuperar_contrase_a_interactor_1.RecuperarContraseñaInteractor(repositorio);
+                const resultado = yield recuperarContraseñaInteractor.execute(payload);
+                const body = {
+                    data: resultado,
+                    message: 'Contraseña actualizada',
+                    status: 200,
+                    error: false
+                };
+            }
+            catch (error) {
+                const errorBody = (0, error_handler_1.validarError)(error);
+                res.status(errorBody.status).json(errorBody);
+            }
+        });
     }
 }
 exports.AutenticacionController = AutenticacionController;
 const autenticacionController = new AutenticacionController();
 autenticacionRouter.post('/inicio-sesion', autenticacionController.inicioSesion);
 autenticacionRouter.post('/registrar-codigo', autenticacionController.registrarCodigoRC);
+autenticacionRouter.post('/verificar-codigo', autenticacionController.verificarCodigoRC);
+autenticacionRouter.post('/recuperar-contraseña', autenticacionController.recuperarContraseña);
 exports.default = autenticacionRouter;

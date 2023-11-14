@@ -12,6 +12,10 @@ import { registrarCodigoUsuarioDto } from './dtos/registrar-codigo-usuario.dto';
 import { codigoRandom } from '../utils/codigo-aleatorio';
 import { generarToken } from '../../../kernel/jwt';
 import { sendEmail } from '../../../kernel/nodemailer';
+import { VerificarCodigoInteractor } from '../use-cases/verificar-codigo-rc.interactor';
+import { recuperarContraseñaDto } from './dtos/recuperar-contraseña.dto';
+import { encriptar } from '../utils/bcrypt';
+import { RecuperarContraseñaInteractor } from '../use-cases/recuperar-contraseña.interactor';
 
 
 const autenticacionRouter = Router();
@@ -76,18 +80,77 @@ export class AutenticacionController {
 
             res.status(body.status).json(body);
 
+        } catch (error) {
+            const errorBody = validarError(error as Error);
+            res.status(errorBody.status).json(errorBody);
+        }
+    }
+
+    //Comparar codigos RC
+    verificarCodigoRC = async (req: Request, res: Response) => {
+        try {
+            const payload = req.body as registrarCodigoUsuarioDto;
+
+            const repositorio: AutenticacionRepository = new AutenticacionStorageGateway;
+            const verificarCodigoInteractor = new VerificarCodigoInteractor(repositorio);
+
+            const resultado = await verificarCodigoInteractor.execute(payload);
+
+            if (resultado.codigo !== payload.codigo) {
+                throw new Error('Código incorrecto');
+            }
+
+            const body: ResponseApi<boolean> = {
+                data: true,
+                message: 'Código correcto',
+                status: 200,
+                error: false
+            }
+
+            res.status(body.status).json(body);
 
         } catch (error) {
             const errorBody = validarError(error as Error);
             res.status(errorBody.status).json(errorBody);
         }
     }
+
+    recuperarContraseña = async (req: Request, res: Response) => {
+        try {
+            const payload = req.body as recuperarContraseñaDto;
+
+            if (payload.nueva_contraseña !== payload.confirmar_contraseña) {
+                throw new Error('Las contraseñas no coinciden');
+            }
+
+            payload.nueva_contraseña = await encriptar(payload.nueva_contraseña);
+
+            const repositorio: AutenticacionRepository = new AutenticacionStorageGateway;
+            const recuperarContraseñaInteractor = new RecuperarContraseñaInteractor(repositorio);
+
+            const resultado = await recuperarContraseñaInteractor.execute(payload);
+
+            const body: ResponseApi<boolean> = {
+                data: resultado,
+                message: 'Contraseña actualizada',
+                status: 200,
+                error: false
+            }
+            
+        } catch (error) {
+            const errorBody = validarError(error as Error);
+            res.status(errorBody.status).json(errorBody);
+        }
+    }
+
 }
 
 const autenticacionController = new AutenticacionController();
 
 autenticacionRouter.post('/inicio-sesion', autenticacionController.inicioSesion);
 autenticacionRouter.post('/registrar-codigo', autenticacionController.registrarCodigoRC);
+autenticacionRouter.post('/verificar-codigo', autenticacionController.verificarCodigoRC);
+autenticacionRouter.post('/recuperar-contraseña', autenticacionController.recuperarContraseña);
 
 
 export default autenticacionRouter;
