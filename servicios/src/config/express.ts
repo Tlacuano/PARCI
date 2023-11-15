@@ -2,6 +2,7 @@ import express, {Request, Response} from "express";
 import cors from "cors";
 
 import autenticacionRouter from "../modules/autenticacion/adapters/autenticacion.controller";
+import entidadesFederativasRouter from "../modules/entidades/adapters/entidad-federativa.controller";
 
 const app = express();
 
@@ -16,5 +17,6 @@ app.get('/', (_req:Request, res:Response)=>{
 });
 
 app.use('/parci-api', autenticacionRouter);
+app.use('/parci-api', entidadesFederativasRouter);
 
 export default app;
