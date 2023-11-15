@@ -1,6 +1,7 @@
 import { ConexionBD } from "../../../utils/dbconfig";
 import { EntidadFederativa } from "../entities/entidad-federativa";
 import { EntidadFederativaRepository } from "../use-cases/ports/entidad-federativa.repository";
+import { ModificarEntidadFederativaDTO } from "./dtos/modificar-entidad-federativa.dto";
 import { RegistrarEntidadFederativaDTO } from "./dtos/registrar-entidad-federativa.dto";
 
 export class EntidadFederativaStorageGateway
@@ -20,6 +21,15 @@ export class EntidadFederativaStorageGateway
     try {
 
       await ConexionBD<boolean>("INSERT INTO entidades_federativas (nombre_entidad, estado) VALUES (?, 1)", [payload.nombre_entidad]);
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async modificarEntidadFederativa(payload: ModificarEntidadFederativaDTO): Promise<boolean> {
+    try {
+      await ConexionBD<boolean>("UPDATE entidades_federativas SET nombre_entidad = ? WHERE id_entidad = ?", [payload.nombre_entidad, payload.id_entidad]);
       return true;
     } catch (error) {
       throw error;
