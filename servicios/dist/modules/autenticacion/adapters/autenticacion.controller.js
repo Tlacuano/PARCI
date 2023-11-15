@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AutenticacionController = void 0;
+const personalizacion_boundary_1 = require("./../../personalizacion/adapters/personalizacion.boundary");
 const registrar_codigo_rc_interactor_1 = require("./../use-cases/registrar-codigo-rc.interactor");
 const buscar_usuario_para_registrar_codigo_rp_1 = require("./../use-cases/buscar-usuario-para-registrar-codigo-rp");
 const inicio_sesion_interactor_1 = require("./../use-cases/inicio-sesion.interactor");
@@ -28,11 +29,19 @@ class AutenticacionController {
         this.inicioSesion = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const payload = req.body;
+                //procesos para validar credenciales
                 const repositorio = new autenticacion_storage_gateway_1.AutenticacionStorageGateway;
                 const inicioSesionInteractor = new inicio_sesion_interactor_1.InicioSesionInteractor(repositorio);
                 const autenticado = yield inicioSesionInteractor.execute(payload);
+                if (!(yield (0, bcrypt_1.compararEncriptado)(payload.contraseña, autenticado.salt))) {
+                    throw new Error('Usuario o contraseña incorrectos');
+                }
+                autenticado.salt = undefined;
                 const token = (0, jwt_1.generarToken)(autenticado);
                 autenticado.token = token;
+                //traer personalizacion
+                const Personalizacion = yield personalizacion_boundary_1.personalizacionBoundary.consultarPersonalizacion_Local(autenticado.usuario);
+                autenticado.personalizacion = Personalizacion;
                 const body = {
                     data: autenticado,
                     message: 'Inicio de sesión exitoso',
@@ -42,7 +51,6 @@ class AutenticacionController {
                 res.status(body.status).json(body);
             }
             catch (error) {
-                console.log(error);
                 const errorBody = (0, error_handler_1.validarError)(error);
                 res.status(errorBody.status).json(errorBody);
             }
@@ -60,6 +68,7 @@ class AutenticacionController {
                 //guardar codigo en la bd
                 const registrarCodigoInteractor = new registrar_codigo_rc_interactor_1.RegistrarCodigoInteractor(repositorio);
                 const resultado = yield registrarCodigoInteractor.execute(usuario);
+                //enviar codigo al correo
                 yield (0, nodemailer_1.sendEmail)(usuario.correo_electronico, 'Recuperación de contraseña', 'Recuperación de contraseña', 'Su código de recuperación es:', usuario.codigo);
                 const body = {
                     data: resultado,

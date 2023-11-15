@@ -16,15 +16,7 @@ export class AutenticacionStorageGateway implements AutenticacionRepository {
             if (resultado.length === 0) {
                 throw new Error('Usuario o contraseña incorrectos');
             }
-
-            const usuario = resultado[0];
-
-            if (!(await compararEncriptado(parametros.contraseña, usuario.salt as string))) {
-                throw new Error('Usuario o contraseña incorrectos');
-            }
-
-            usuario.salt = undefined;
-
+            
             return resultado[0];
         } catch (error) {
             throw error;

@@ -8,6 +8,7 @@ const errores: { [x: string]: ResponseApi<undefined> } = {
     'Server Error': { status: 500, error: true, message: 'Server Error' },
     'Campos requeridos incompletos': { status: 400, error: true, message: 'Campos requeridos incompletos' },
     'Estado inválido': { status: 400, error: true, message: 'Estado inválido' },
+    'No se pudo modificar la personalizacion': { status: 400, error: true, message: 'No se pudo modificar la personalizacion' },
 };
 
 
