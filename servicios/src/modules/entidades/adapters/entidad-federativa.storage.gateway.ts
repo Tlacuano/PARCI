@@ -1,6 +1,7 @@
 import { ConexionBD } from "../../../utils/dbconfig";
 import { EntidadFederativa } from "../entities/entidad-federativa";
 import { EntidadFederativaRepository } from "../use-cases/ports/entidad-federativa.repository";
+import { CambiarEstadoEntidadFederativaDTO } from "./dtos/cambiar-estado-entidad-federativa.dto";
 import { ModificarEntidadFederativaDTO } from "./dtos/modificar-entidad-federativa.dto";
 import { RegistrarEntidadFederativaDTO } from "./dtos/registrar-entidad-federativa.dto";
 
@@ -30,6 +31,15 @@ export class EntidadFederativaStorageGateway
   async modificarEntidadFederativa(payload: ModificarEntidadFederativaDTO): Promise<boolean> {
     try {
       await ConexionBD<boolean>("UPDATE entidades_federativas SET nombre_entidad = ? WHERE id_entidad = ?", [payload.nombre_entidad, payload.id_entidad]);
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async cambiarEstadoEntidadFederativa(payload: CambiarEstadoEntidadFederativaDTO): Promise<boolean> {
+    try {
+      await ConexionBD<boolean>("UPDATE entidades_federativas SET estado = ? WHERE id_entidad = ?", [payload.estado, payload.id_entidad]);
       return true;
     } catch (error) {
       throw error;

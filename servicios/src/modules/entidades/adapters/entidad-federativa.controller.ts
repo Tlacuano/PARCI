@@ -9,6 +9,8 @@ import { RegistrarEntidadFederativaInteractor } from "../use-cases/registrar-ent
 import { RegistrarEntidadFederativaDTO } from "./dtos/registrar-entidad-federativa.dto";
 import { ModificarEntidadFederativaDTO } from "./dtos/modificar-entidad-federativa.dto";
 import { ModificarEntidadFederativaInteractor } from "../use-cases/modificar-entidad-federativa";
+import { CambiarEstadoEntidadFederativaDTO } from "./dtos/cambiar-estado-entidad-federativa.dto";
+import { CambiarEstadoEntidadFederativaInteractor } from './../use-cases/cambiar-estado-entidad-federativa';
 
 const entidadesFederativasRouter = Router();
 
@@ -54,7 +56,7 @@ export class EntidadesFederativasController {
         repositorio
       );
 
-      const result = await registrarEntidadFederativaInteractor.execute(payload);
+      await registrarEntidadFederativaInteractor.execute(payload);
 
       const body: ResponseApi<boolean> = {
         data: true,
@@ -82,11 +84,43 @@ export class EntidadesFederativasController {
       const repositorio: EntidadFederativaRepository = new EntidadFederativaStorageGateway();
       const modificarEntidadFederativaInteractor = new ModificarEntidadFederativaInteractor(repositorio);
 
-      const result = await modificarEntidadFederativaInteractor.execute(payload);
+      await modificarEntidadFederativaInteractor.execute(payload);
 
       const body: ResponseApi<boolean> = {
         data: true,
         message: "Entidad federativa modificada correctamente",
+        status: 200,
+        error: false,
+      };
+
+      res.status(body.status).json(body);
+    } catch (error) {
+      const errorBody = validarError(error as Error);
+      res.status(errorBody.status).json(errorBody);
+    }
+  }
+
+  // CAMBIAR ESTADO
+  cambiarEstadoEntidadFederativa = async (req: Request, res: Response) => {
+    try {
+      const payload = req.body as CambiarEstadoEntidadFederativaDTO;
+
+      if (!payload.id_entidad) {
+        throw new Error("Campos requeridos incompletos");
+      }
+
+      if (payload.estado !== 0 && payload.estado !== 1) {
+        throw new Error("Estado inválido");
+      }
+
+      const repositorio: EntidadFederativaRepository = new EntidadFederativaStorageGateway();
+      const cambiarEstadoEntidadFederativaInteractor = new CambiarEstadoEntidadFederativaInteractor(repositorio);
+
+      await cambiarEstadoEntidadFederativaInteractor.execute(payload);
+
+      const body: ResponseApi<boolean> = {
+        data: true,
+        message: `Entidad federativa ${payload.estado === 1 ? 'activada' : 'desactivada'} correctamente`,
         status: 200,
         error: false,
       };
@@ -104,5 +138,6 @@ const entidadesFederativasController = new EntidadesFederativasController();
 entidadesFederativasRouter.get("/entidades-federativas", entidadesFederativasController.getEntidadesFederativas);
 entidadesFederativasRouter.post("/entidades-federativas", entidadesFederativasController.registrarEntidadFederativa);
 entidadesFederativasRouter.put("/entidades-federativas", entidadesFederativasController.modificarEntidadFederativa);
+entidadesFederativasRouter.put("/entidades-federativas/estado", entidadesFederativasController.cambiarEstadoEntidadFederativa);
 
 export default entidadesFederativasRouter;
