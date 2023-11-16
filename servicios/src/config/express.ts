@@ -3,6 +3,7 @@ import cors from "cors";
 
 import autenticacionRouter from "../modules/autenticacion/adapters/autenticacion.controller";
 import entidadesFederativasRouter from "../modules/entidades/adapters/entidad-federativa.controller";
+import municipiosRouter from "src/modules/municipios/adapters/municipios-controller";
 
 const app = express();
 
@@ -18,5 +19,6 @@ app.get('/', (_req:Request, res:Response)=>{
 
 app.use('/parci-api', autenticacionRouter);
 app.use('/parci-api', entidadesFederativasRouter);
+app.use('/parci-api', municipiosRouter);
 
 export default app;
