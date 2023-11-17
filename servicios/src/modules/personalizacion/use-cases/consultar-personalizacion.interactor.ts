@@ -8,6 +8,9 @@ export class ConsultarPersonalizacionInteractor implements UseCase<string, Perso
     constructor(private personalizacionRepository:PersonalizacionRepository ) {}
 
     execute(payload: string): Promise<Personalizacion> {
+        if(!payload || payload === '') {
+            throw new Error('El usuario es requerido');
+        }
         return this.personalizacionRepository.consultarPersonalizacion(payload);
     }
 

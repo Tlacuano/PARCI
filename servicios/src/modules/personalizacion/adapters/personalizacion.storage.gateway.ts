@@ -6,13 +6,23 @@ import { ConexionBD } from "../../../utils/dbconfig";
 
 
 export class PersonalizacionStorageGateway implements PersonalizacionRepository{
-    registrarPersonalizacionPorDefecto(payload: Personalizacion): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async registrarPersonalizacionPorDefecto(payload: string): Promise<boolean> {
+        try {
+            const respuesta = await ConexionBD<any>('INSERT INTO personalizacion (tamaño_letra, tema, fk_idUsuario) VALUES (?,?,(SELECT id_usuario from usuarios WHERE usuario = ?))',['Mediana', 'Claro', payload]);
+
+            if(respuesta.affectedRows === 0) {
+                throw new Error('Server error');
+            }
+
+            return true;
+        }catch (error) {
+            throw error;
+        }   
     }
 
     async consultarPersonalizacion(payload: string): Promise<Personalizacion> {
         try {
-            const respuesta = await ConexionBD<Personalizacion[]>('select tamaño_letra, tema from personalizacion join usuarios on fk_idUsuario = id_usuario where usuario = ?',[payload]);
+            const respuesta = await ConexionBD<Personalizacion[]>('SELECT tamaño_letra, tema FROM personalizacion JOIN usuarios ON fk_idUsuario = id_usuario WHERE usuario = ?',[payload]);
 
             return respuesta[0];
         } catch (error) {
@@ -22,7 +32,7 @@ export class PersonalizacionStorageGateway implements PersonalizacionRepository{
 
     async modificarPersonalizacion(payload: Personalizacion): Promise<boolean> {
         try {
-            const resupuesta = await ConexionBD<any>('update personalizacion set tamaño_letra = ?, tema = ? where fk_idUsuario = (select id_usuario from usuarios where usuario = ?)',[payload.tamaño_letra, payload.tema, payload.usuario]);
+            const resupuesta = await ConexionBD<any>('UPDATE personalizacion SET tamaño_letra = ?, tema = ? WHERE fk_idUsuario = (SELECT id_usuario FROM usuarios WHERE usuario = ?)',[payload.tamaño_letra, payload.tema, payload.usuario]);
             
             if(resupuesta.affectedRows === 0) {
                 throw new Error('No se pudo modificar la personalizacion');

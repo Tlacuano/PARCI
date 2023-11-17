@@ -5,12 +5,24 @@ import { validarError } from "../../../kernel/error-handler";
 import { PersonalizacionStorageGateway } from './personalizacion.storage.gateway';
 import { Personalizacion } from '../entities/personalizacion';
 import { ModificarPersonalizacionInteractor } from '../use-cases/modificar-personalizacion.interactor';
+import { RegistrarPersonalizacionInteractor } from '../use-cases/registrar-personalizacion.interactor';
 
 
 const personalizacionRouter = Router();
 
 export class PersonalizacionController {
+    static registrarPersonalizacionPorDefecto_Local = async (usuario:string) => {
+        try {
+            const personalizacionRepository:PersonalizacionRepository = new PersonalizacionStorageGateway();
+            const registrarPersonalizacionInteractor = new RegistrarPersonalizacionInteractor(personalizacionRepository);
 
+            const respuesta = await registrarPersonalizacionInteractor.execute(usuario) as boolean;
+
+            return respuesta;
+        } catch (error) {
+            return error;
+        }
+    }
 
     static consultarPersonalizacion_Local = async (usuario:string) => {
         try {
@@ -29,7 +41,6 @@ export class PersonalizacionController {
         try {
             const payload = req.body as Personalizacion;
 
-            
             const personalizacionRepository:PersonalizacionRepository = new PersonalizacionStorageGateway();
             const consultarPersonalizacionInteractor = new ConsultarPersonalizacionInteractor(personalizacionRepository);
 
