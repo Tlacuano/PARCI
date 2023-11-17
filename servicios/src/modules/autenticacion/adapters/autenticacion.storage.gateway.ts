@@ -40,7 +40,11 @@ export class AutenticacionStorageGateway implements AutenticacionRepository {
 
     async registrarCodigo(parametros: registrarCodigoUsuarioDto): Promise<boolean> {
         try {
-            const resultado = await ConexionBD<registrarCodigoUsuarioDto[]>('update usuarios set codigo = ? where id_usuario = ?',[parametros.codigo, parametros.id_usuario]);
+            const resultado = await ConexionBD<any>('update usuarios set codigo = ? where id_usuario = ?',[parametros.codigo, parametros.id_usuario]);
+
+            if(resultado.affectedRows === 0) {
+                throw new Error('Error al generar el codigo');
+            }
 
             return true;
         } catch (error) {

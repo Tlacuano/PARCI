@@ -6,6 +6,9 @@ class BuscarUsuarioInteractor {
         this.autenticacionRepository = autenticacionRepository;
     }
     execute(payload) {
+        if (!payload.usuario || payload.usuario === '') {
+            throw new Error('El usuario es requerido');
+        }
         return this.autenticacionRepository.buscarUsuario(payload);
     }
 }
