@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecuperarContraseñaInteractor = void 0;
 const validation_1 = require("../../../kernel/validation");
-const bcrypt_1 = require("../utils/bcrypt");
+const bcrypt_1 = require("../../../kernel/bcrypt");
 class RecuperarContraseñaInteractor {
     constructor(autenticacionRepository) {
         this.autenticacionRepository = autenticacionRepository;
