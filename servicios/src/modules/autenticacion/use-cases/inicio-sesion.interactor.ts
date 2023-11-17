@@ -1,5 +1,5 @@
 import { AutenticacionRepository } from './ports/autenticacion.repository';
-import { UseCase } from "src/kernel/contracts";
+import { UseCase } from "../../../kernel/contracts";
 import { inicioSesionDto } from "../adapters/dtos/inicio-sesion.dto";
 import { autenticado } from "../entities/autenticado";
 
