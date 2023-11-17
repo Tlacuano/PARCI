@@ -62,7 +62,6 @@ class AutenticacionController {
                 //buscar usuario
                 const repositorio = new autenticacion_storage_gateway_1.AutenticacionStorageGateway;
                 const buscarUsuarioInteractor = new buscar_usuario_para_registrar_codigo_rp_1.BuscarUsuarioInteractor(repositorio);
-                //generar codigo
                 const usuario = yield buscarUsuarioInteractor.execute(payload);
                 usuario.codigo = (0, codigo_aleatorio_1.codigoRandom)();
                 //guardar codigo en la bd
@@ -109,10 +108,6 @@ class AutenticacionController {
         this.recuperarContraseña = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const payload = req.body;
-                if (payload.nueva_contraseña !== payload.confirmar_contraseña) {
-                    throw new Error('Las contraseñas no coinciden');
-                }
-                payload.nueva_contraseña = yield (0, bcrypt_1.encriptar)(payload.nueva_contraseña);
                 const repositorio = new autenticacion_storage_gateway_1.AutenticacionStorageGateway;
                 const recuperarContraseñaInteractor = new recuperar_contrase_a_interactor_1.RecuperarContraseñaInteractor(repositorio);
                 const resultado = yield recuperarContraseñaInteractor.execute(payload);

@@ -44,6 +44,9 @@ class AutenticacionStorageGateway {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const resultado = yield (0, dbconfig_1.ConexionBD)('update usuarios set codigo = ? where id_usuario = ?', [parametros.codigo, parametros.id_usuario]);
+                if (resultado.affectedRows === 0) {
+                    throw new Error('Error al generar el codigo');
+                }
                 return true;
             }
             catch (error) {

@@ -104,6 +104,6 @@ export const sendEmail = async (correo_electronico: string, asunto:string, titul
 
         await transporter.sendMail(mailOptions);
     } catch (error) {
-        throw new Error("Error sending email");
+        throw new Error("Server Error");
     }
 }

@@ -9,8 +9,7 @@ export class PersonalizacionStorageGateway implements PersonalizacionRepository{
     async registrarPersonalizacionPorDefecto(payload: string): Promise<boolean> {
         try {
             const respuesta = await ConexionBD<any>('INSERT INTO personalizacion (tamaño_letra, tema, fk_idUsuario) VALUES (?,?,(SELECT id_usuario from usuarios WHERE usuario = ?))',['Mediana', 'Claro', payload]);
-
-            if(respuesta.affectedRows === 0) {
+            if(respuesta !== 0){
                 throw new Error('Server error');
             }
 

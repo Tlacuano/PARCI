@@ -9,6 +9,10 @@ export class BuscarUsuarioInteractor implements UseCase<registrarCodigoUsuarioDt
     constructor(private autenticacionRepository: AutenticacionRepository) {}
 
     execute(payload: registrarCodigoUsuarioDto): Promise<registrarCodigoUsuarioDto> {
+        if(!payload.usuario || payload.usuario === '') {
+            throw new Error('El usuario es requerido');
+        }
+        
         return this.autenticacionRepository.buscarUsuario(payload);
     }
 }

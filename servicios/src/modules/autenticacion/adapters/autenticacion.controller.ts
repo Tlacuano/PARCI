@@ -73,11 +73,10 @@ export class AutenticacionController {
             const repositorio: AutenticacionRepository = new AutenticacionStorageGateway;
             const buscarUsuarioInteractor = new BuscarUsuarioInteractor(repositorio);
 
-            //generar codigo
             const usuario = await buscarUsuarioInteractor.execute(payload);
+
             usuario.codigo = codigoRandom();
             
-
             //guardar codigo en la bd
             const registrarCodigoInteractor = new RegistrarCodigoInteractor(repositorio);
             const resultado = await registrarCodigoInteractor.execute(usuario);
@@ -132,12 +131,6 @@ export class AutenticacionController {
     recuperarContraseña = async (req: Request, res: Response) => {
         try {
             const payload = req.body as recuperarContraseñaDto;
-
-            if (payload.nueva_contraseña !== payload.confirmar_contraseña) {
-                throw new Error('Las contraseñas no coinciden');
-            }
-
-            payload.nueva_contraseña = await encriptar(payload.nueva_contraseña);
 
             const repositorio: AutenticacionRepository = new AutenticacionStorageGateway;
             const recuperarContraseñaInteractor = new RecuperarContraseñaInteractor(repositorio);
