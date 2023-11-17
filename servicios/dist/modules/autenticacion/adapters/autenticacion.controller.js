@@ -21,7 +21,7 @@ const codigo_aleatorio_1 = require("../utils/codigo-aleatorio");
 const jwt_1 = require("../../../kernel/jwt");
 const nodemailer_1 = require("../../../kernel/nodemailer");
 const verificar_codigo_rc_interactor_1 = require("../use-cases/verificar-codigo-rc.interactor");
-const bcrypt_1 = require("../utils/bcrypt");
+const bcrypt_1 = require("../../../kernel/bcrypt");
 const recuperar_contrase_a_interactor_1 = require("../use-cases/recuperar-contrase\u00F1a.interactor");
 const autenticacionRouter = (0, express_1.Router)();
 class AutenticacionController {

@@ -3,7 +3,7 @@ import { autenticado } from "../entities/autenticado";
 import { AutenticacionRepository } from "../use-cases/ports/autenticacion.repository";
 import { inicioSesionDto } from "./dtos/inicio-sesion.dto";
 import { registrarCodigoUsuarioDto } from "./dtos/registrar-codigo-usuario.dto";
-import { compararEncriptado } from "../utils/bcrypt";
+import { compararEncriptado } from "../../../kernel/bcrypt";
 import { recuperarContraseñaDto } from "./dtos/recuperar-contraseña.dto";
 
 

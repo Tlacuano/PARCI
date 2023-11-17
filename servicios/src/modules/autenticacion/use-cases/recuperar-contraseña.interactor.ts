@@ -1,7 +1,7 @@
 import { regexValidationAlMenosUnaMayuscula, regexValidationNoEspaciosInicioFin, regexValidationUnAlMenosNumero, regexValidationUnaAlMenosMinuscula, validateRegex } from "../../../kernel/validation";
 import { UseCase } from "../../../kernel/contracts";
 import { recuperarContraseñaDto } from "../adapters/dtos/recuperar-contraseña.dto";
-import { encriptar } from "../utils/bcrypt";
+import { encriptar } from "../../../kernel/bcrypt";
 import { AutenticacionRepository } from "./ports/autenticacion.repository";
 
 

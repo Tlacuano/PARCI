@@ -16,7 +16,7 @@ import { generarToken } from '../../../kernel/jwt';
 import { sendEmail } from '../../../kernel/nodemailer';
 import { VerificarCodigoInteractor } from '../use-cases/verificar-codigo-rc.interactor';
 import { recuperarContraseñaDto } from './dtos/recuperar-contraseña.dto';
-import { compararEncriptado, encriptar } from '../utils/bcrypt';
+import { compararEncriptado, encriptar } from '../../../kernel/bcrypt';
 import { RecuperarContraseñaInteractor } from '../use-cases/recuperar-contraseña.interactor';
 
 
