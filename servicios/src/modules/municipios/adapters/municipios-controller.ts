@@ -2,6 +2,7 @@ import {Request, Response, Router} from "express";
 import { MunicipioRepository } from "../use-cases/ports/municipio.repository"
 import { MunicipiosStorageGateway } from "./municipios.gateway";
 import { GetMunicipiosInteractor } from "../use-cases/get-municipios.interactor";
+import { GetMunicipiosPorEntidadInteractor } from "../use-cases/get-municipios-por-entidad.interactor";
 import { ResponseApi } from "src/kernel/types";
 import { Municipio } from "../entities/municipios";
 import { validarError } from "src/kernel/error-handler";
@@ -32,7 +33,34 @@ export class MunicipiosController {
             res.status(body.status).json(body);
         } catch (error) {
             const errorBody = validarError(error as Error);
-            res.status(errorBody.status).json(errorBody)
+            res.status(errorBody.status).json(errorBody);
+        }
+    }
+
+    getMunicipiosPorEntidad = async (req: Request, res: Response) => {
+        try {
+            const { fk_idEntidad } = req.body
+
+            if (!fk_idEntidad) {
+                throw new Error("Campos requeridos incompletos");
+            }
+
+            const repositorio: MunicipioRepository = new MunicipiosStorageGateway();
+            const getMunicipiosPorEntidadInteractor = new GetMunicipiosPorEntidadInteractor(repositorio);
+
+            const municipios = await getMunicipiosPorEntidadInteractor.execute(fk_idEntidad);
+
+            const body: ResponseApi<Municipio[]> = {
+                data: municipios,
+                message: "Municipios obtenidos correctamente",
+                status: 200,
+                error: false
+            }
+
+            res.status(body.status).json(body);
+        } catch (error) {
+            const errorBody = validarError(error as Error);
+            res.status(errorBody.status).json(errorBody);
         }
     }
 
@@ -126,6 +154,7 @@ export class MunicipiosController {
 const municipiosController = new MunicipiosController();
 
 municipiosRouter.get("/municipios", municipiosController.getMunicipios);
+municipiosRouter.get("municipios/",municipiosController.getMunicipiosPorEntidad);
 municipiosRouter.post("municipios", municipiosController.registrarMunicipio)
 municipiosRouter.put("/municipios", municipiosController.modificarMunicipio);
 municipiosRouter.put("/municipios/estado", municipiosController.cambiarEstadoMunicipio);
