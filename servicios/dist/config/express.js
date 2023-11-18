@@ -8,6 +8,7 @@ const cors_1 = __importDefault(require("cors"));
 const autenticacion_controller_1 = __importDefault(require("../modules/autenticacion/adapters/autenticacion.controller"));
 const entidad_federativa_controller_1 = __importDefault(require("../modules/entidades/adapters/entidad-federativa.controller"));
 const personalizacion_controller_1 = __importDefault(require("../modules/personalizacion/adapters/personalizacion.controller"));
+const usuario_controller_1 = __importDefault(require("../modules/usuarios/adapters/usuario.controller"));
 const app = (0, express_1.default)();
 app.set('port', process.env.PORT || 3000);
 app.use((0, cors_1.default)({ origin: '*' }));
@@ -18,4 +19,5 @@ app.get('/', (_req, res) => {
 app.use('/parci-api/autenticacion', autenticacion_controller_1.default);
 app.use('/parci-api/', entidad_federativa_controller_1.default);
 app.use('/parci-api/personalizacion', personalizacion_controller_1.default);
+app.use('/parci-api/usuarios', usuario_controller_1.default);
 exports.default = app;

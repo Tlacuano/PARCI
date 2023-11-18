@@ -26,6 +26,8 @@ const errores = {
     'No se pudo modificar la personalizacion': { status: 400, error: true, message: 'No se pudo modificar la personalizacion' },
     'El tema es requerido': { status: 400, error: true, message: 'El tema es requerido' },
     'El tamaño de letra es requerido': { status: 400, error: true, message: 'El tamaño de letra es requerido' },
+    //entidades federativas
+    'El nombre es requerido': { status: 400, error: true, message: 'El nombre es requerido' },
 };
 const validarError = (error) => {
     return errores[error.message] || errores['Server Error'];
