@@ -14,7 +14,6 @@ const errores: { [x: string]: ResponseApi<undefined> } = {
     'Error al generar el codigo': { status: 400, error: true, message: 'Error al generar el codigo' },
     'El codigo es requerido': { status: 400, error: true, message: 'El codigo es requerido' },
 
-        
     //usuarios
     'El usuario es requerido': { status: 400, error: true, message: 'El usuario es requerido' },
     'Usuario no encontrado': { status: 404, error: true, message: 'Usuario no encontrado' },
@@ -29,6 +28,9 @@ const errores: { [x: string]: ResponseApi<undefined> } = {
     'No se pudo modificar la personalizacion': { status: 400, error: true, message: 'No se pudo modificar la personalizacion' },
     'El tema es requerido': { status: 400, error: true, message: 'El tema es requerido' },
     'El tamaño de letra es requerido': { status: 400, error: true, message: 'El tamaño de letra es requerido' },
+
+    //entidades federativas
+    'El nombre es requerido': { status: 400, error: true, message: 'El nombre es requerido' },
 };
 
 
