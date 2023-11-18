@@ -46,10 +46,6 @@ export class EntidadesFederativasController {
     try {
       const payload = req.body as RegistrarEntidadFederativaDTO;
 
-      if (!payload.nombre_entidad) {
-        throw new Error("Campos requeridos incompletos");
-      }
-
       const repositorio: EntidadFederativaRepository =
         new EntidadFederativaStorageGateway();
       const registrarEntidadFederativaInteractor = new RegistrarEntidadFederativaInteractor(
@@ -77,10 +73,6 @@ export class EntidadesFederativasController {
     try {
       const payload = req.body as ModificarEntidadFederativaDTO;
 
-      if (!payload.nombre_entidad || !payload.id_entidad) {
-        throw new Error("Campos requeridos incompletos");
-      }
-
       const repositorio: EntidadFederativaRepository = new EntidadFederativaStorageGateway();
       const modificarEntidadFederativaInteractor = new ModificarEntidadFederativaInteractor(repositorio);
 
@@ -104,14 +96,6 @@ export class EntidadesFederativasController {
   cambiarEstadoEntidadFederativa = async (req: Request, res: Response) => {
     try {
       const payload = req.body as CambiarEstadoEntidadFederativaDTO;
-
-      if (!payload.id_entidad) {
-        throw new Error("Campos requeridos incompletos");
-      }
-
-      if (payload.estado !== 0 && payload.estado !== 1) {
-        throw new Error("Estado inválido");
-      }
 
       const repositorio: EntidadFederativaRepository = new EntidadFederativaStorageGateway();
       const cambiarEstadoEntidadFederativaInteractor = new CambiarEstadoEntidadFederativaInteractor(repositorio);
