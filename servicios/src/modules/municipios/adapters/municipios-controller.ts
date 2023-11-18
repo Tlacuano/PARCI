@@ -41,10 +41,6 @@ export class MunicipiosController {
         try {
             const { fk_idEntidad } = req.body
 
-            if (!fk_idEntidad) {
-                throw new Error("Campos requeridos incompletos");
-            }
-
             const repositorio: MunicipioRepository = new MunicipiosStorageGateway();
             const getMunicipiosPorEntidadInteractor = new GetMunicipiosPorEntidadInteractor(repositorio);
 
@@ -67,10 +63,6 @@ export class MunicipiosController {
     registrarMunicipio = async (req: Request, res: Response) => {
         try {
             const payload = req.body as RegistrarMunicipioDTO;
-
-            if (!payload.nombre_municipio || !payload.fk_idEntidad) {
-                throw new Error("Campos requeridos incompletos");
-            }
 
             const repositorio: MunicipioRepository = new MunicipiosStorageGateway();
             const registrarMunicipioInteractor = new RegistrarMunicipioInteractor(repositorio);
@@ -95,10 +87,6 @@ export class MunicipiosController {
         try {
             const payload = req.body as ModificarMunicipioDTO;
 
-            if(!payload.nombre_municipio || !payload.fk_idEntidad || !payload.id_municipio) {
-                throw new Error("Campos requeridos incompletos");
-            }
-
             const repositorio: MunicipioRepository = new MunicipiosStorageGateway();
             const modificarMunicipioInteractor = new ModificarMunicipioInteractor(repositorio);
 
@@ -121,14 +109,6 @@ export class MunicipiosController {
     cambiarEstadoMunicipio = async (req: Request, res: Response) => {
         try {
             const payload = req.body as CambiarEstadoMunicipioDTO;
-
-            if (!payload.id_municipio) {
-                throw new Error("Campos requeridos incompletos")
-            }
-
-            if (payload.estado !== 0 && payload.estado !== 1) {
-                throw new Error("Estado invalido");
-            }
 
             const repositorio: MunicipioRepository = new MunicipiosStorageGateway();
             const cambiarEstaadoMunicipioInteractor = new CambiarEstadoMunicipioInteractor(repositorio);
@@ -154,8 +134,8 @@ export class MunicipiosController {
 const municipiosController = new MunicipiosController();
 
 municipiosRouter.get("/municipios", municipiosController.getMunicipios);
-municipiosRouter.get("municipios/",municipiosController.getMunicipiosPorEntidad);
-municipiosRouter.post("municipios", municipiosController.registrarMunicipio)
+municipiosRouter.get("/municipios/entidad",municipiosController.getMunicipiosPorEntidad);
+municipiosRouter.post("/municipios", municipiosController.registrarMunicipio)
 municipiosRouter.put("/municipios", municipiosController.modificarMunicipio);
 municipiosRouter.put("/municipios/estado", municipiosController.cambiarEstadoMunicipio);
 

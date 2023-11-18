@@ -6,6 +6,9 @@ export class GetMunicipiosPorEntidadInteractor implements UseCase<number, Munici
     constructor(private readonly repository: MunicipioRepository) {}
     
     async execute(fk_idEntidad: number): Promise<Municipio[]> {
+        if (!fk_idEntidad) {
+            throw new Error("Campo requerido incompleto")
+        }
         return await this.repository.getMunicipiosPorEntidad(fk_idEntidad);
     }
 }

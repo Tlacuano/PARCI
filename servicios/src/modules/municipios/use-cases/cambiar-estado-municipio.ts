@@ -6,6 +6,9 @@ export class CambiarEstadoMunicipioInteractor implements UseCase<CambiarEstadoMu
     constructor(private readonly repository: MunicipioRepository) {}
 
     async execute(payload: CambiarEstadoMunicipioDTO): Promise<boolean> {
+        if (payload.estado !== 0 && payload.estado !== 1) {
+            throw new Error("Estado invalido");
+        }
         return this.repository.cambiarEstadoMunicipio(payload);
     }
 }
