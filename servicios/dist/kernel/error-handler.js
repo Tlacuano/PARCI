@@ -37,6 +37,8 @@ const errores = {
     "La entidad federativa es requerida": { status: 400, error: true, message: "La entidad federativa es requerido" },
     "No se pudo modificar el municipio": { status: 400, error: true, message: "No se pudo modificar el municipio" },
     "El nombre no deve contener caracteres especiales": { status: 400, error: true, message: "El nombre no debe contener caracteres especiales" },
+    //opciones
+    "No se pudo registrar la opinion": { status: 400, error: true, message: "No se pudo registrar la opinion" },
 };
 const validarError = (error) => {
     return errores[error.message] || errores["Server Error"];
