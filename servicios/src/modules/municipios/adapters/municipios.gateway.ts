@@ -1,4 +1,4 @@
-import { ConexionBD } from "src/utils/dbconfig";
+import { ConexionBD } from "../../../utils/dbconfig";
 import { Municipio } from "../entities/municipios";
 import { MunicipioRepository } from "../use-cases/ports/municipio.repository";
 import { CambiarEstadoMunicipioDTO } from "./dtos/cambiar-estado-municipio.dto";

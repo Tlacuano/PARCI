@@ -1,4 +1,4 @@
-import { UseCase } from "src/kernel/contracts";
+import { UseCase } from "../../../kernel/contracts";
 import { RegistrarMunicipioDTO } from "../adapters/dtos/registrar-municipio.dto";
 import { Municipio } from "../entities/municipios";
 import { MunicipioRepository } from "./ports/municipio.repository";

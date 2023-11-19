@@ -1,4 +1,4 @@
-import { UseCase } from "src/kernel/contracts";
+import { UseCase } from "../../../kernel/contracts";
 import { Municipio } from "../entities/municipios";
 import { MunicipioRepository } from "./ports/municipio.repository";
 
