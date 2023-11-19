@@ -18,7 +18,7 @@ app.get('/', (_req:Request, res:Response)=>{
 });
 
 app.use('/parci-api/autenticacion', autenticacionRouter);
-app.use('/parci-api/', entidadesFederativasRouter);
+app.use('/parci-api/entidades-federativas', entidadesFederativasRouter);
 app.use('/parci-api/personalizacion', personalizacionRouter);
 
 export default app;
