@@ -5,6 +5,7 @@ import { Municipio } from "../../entities/municipios"
 
 export interface MunicipioRepository {
     getMunicipios(): Promise<Municipio[]>;
+    buscarMunicipioPorNombre(payload: RegistrarMunicipioDTO): Promise<Municipio[] | null>;
     getMunicipiosPorEntidad(fk_idEntidad: number): Promise<Municipio[]>;
     registrarMunicipio(payload: RegistrarMunicipioDTO): Promise<boolean>;
     modificarMunicipio(payload: ModificarMunicipioDTO): Promise<boolean>;

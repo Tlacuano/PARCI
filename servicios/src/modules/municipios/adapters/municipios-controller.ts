@@ -2,6 +2,7 @@ import {Request, Response, Router} from "express";
 import { MunicipioRepository } from "../use-cases/ports/municipio.repository"
 import { MunicipiosStorageGateway } from "./municipios.gateway";
 import { GetMunicipiosInteractor } from "../use-cases/get-municipios.interactor";
+import { BuscaMunicipioPorNombreInteractor } from "../use-cases/buscar-municipo-por-nombre.interactor";
 import { GetMunicipiosPorEntidadInteractor } from "../use-cases/get-municipios-por-entidad.interactor";
 import { ResponseApi } from "src/kernel/types";
 import { Municipio } from "../entities/municipios";
@@ -128,15 +129,39 @@ export class MunicipiosController {
             res.status(errorBody.status).json(errorBody);
         }
     }
+
+    buscarMunicipioPorNombre =async (req: Request, res: Response) => {
+        try {
+            const payload = req.body as RegistrarMunicipioDTO;
+            
+            const repositorio: MunicipioRepository = new MunicipiosStorageGateway();
+            const buscarMunicipioPorNombreInteractor = new BuscaMunicipioPorNombreInteractor(repositorio);
+
+            const municipios = await buscarMunicipioPorNombreInteractor.execute(payload);
+
+            const body: ResponseApi<Municipio[] | null> = {
+                data: municipios,
+                message: "Municipios obtenidas correctamente",
+                status: 200,
+                error: false,
+            };
+
+            res.status(body.status).json(body);
+        } catch (error) {
+            const errorBody = validarError(error as Error);
+            res.status(errorBody.status).json(errorBody);
+        }  
+    };
 }
 
 
 const municipiosController = new MunicipiosController();
 
-municipiosRouter.get("/municipios", municipiosController.getMunicipios);
-municipiosRouter.get("/municipios/entidad",municipiosController.getMunicipiosPorEntidad);
-municipiosRouter.post("/municipios", municipiosController.registrarMunicipio)
-municipiosRouter.put("/municipios", municipiosController.modificarMunicipio);
-municipiosRouter.put("/municipios/estado", municipiosController.cambiarEstadoMunicipio);
+municipiosRouter.get("/consultar", municipiosController.getMunicipios);
+municipiosRouter.get("/buscar-por-nombre", municipiosController.buscarMunicipioPorNombre);
+municipiosRouter.get("/consultar-por-entidad",municipiosController.getMunicipiosPorEntidad);
+municipiosRouter.post("/registrar", municipiosController.registrarMunicipio)
+municipiosRouter.put("/modificar", municipiosController.modificarMunicipio);
+municipiosRouter.put("/cambiar-estado", municipiosController.cambiarEstadoMunicipio);
 
 export default municipiosRouter;

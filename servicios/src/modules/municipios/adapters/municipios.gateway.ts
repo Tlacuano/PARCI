@@ -35,7 +35,12 @@ export class MunicipiosStorageGateway implements MunicipioRepository {
 
     async modificarMunicipio(payload: ModificarMunicipioDTO): Promise<boolean> {
         try {
-            await ConexionBD<boolean>("UPDATE municipios SET nombre_municipio = ?, fk_idEntidad = ? WHERE id_municipio = ?", [payload.nombre_municipio,payload.fk_idEntidad,payload.id_municipio]);
+            const result = await ConexionBD<any>("UPDATE municipios SET nombre_municipio = ?, fk_idEntidad = ? WHERE id_municipio = ?", [payload.nombre_municipio,payload.fk_idEntidad,payload.id_municipio]);
+
+            if (result.affectedRows === 0) {
+                throw new Error("No se pudo modificar el municipio");
+            }
+            
             return true;
         } catch (error) {
             throw error;
@@ -46,6 +51,16 @@ export class MunicipiosStorageGateway implements MunicipioRepository {
         try {
             await ConexionBD<boolean>("UPDATE municipios SET estado = ? WHERE id_municipio = ?", [payload.estado,payload.id_municipio]);
             return true;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async buscarMunicipioPorNombre(payload: RegistrarMunicipioDTO): Promise<Municipio[] | null> {
+        try {
+            const resultado = await ConexionBD<Municipio[]>("SELECT id_municipio, nombre_municipio FROM municipios WHERE nombre_municipio LIKE ?", 
+            [`%${payload.nombre_municipio}`]);
+            return resultado;
         } catch (error) {
             throw error;
         }
