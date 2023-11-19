@@ -1,14 +1,14 @@
 import { Request, Response, Router } from "express";
-import { CategoriaRepository } from "../use-cases/ports/categoria.repository";
 import { CategoriaStorageGateway } from "./categoria.storage.gateway";
 import { ResponseApi } from "src/kernel/types";
 import { InsertCategoriaInteractor } from "../use-cases/insert-categoria.interactor";
 import { GetCategoriasInteractor } from "../use-cases/get-categorias.interactor";
 import { categoria } from "../entities/categoria";
-import { insertCategoriaDto } from "./dtos/insert-categoria.dto";
 import { modifyCategoriaDTO } from "./dtos/modify-categoria.dto";
 import { ModificarCategoriaInteractor } from "../use-cases/modify-categoria";
 import { validarError } from "src/kernel/error-handler";
+import { CategoriaRepository } from "../use-cases/ports/categoria.repository";
+import { insertCategoriaDto } from "./dtos/insert-categoria.dto";
 
 const categoriaRouter = Router();
 

@@ -1,8 +1,8 @@
 import { ConexionBD } from "src/utils/dbconfig";
 import { categoria } from "../entities/categoria";
-import { CategoriaRepository } from "../use-cases/ports/categoria.repository";
-import { insertCategoriaDto } from "./dtos/insert-categoria.dto";
 import { modifyCategoriaDTO } from "./dtos/modify-categoria.dto";
+import { insertCategoriaDto } from "./dtos/insert-categoria.dto";
+import { CategoriaRepository } from "../use-cases/ports/categoria.repository";
 
 export class CategoriaStorageGateway implements CategoriaRepository {
 
