@@ -1,3 +1,5 @@
+import { personalizacionBoundary } from './../../personalizacion/adapters/personalizacion.boundary';
+import { Personalizacion } from './../../personalizacion/entities/personalizacion';
 import { RegistrarCodigoInteractor } from './../use-cases/registrar-codigo-rc.interactor';
 import { BuscarUsuarioInteractor } from './../use-cases/buscar-usuario-para-registrar-codigo-rp';
 import { InicioSesionInteractor } from './../use-cases/inicio-sesion.interactor';
@@ -14,7 +16,7 @@ import { generarToken } from '../../../kernel/jwt';
 import { sendEmail } from '../../../kernel/nodemailer';
 import { VerificarCodigoInteractor } from '../use-cases/verificar-codigo-rc.interactor';
 import { recuperarContraseñaDto } from './dtos/recuperar-contraseña.dto';
-import { encriptar } from '../utils/bcrypt';
+import { compararEncriptado, encriptar } from '../../../kernel/bcrypt';
 import { RecuperarContraseñaInteractor } from '../use-cases/recuperar-contraseña.interactor';
 
 
@@ -26,13 +28,26 @@ export class AutenticacionController {
         try {
             const payload = req.body as inicioSesionDto;
 
+            //procesos para validar credenciales
             const repositorio: AutenticacionRepository = new AutenticacionStorageGateway;
             const inicioSesionInteractor = new InicioSesionInteractor(repositorio);
 
-            const autenticado = await inicioSesionInteractor.execute(payload);            
+            const autenticado = await inicioSesionInteractor.execute(payload);
+
+
+            if (!(await compararEncriptado(payload.contraseña, autenticado.salt as string))) {
+                throw new Error('Usuario o contraseña incorrectos');
+            }
+
+            autenticado.salt = undefined;
 
             const token = generarToken(autenticado);
             autenticado.token = token;
+
+            //traer personalizacion
+            const Personalizacion = await personalizacionBoundary.consultarPersonalizacion_Local(autenticado.usuario) as Personalizacion;
+
+            autenticado.personalizacion = Personalizacion;
             
             const body: ResponseApi<autenticado> = {
                 data: autenticado,
@@ -43,9 +58,7 @@ export class AutenticacionController {
 
             res.status(body.status).json(body);
 
-        } catch (error) {
-            console.log(error);
-            
+        } catch (error) {            
             const errorBody = validarError(error as Error);
             res.status(errorBody.status).json(errorBody);
         }
@@ -60,15 +73,15 @@ export class AutenticacionController {
             const repositorio: AutenticacionRepository = new AutenticacionStorageGateway;
             const buscarUsuarioInteractor = new BuscarUsuarioInteractor(repositorio);
 
-            //generar codigo
             const usuario = await buscarUsuarioInteractor.execute(payload);
+
             usuario.codigo = codigoRandom();
             
-
             //guardar codigo en la bd
             const registrarCodigoInteractor = new RegistrarCodigoInteractor(repositorio);
             const resultado = await registrarCodigoInteractor.execute(usuario);
 
+            //enviar codigo al correo
             await sendEmail(usuario.correo_electronico, 'Recuperación de contraseña','Recuperación de contraseña', 'Su código de recuperación es:', usuario.codigo);
 
             const body: ResponseApi<boolean> = {
@@ -118,12 +131,6 @@ export class AutenticacionController {
     recuperarContraseña = async (req: Request, res: Response) => {
         try {
             const payload = req.body as recuperarContraseñaDto;
-
-            if (payload.nueva_contraseña !== payload.confirmar_contraseña) {
-                throw new Error('Las contraseñas no coinciden');
-            }
-
-            payload.nueva_contraseña = await encriptar(payload.nueva_contraseña);
 
             const repositorio: AutenticacionRepository = new AutenticacionStorageGateway;
             const recuperarContraseñaInteractor = new RecuperarContraseñaInteractor(repositorio);

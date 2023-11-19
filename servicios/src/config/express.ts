@@ -3,6 +3,8 @@ import cors from "cors";
 
 import autenticacionRouter from "../modules/autenticacion/adapters/autenticacion.controller";
 import entidadesFederativasRouter from "../modules/entidades/adapters/entidad-federativa.controller";
+import municipiosRouter from "src/modules/municipios/adapters/municipios-controller";
+import personalizacionRouter from "../modules/personalizacion/adapters/personalizacion.controller";
 
 const app = express();
 
@@ -16,7 +18,9 @@ app.get('/', (_req:Request, res:Response)=>{
     res.send('servicios corriendo UwU')
 });
 
-app.use('/parci-api', autenticacionRouter);
-app.use('/parci-api', entidadesFederativasRouter);
+app.use('/parci-api/autenticacion', autenticacionRouter);
+app.use('/parci-api/entidades-federativas', entidadesFederativasRouter);
+app.use('/parci-api/municipios', municipiosRouter);
+app.use('/parci-api/personalizacion', personalizacionRouter);
 
 export default app;

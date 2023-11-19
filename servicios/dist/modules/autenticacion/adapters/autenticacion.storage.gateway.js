@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AutenticacionStorageGateway = void 0;
 const dbconfig_1 = require("../../../utils/dbconfig");
-const bcrypt_1 = require("../utils/bcrypt");
 class AutenticacionStorageGateway {
     inicioSesion(parametros) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -20,11 +19,6 @@ class AutenticacionStorageGateway {
                 if (resultado.length === 0) {
                     throw new Error('Usuario o contraseña incorrectos');
                 }
-                const usuario = resultado[0];
-                if (!(yield (0, bcrypt_1.compararEncriptado)(parametros.contraseña, usuario.salt))) {
-                    throw new Error('Usuario o contraseña incorrectos');
-                }
-                usuario.salt = undefined;
                 return resultado[0];
             }
             catch (error) {
@@ -50,6 +44,9 @@ class AutenticacionStorageGateway {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const resultado = yield (0, dbconfig_1.ConexionBD)('update usuarios set codigo = ? where id_usuario = ?', [parametros.codigo, parametros.id_usuario]);
+                if (resultado.affectedRows === 0) {
+                    throw new Error('Error al generar el codigo');
+                }
                 return true;
             }
             catch (error) {

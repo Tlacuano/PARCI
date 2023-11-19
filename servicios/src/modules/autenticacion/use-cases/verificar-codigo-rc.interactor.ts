@@ -8,6 +8,13 @@ export class VerificarCodigoInteractor implements UseCase<registrarCodigoUsuario
     constructor(private autenticacionRepository: AutenticacionRepository) {}
 
     execute(payload: registrarCodigoUsuarioDto): Promise<registrarCodigoUsuarioDto> {
+        if(!payload.usuario || payload.usuario === '') {
+            throw new Error('El usuario es requerido');
+        }
+        if(!payload.codigo || payload.codigo === '') {
+            throw new Error('El codigo es requerido');
+        }
+
         return this.autenticacionRepository.verificarCodigo(payload);
     }
 }
