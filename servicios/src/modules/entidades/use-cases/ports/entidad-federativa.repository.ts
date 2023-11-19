@@ -8,4 +8,5 @@ export interface EntidadFederativaRepository {
   registrarEntidadFederativa(payload: RegistrarEntidadFederativaDTO): Promise<boolean>;
   modificarEntidadFederativa(payload: ModificarEntidadFederativaDTO): Promise<boolean>;
   cambiarEstadoEntidadFederativa(payload: CambiarEstadoEntidadFederativaDTO): Promise<boolean>;
+  buscarEntidadPorNombre(payload: RegistrarEntidadFederativaDTO): Promise<EntidadFederativa[] | null>;
 }

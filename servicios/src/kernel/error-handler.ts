@@ -6,6 +6,7 @@ const errores: { [x: string]: ResponseApi<undefined> } = {
   "Campos requeridos incompletos": { status: 400, error: true, message: "Campos requeridos incompletos" },
   "Server Error": { status: 500, error: true, message: "Server Error" },
   "Ningún campo puede empezar o terminar con espacios": { status: 400, error: true, message: "Ningún campo puede empezar o terminar con espacios" },
+  "El id es requerido": { status: 400, error: true, message: "El id es requerido" },
 
   //autenticacion
   "Usuario o contraseña incorrectos": { status: 400, error: true, message: "Usuario o contraseña incorrectos" },
@@ -32,6 +33,8 @@ const errores: { [x: string]: ResponseApi<undefined> } = {
   //entidades federativas
   "El nombre es requerido": { status: 400, error: true, message: "El nombre es requerido" },
   "El nombre ya existe": { status: 400, error: true, message: "El nombre ya existe" },
+  "No se pudo modificar la entidad federativa": { status: 400, error: true, message: "No se pudo modificar la entidad federativa" },
+  "El nombre no debe contener caracteres especiales": { status: 400, error: true, message: "El nombre no debe contener caracteres especiales" },
 };
 
 export const validarError = (error: Error): ResponseApi<undefined> => {
