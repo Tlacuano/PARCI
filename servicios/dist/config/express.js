@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const autenticacion_controller_1 = __importDefault(require("../modules/autenticacion/adapters/autenticacion.controller"));
 const entidad_federativa_controller_1 = __importDefault(require("../modules/entidades/adapters/entidad-federativa.controller"));
-const municipios_controller_1 = __importDefault(require("src/modules/municipios/adapters/municipios-controller"));
+const municipios_controller_1 = __importDefault(require("../modules/municipios/adapters/municipios-controller"));
 const personalizacion_controller_1 = __importDefault(require("../modules/personalizacion/adapters/personalizacion.controller"));
 const app = (0, express_1.default)();
 app.set('port', process.env.PORT || 3000);
