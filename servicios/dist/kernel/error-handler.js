@@ -32,6 +32,11 @@ const errores = {
     "El nombre ya existe": { status: 400, error: true, message: "El nombre ya existe" },
     "No se pudo modificar la entidad federativa": { status: 400, error: true, message: "No se pudo modificar la entidad federativa" },
     "El nombre no debe contener caracteres especiales": { status: 400, error: true, message: "El nombre no debe contener caracteres especiales" },
+    //municipios
+    "El nombre del municipio es requerido": {status: 400, error: true, message: "El nombre del municipio es requerido"},
+    "La entidad federativa es requerida": {status: 400, error: true, message: "La entidad federativa es requerido"},
+    "No se pudo modificar el municipio": {staus: 400, error: true, message: "No se pudo modificar el municipio"},
+    "El nombre no deve contener caracteres especiales": {staus: 400, error: true, message: "El nombre no debe contener caracteres especiales" },
 };
 const validarError = (error) => {
     return errores[error.message] || errores["Server Error"];
