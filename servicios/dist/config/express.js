@@ -16,6 +16,6 @@ app.get('/', (_req, res) => {
     res.send('servicios corriendo UwU');
 });
 app.use('/parci-api/autenticacion', autenticacion_controller_1.default);
-app.use('/parci-api/', entidad_federativa_controller_1.default);
+app.use('/parci-api/entidades-federativas', entidad_federativa_controller_1.default);
 app.use('/parci-api/personalizacion', personalizacion_controller_1.default);
 exports.default = app;
