@@ -1,8 +1,8 @@
-import { UseCase } from "src/kernel/contracts";
+import { UseCase } from "../../../kernel/contracts";
 import { RegistrarMunicipioDTO } from "../adapters/dtos/registrar-municipio.dto";
 import { MunicipioRepository } from "./ports/municipio.repository";
 import { nombreRepetidoMunicipio } from "../utils/nombre-repetido-municipio";
-import { regexValidationNoCaracteresEspeciales, validateRegex, regexValidationNoEspaciosInicioFin} from "src/kernel/validation";
+import { regexValidationNoCaracteresEspeciales, validateRegex, regexValidationNoEspaciosInicioFin} from "../../../kernel/validation";
 
 export class RegistrarMunicipioInteractor implements UseCase<RegistrarMunicipioDTO, boolean> {
     constructor(private readonly repository: MunicipioRepository) {}

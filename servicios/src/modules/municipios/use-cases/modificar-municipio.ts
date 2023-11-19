@@ -1,7 +1,7 @@
-import { UseCase } from "src/kernel/contracts";
+import { UseCase } from "../../../kernel/contracts";
 import { MunicipioRepository } from "./ports/municipio.repository";
 import { ModificarMunicipioDTO } from "../adapters/dtos/modificar-municipio.dto";
-import { regexValidationNoCaracteresEspeciales, regexValidationNoEspaciosInicioFin, validateRegex } from "src/kernel/validation";
+import { regexValidationNoCaracteresEspeciales, regexValidationNoEspaciosInicioFin, validateRegex } from "../../../kernel/validation";
 
 export class ModificarMunicipioInteractor implements UseCase<ModificarMunicipioDTO, boolean> {
     constructor(private readonly repository: MunicipioRepository) {}

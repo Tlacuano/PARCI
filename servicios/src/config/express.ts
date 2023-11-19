@@ -3,7 +3,7 @@ import cors from "cors";
 
 import autenticacionRouter from "../modules/autenticacion/adapters/autenticacion.controller";
 import entidadesFederativasRouter from "../modules/entidades/adapters/entidad-federativa.controller";
-import municipiosRouter from "src/modules/municipios/adapters/municipios-controller";
+import municipiosRouter from "../modules/municipios/adapters/municipios-controller";
 import personalizacionRouter from "../modules/personalizacion/adapters/personalizacion.controller";
 
 const app = express();
