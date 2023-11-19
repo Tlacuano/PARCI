@@ -11,6 +11,7 @@ import { ModificarEntidadFederativaDTO } from "./dtos/modificar-entidad-federati
 import { ModificarEntidadFederativaInteractor } from "../use-cases/modificar-entidad-federativa";
 import { CambiarEstadoEntidadFederativaDTO } from "./dtos/cambiar-estado-entidad-federativa.dto";
 import { CambiarEstadoEntidadFederativaInteractor } from "./../use-cases/cambiar-estado-entidad-federativa";
+import { BuscarEntidadPorNombreInteractor } from "./../use-cases/buscar-entidad-por-nombre.interactor";
 
 const entidadesFederativasRouter = Router();
 
@@ -108,6 +109,30 @@ export class EntidadesFederativasController {
       res.status(errorBody.status).json(errorBody);
     }
   };
+
+  // BUSCAR POR NOMBRE
+  buscarEntidadPorNombre = async (req: Request, res: Response) => {
+    try {
+      const payload = req.body as RegistrarEntidadFederativaDTO;
+
+      const repositorio: EntidadFederativaRepository = new EntidadFederativaStorageGateway();
+      const buscarEntidadPorNombreInteractor = new BuscarEntidadPorNombreInteractor(repositorio);
+
+      const entidadesFederativas = await buscarEntidadPorNombreInteractor.execute(payload);
+
+      const body: ResponseApi<EntidadFederativa[] | null> = {
+        data: entidadesFederativas,
+        message: "Entidades federativas obtenidas correctamente",
+        status: 200,
+        error: false,
+      };
+
+      res.status(body.status).json(body);
+    } catch (error) {
+      const errorBody = validarError(error as Error);
+      res.status(errorBody.status).json(errorBody);
+    }
+  };
 }
 
 const entidadesFederativasController = new EntidadesFederativasController();
@@ -116,5 +141,6 @@ entidadesFederativasRouter.get("/consultar", entidadesFederativasController.getE
 entidadesFederativasRouter.post("/registrar", entidadesFederativasController.registrarEntidadFederativa);
 entidadesFederativasRouter.put("/modificar", entidadesFederativasController.modificarEntidadFederativa);
 entidadesFederativasRouter.put("/cambiar-estado", entidadesFederativasController.cambiarEstadoEntidadFederativa);
+entidadesFederativasRouter.post("/buscar-nombre", entidadesFederativasController.buscarEntidadPorNombre);
 
 export default entidadesFederativasRouter;
