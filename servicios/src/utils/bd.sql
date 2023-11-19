@@ -1,6 +1,36 @@
 create database PARCI;
 use PARCI;
 
+
+CREATE TABLE entidades_federativas (
+  id_entidad INT NOT NULL AUTO_INCREMENT,
+  nombre_entidad VARCHAR(45) NULL,
+  estado TINYINT NULL,
+  PRIMARY KEY (id_entidad)
+);
+
+CREATE TABLE municipios (
+  id_municipio INT NOT NULL AUTO_INCREMENT,
+  nombre_municipio VARCHAR(45) NULL,
+  fk_idEntidad INT NULL,
+  estado TINYINT NULL,
+  PRIMARY KEY (id_municipio),
+  INDEX fk_idEntidad_idx (fk_idEntidad ASC) VISIBLE,
+  CONSTRAINT fk_idEntidad
+    FOREIGN KEY (fk_idEntidad)
+    REFERENCES entidades_federativas (id_entidad)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
+
+CREATE TABLE categorias (
+  id_categoria INT NOT NULL AUTO_INCREMENT,
+  nombre_categoria VARCHAR(45) NULL,
+  color VARCHAR(45) NULL,
+  estado TINYINT NULL, -- Agregado campo estado como TINYINT
+  PRIMARY KEY (id_categoria)
+);
+
 CREATE TABLE personas (
   id_persona INT NOT NULL AUTO_INCREMENT,
   nombre VARCHAR(45) NULL,
@@ -9,7 +39,14 @@ CREATE TABLE personas (
   correo_electronico VARCHAR(45) NULL,
   fecha_nacimiento VARCHAR(45) NULL,
   fk_idMunicipio INT NULL,
-  PRIMARY KEY (id_persona));
+  PRIMARY KEY (id_persona),
+  INDEX fk_idMunicipio_idx (fk_idMunicipio ASC) VISIBLE,
+  CONSTRAINT fk_idMunicipio
+    FOREIGN KEY (fk_idMunicipio)
+    REFERENCES municipios (id_municipio)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
 
 CREATE TABLE usuarios (
   id_usuario INT NOT NULL AUTO_INCREMENT,
@@ -20,30 +57,34 @@ CREATE TABLE usuarios (
   fecha_opinion DATE NULL,
   contador_opinion INT NULL,
   fk_idPersona INT NULL,
-  PRIMARY KEY (id_usuario));
+  PRIMARY KEY (id_usuario),
+  INDEX fk_idPersonaUsuario_idx (fk_idPersona ASC) VISIBLE,
+  CONSTRAINT fk_idPersonaUsuario
+    FOREIGN KEY (fk_idPersona)
+    REFERENCES personas (id_persona)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
 
 CREATE TABLE personalizacion (
   id_personalizacion INT NOT NULL AUTO_INCREMENT,
   tema ENUM('Claro', 'Oscuro') NULL,
   tamaño_letra ENUM('Chica', 'Mediana', 'Grande') NULL,
   fk_idUsuario INT NULL,
-  PRIMARY KEY (id_Personalizacion));
+  PRIMARY KEY (id_personalizacion),
+  INDEX fk_idUsuario_idx (fk_idUsuario ASC) VISIBLE,
+  CONSTRAINT fk_idUsuario
+    FOREIGN KEY (fk_idUsuario)
+    REFERENCES usuarios (id_usuario)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
 
-CREATE TABLE opiniones (
-  id_opiniones INT NOT NULL AUTO_INCREMENT,
-  fecha DATE NULL,
-  opinion VARCHAR(100) NULL,
-  votos_positivos INT NULL,
-  votos_negativos INT NULL,
-  fk_idReporte INT NULL,
-  fk_idPersona INT NULL,
-  PRIMARY KEY (id_opiniones));
-  
-  CREATE TABLE reportes (
+CREATE TABLE reportes (
   id_reporte INT NOT NULL AUTO_INCREMENT,
   fecha DATE NULL,
   titulo VARCHAR(45) NULL,
-  descripcion VARCHAR(200) NULL,
+  descripcion TEXT NULL, -- Cambiado a tipo TEXT
   imagen JSON NULL,
   votos_positivos INT NULL,
   votos_negativos INT NULL,
@@ -51,110 +92,47 @@ CREATE TABLE opiniones (
   fk_idMunicipio INT NULL,
   fk_idCategoria INT NULL,
   estado ENUM('Espera', 'Publicado', 'Rechazado') NULL,
-  PRIMARY KEY (id_reporte));
+  PRIMARY KEY (id_reporte),
+  CONSTRAINT fk_idCategoriaReporte
+    FOREIGN KEY (fk_idCategoria)
+    REFERENCES categorias (id_categoria)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_idPersonaReporte
+    FOREIGN KEY (fk_idPersona)
+    REFERENCES personas (id_persona)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_idMunicipioReporte
+    FOREIGN KEY (fk_idMunicipio)
+    REFERENCES municipios (id_municipio)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
 
 
-CREATE TABLE categorias (
-  id_categoria INT NOT NULL AUTO_INCREMENT,
-  nombre_categoria VARCHAR(45) NULL,
-  color VARCHAR(45) NULL,
-  PRIMARY KEY (id_categoria));
-
-
-CREATE TABLE entidades_federativas (
-  id_entidad INT NOT NULL AUTO_INCREMENT,
-  nombre_entidad VARCHAR(45) NULL,
-  estado TINYINT NULL,
-  PRIMARY KEY (id_entidad));
-  
-  CREATE TABLE municipios (
-  id_municipio INT NOT NULL AUTO_INCREMENT,
-  nombre_municipio VARCHAR(45) NULL,
-  fk_idEntidad INT NULL,
-  estado TINYINT NULL,
-  PRIMARY KEY (id_municipio));
-  
-  ALTER TABLE municipios 
-ADD INDEX fk_idEntidad_idx (fk_idEntidad ASC) VISIBLE;
-;
-ALTER TABLE municipios 
-ADD CONSTRAINT fk_idEntidad
-  FOREIGN KEY (fk_idEntidad)
-  REFERENCES entidades_federativas (id_entidad)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-  
-    ALTER TABLE opiniones 
-ADD INDEX fk_idReporte_idx (fk_idReporte ASC) VISIBLE;
-;
-ALTER TABLE opiniones 
-ADD CONSTRAINT fk_idReporte
-  FOREIGN KEY (fk_idReporte)
-  REFERENCES reportes (id_reporte)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-  
-  ALTER TABLE opiniones 
-ADD INDEX fk_idPersona_idx (fk_idPersona ASC) VISIBLE;
-;
-ALTER TABLE opiniones 
-ADD CONSTRAINT fk_idPersona
-  FOREIGN KEY (fk_idPersona)
-  REFERENCES personas (id_persona)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-
-ALTER TABLE personalizacion 
-ADD INDEX fk_idUsuario_idx (fk_idUsuario ASC) VISIBLE;
-;
-ALTER TABLE personalizacion 
-ADD CONSTRAINT fk_idUsuario
-  FOREIGN KEY (fk_idUsuario)
-  REFERENCES usuarios (id_usuario)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-
-ALTER TABLE personas 
-ADD INDEX fk_idMunicipio_idx (fk_idMunicipio ASC) VISIBLE;
-;
-ALTER TABLE personas 
-ADD CONSTRAINT fk_idMunicipio
-  FOREIGN KEY (fk_idMunicipio)
-  REFERENCES municipios (id_municipio)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-  
-  
-  ALTER TABLE reportes 
-ADD CONSTRAINT fk_idCategoriaReporte
-  FOREIGN KEY (fk_idCategoria)
-  REFERENCES categorias (id_categoria)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-  
-  ALTER TABLE reportes 
-ADD CONSTRAINT fk_idPersonaReporte
-  FOREIGN KEY (fk_idPersona)
-  REFERENCES personas (id_persona)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-  
-  ALTER TABLE reportes 
-ADD CONSTRAINT fk_idMunicipioReporte
-  FOREIGN KEY (fk_idMunicipio)
-  REFERENCES municipios (id_municipio)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-
-ALTER TABLE usuarios 
-ADD INDEX fk_idPersonaUsuario_idx (fk_idPersona ASC) VISIBLE;
-;
-ALTER TABLE usuarios 
-ADD CONSTRAINT fk_idPersonaUsuario
-  FOREIGN KEY (fk_idPersona)
-  REFERENCES personas (id_persona)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
+CREATE TABLE opiniones (
+  id_opinion INT NOT NULL AUTO_INCREMENT,
+  fecha DATE NULL,
+  opinion TEXT NULL,
+  votos_positivos INT NULL,
+  votos_negativos INT NULL,
+  fk_idReporte INT NULL,
+  fk_idPersona INT NULL,
+  PRIMARY KEY (id_opinion),
+  INDEX fk_idReporte_idx (fk_idReporte ASC) VISIBLE,
+  INDEX fk_idPersona_idx (fk_idPersona ASC) VISIBLE,
+  CONSTRAINT fk_idReporte
+    FOREIGN KEY (fk_idReporte)
+    REFERENCES reportes (id_reporte)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_idPersona
+    FOREIGN KEY (fk_idPersona)
+    REFERENCES personas (id_persona)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
   
 
 --Entidades Federativas
@@ -449,3 +427,27 @@ insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Oscuro'
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Claro', 'Mediana', 4);
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Oscuro', 'Mediana', 5);
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Claro', 'Grande', 6);
+
+
+/*
+ CREATE TABLE reportes (
+  id_reporte INT NOT NULL AUTO_INCREMENT,
+  fecha DATE NULL,
+  titulo VARCHAR(45) NULL,
+  descripcion VARCHAR(200) NULL,
+  imagen JSON NULL,
+  votos_positivos INT NULL,
+  votos_negativos INT NULL,
+  fk_idPersona INT NULL,
+  fk_idMunicipio INT NULL,
+  fk_idCategoria INT NULL,
+  estado ENUM('Espera', 'Publicado', 'Rechazado') NULL,
+  PRIMARY KEY (id_reporte));
+*/
+
+/*Reportes*/
+insert into reportes (fecha, titulo, descripcion, imagen, votos_positivos, votos_negativos, 
+fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) values ('2021-05-05', 'Robo a mano armada', 
+'Me asaltaron en la calle', 
+'["https://www.elsoldemexico.com.mx/mexico/justicia/5gqj2t-robos-a-mano-armada-en-la-cdmx-crecen-20-en-enero.jpg"]'
+, 0, 0, 3, 152, 1, 'Espera');
