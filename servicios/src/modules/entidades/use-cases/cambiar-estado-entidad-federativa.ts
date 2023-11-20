@@ -6,6 +6,9 @@ export class CambiarEstadoEntidadFederativaInteractor implements UseCase<Cambiar
   constructor(private readonly repository: EntidadFederativaRepository) {}
 
   async execute(payload: CambiarEstadoEntidadFederativaDTO): Promise<boolean> {
+    if (!payload.id_entidad) {
+      throw new Error("El id es requerido");
+    }
     if (payload.estado !== 0 && payload.estado !== 1) {
       throw new Error("Estado inválido");
     }
