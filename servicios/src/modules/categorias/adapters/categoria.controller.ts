@@ -1,48 +1,39 @@
 import { Request, Response, Router } from "express";
 import { CategoriaStorageGateway } from "./categoria.storage.gateway";
-import { ResponseApi } from "src/kernel/types";
+import { ResponseApi } from "../../../kernel/types";
 import { InsertCategoriaInteractor } from "../use-cases/insert-categoria.interactor";
 import { GetCategoriasInteractor } from "../use-cases/get-categorias.interactor";
 import { categoria } from "../entities/categoria";
 import { modifyCategoriaDTO } from "./dtos/modify-categoria.dto";
-import { ModificarCategoriaInteractor } from "../use-cases/modify-categoria";
-import { validarError } from "src/kernel/error-handler";
+import { ModificarCategoriaInteractor } from "../use-cases/modificar-categoria.interactor";
+import { validarError } from "../../../kernel/error-handler";
 import { CategoriaRepository } from "../use-cases/ports/categoria.repository";
 import { insertCategoriaDto } from "./dtos/insert-categoria.dto";
+import { modificarEstadoCategoriaDTO } from "./dtos/modificar-estado-categoria";
+import { ModificarEstadoCategoriaInteractor } from "../use-cases/modificar-estado-categoria.interactor";
 
 const categoriaRouter = Router();
 
 export class CategoriaController {
 
-    getError(error:any){
-        const body: ResponseApi<null> = {
-            data: null,
-            message: error.message,
-            error: true,
-            status: 500,
-        } 
-        return body;
-    }
-
     getCategoria = async (_req:Request, res:Response) => {
         try {
-            const repository:CategoriaRepository = new CategoriaStorageGateway();
-            const interactor = new GetCategoriasInteractor(repository);
+            const repositorio:CategoriaRepository = new CategoriaStorageGateway();
+            const getCategoriaInteractor = new GetCategoriasInteractor(repositorio);
 
-            const result = await interactor.execute(null);
+            const categorias = await getCategoriaInteractor.execute(null);
 
             const body: ResponseApi<categoria[]> = {
-                data: result,
+                data: categorias,
                 message: 'Las categorias han sido encontrados esplendidamente',
                 error: false,
                 status: 200,
             }
 
-            return res.status(body.status).json(body);
+            res.status(body.status).json(body);
         } catch(error){
-            const body = this.getError(error);
-
-            return res.status(body.status).json(body);
+            const errorBody = validarError(error as Error);
+            res.status(errorBody.status).json(errorBody);
         }
     }
 
@@ -50,17 +41,13 @@ export class CategoriaController {
         try {
             const payload = _req.body as insertCategoriaDto;
 
-            if (!payload.nombre_categoria) {
-                throw new Error("Campos requeridos incompletos");
-              }
-
             const repository:CategoriaRepository = new CategoriaStorageGateway();
             const interactor = new InsertCategoriaInteractor(repository);
 
-            const result = await interactor.execute(payload);
+            await interactor.execute(payload);
 
             const body: ResponseApi<boolean> = {
-                data: result,
+                data: true,
                 message: 'La categoria a sido registrada esplendidamente',
                 error: false,
                 status: 200,
@@ -69,19 +56,14 @@ export class CategoriaController {
             res.status(body.status).json(body);
 
         } catch(error){
-            const body = this.getError(error);
-
-            res.status(body.status).json(body);
+            const errorBody = validarError(error as Error);
+            res.status(errorBody.status).json(errorBody);
         }
     }
 
     modificarCategoria = async (req: Request, res: Response) => {
         try {
           const payload = req.body as modifyCategoriaDTO;
-    
-          if (!payload.nombre_categoria || !payload.id_categoria) {
-            throw new Error("Campos requeridos incompletos");
-          }
     
           const repositorio: CategoriaRepository = new CategoriaStorageGateway();
           const modificarCategoriaInteractor = new ModificarCategoriaInteractor(repositorio);
@@ -102,12 +84,37 @@ export class CategoriaController {
         }
       }
 
+      modificarEstadoCategoria = async (_req: Request, _res: Response) => {
+        try{
+            const payload = _req.body as modificarEstadoCategoriaDTO;
+
+            const repository:CategoriaRepository = new CategoriaStorageGateway();
+            const interactor = new ModificarEstadoCategoriaInteractor(repository);
+
+            await interactor.execute(payload);
+
+            const body: ResponseApi<boolean> = {
+                data: true,
+                message: 'Se a modificado el estado del reporte',
+                error: false,
+                status: 200, 
+            };
+
+            _res.status(body.status).json(body);
+        
+        } catch (error){
+            const errorBody = validarError(error as Error);
+            _res.status(errorBody.status).json(errorBody);
+        }
+    }
+
 }
 
 const categoriaController = new CategoriaController();
 
-categoriaRouter.get('/categorias', categoriaController.getCategoria);
-categoriaRouter.post('/categorias', categoriaController.insertCategoria);
-categoriaRouter.put('/categorias', categoriaController.modificarCategoria);
+categoriaRouter.get('/consultar', categoriaController.getCategoria);
+categoriaRouter.post('/registrar', categoriaController.insertCategoria);
+categoriaRouter.put('/modificar', categoriaController.modificarCategoria);
+categoriaRouter.put('/modificar-estado', categoriaController.modificarEstadoCategoria);
 
-export default categoriaController;
+export default categoriaRouter;

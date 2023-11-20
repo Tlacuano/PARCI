@@ -37,6 +37,11 @@ const errores = {
     "La entidad federativa es requerida": { status: 400, error: true, message: "La entidad federativa es requerido" },
     "No se pudo modificar el municipio": { status: 400, error: true, message: "No se pudo modificar el municipio" },
     "El nombre no deve contener caracteres especiales": { status: 400, error: true, message: "El nombre no debe contener caracteres especiales" },
+    //categorias
+    "El nombre de la categoria es requerido": { status: 400, error: true, message: "El nombre es requerido" },
+    "El id de la categoria es requerido": { status: 400, error: true, message: "El id es requerido" },
+    "El nombre de la categoria ya existe": { status: 400, error: true, message: "El nombre ya existe" },
+    "El color de la categoria ya existe": { status: 400, error: true, message: "El color ya existe" },
 };
 const validarError = (error) => {
     return errores[error.message] || errores["Server Error"];

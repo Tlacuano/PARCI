@@ -4,10 +4,10 @@ import { CategoriaRepository } from "./ports/categoria.repository";
 
 
 export class GetCategoriasInteractor implements UseCase<null, categoria[]>{
-    constructor(private categoriaRepsitory:CategoriaRepository){}
+    constructor(private categoriaRepository:CategoriaRepository){}
 
-    execute(payload: null): Promise<categoria[]> {
-        throw new Error("Method not implemented.");
+    async execute(payload: null): Promise<categoria[]> {
+        return await this.categoriaRepository.getCategoria();
     }
 
 }
