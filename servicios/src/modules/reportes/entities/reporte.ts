@@ -9,6 +9,6 @@ export type Reporte = {
     fk_idPersona: number;
     fk_idMunicipio: number;
     fk_idCategoria: number;
-    estado: number;
+    estado: string;
 };
 

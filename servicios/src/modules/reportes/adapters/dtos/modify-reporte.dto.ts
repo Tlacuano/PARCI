@@ -1,13 +1,6 @@
 export type modifyReporteDTO = {
-    fecha: Date;
+    id_reporte: number;
     titulo: string;
     descripcion: string;
-    imagen: string;
-    votos_positivos: number;
-    votos_negativos: number;
-    fk_idPersona: number;
-    fk_idMunicipio: number;
-    fk_idCategoria: number;
-    estado: number;
+    imagen: object;
 }
-
