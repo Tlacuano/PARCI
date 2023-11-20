@@ -10,6 +10,7 @@ const entidad_federativa_controller_1 = __importDefault(require("../modules/enti
 const municipios_controller_1 = __importDefault(require("../modules/municipios/adapters/municipios-controller"));
 const personalizacion_controller_1 = __importDefault(require("../modules/personalizacion/adapters/personalizacion.controller"));
 const opinion_controller_1 = __importDefault(require("../modules/opiniones/adapters/opinion.controller"));
+const usuario_controller_1 = __importDefault(require("../modules/usuarios/adapters/usuario.controller"));
 const app = (0, express_1.default)();
 app.set('port', process.env.PORT || 3000);
 app.use((0, cors_1.default)({ origin: '*' }));
@@ -22,4 +23,5 @@ app.use('/parci-api/entidades-federativas', entidad_federativa_controller_1.defa
 app.use('/parci-api/municipios', municipios_controller_1.default);
 app.use('/parci-api/personalizacion', personalizacion_controller_1.default);
 app.use('/parci-api/opiniones', opinion_controller_1.default);
+app.use('/parci-api/usuarios', usuario_controller_1.default);
 exports.default = app;

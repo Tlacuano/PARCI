@@ -1,7 +1,9 @@
 import { ConexionBD } from './../../../utils/dbconfig';
 import { Opinion } from "../entities/opinion";
-import { OpinionesRepository } from '../use-cases/ports/opiniones.repository';
 import { RequestRegistrarOpinionDto } from './dto/request-registrar-opinion.dto';
+import { OpinionesRepository } from '../use-cases/ports/opiniones.Repository';
+import { RequestEliminarOpinionDto } from './dto/request-eliminar-opinion.dto';
+import { RequestModificarOpinionDto } from './dto/request-modificar-opinion.dto';
 
 
 
@@ -31,7 +33,7 @@ export class OpinionStorageGateway implements OpinionesRepository{
 
     async registrarOpinion(payload: RequestRegistrarOpinionDto): Promise<boolean> {
         try {
-            const resultado = await ConexionBD<any>(`INSERT INTO opiniones (fecha, opinion, votos_positivos, votos_negativos, fk_idReporte, fk_idPersona) VALUES (?, ?, 0, 0, ?, ?)`, [payload.fecha, payload.opinion, payload.fk_idReporte, payload.fk_idPersona]);
+            const resultado = await ConexionBD<any>(`INSERT INTO opiniones (fecha, opinion, votos_positivos, votos_negativos, fk_idReporte, fk_idPersona) VALUES (?, ?, 0, 0, ?, (SELECT id_persona FROM personas join usuarios ON fk_idPersona = id_persona WHERE usuario = ?))`, [payload.fecha, payload.opinion, payload.fk_idReporte, payload.usuario]);
 
             if (resultado.insertId === 0) {
                 throw new Error('No se pudo registrar la opinion');
@@ -43,9 +45,9 @@ export class OpinionStorageGateway implements OpinionesRepository{
         }
     }
 
-    async eliminarOpinion(payload: number): Promise<boolean> {
+    async eliminarOpinion(payload: RequestEliminarOpinionDto): Promise<boolean> {
         try {
-            const resultado = await ConexionBD<any>(`DELETE FROM opiniones WHERE id_opinion = ?`, [payload]);
+            const resultado = await ConexionBD<any>(`DELETE FROM opiniones WHERE id_opinion = ?`, [payload.id_opinion]);
 
             if (resultado.affectedRows === 0) {
                 throw new Error('No se pudo eliminar la opinion');
@@ -57,12 +59,12 @@ export class OpinionStorageGateway implements OpinionesRepository{
         }
     }
 
-    async actualizarOpinion(payload: Opinion): Promise<boolean> {
+    async modificarOpinion(payload: RequestModificarOpinionDto): Promise<boolean> {
         try {
             const resultado = await ConexionBD<any>(`UPDATE opiniones SET opinion = ? WHERE id_opinion = ?`, [payload.opinion, payload.id_opinion]);
 
             if (resultado.affectedRows === 0) {
-                throw new Error('No se pudo modificar la opinion');
+                throw new Error('Ocurrio un error al modificar');
             }
 
             return true;
@@ -72,20 +74,33 @@ export class OpinionStorageGateway implements OpinionesRepository{
     }
 
 
+    async aumentarVotoPositivo(payload: number): Promise<boolean> {
+        try {
+            const resultado = await ConexionBD<any>(`UPDATE opiniones SET votos_positivos = votos_positivos + 1 WHERE id_opinion = ?`, [payload]);
 
-    aumentarVotoPositivo(payload: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
+            if (resultado.affectedRows === 0) {
+                throw new Error('Ocurrio un error al modificar');
+            }
+
+            return true;
+        } catch (error) {
+            throw error;
+        }
     }
 
-    aumentarVotoNegativo(payload: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async aumentarVotoNegativo(payload: number): Promise<boolean> {
+        try {
+            const resultado = await ConexionBD<any>(`UPDATE opiniones SET votos_negativos = votos_negativos + 1 WHERE id_opinion = ?`, [payload]);
+
+            if (resultado.affectedRows === 0) {
+                throw new Error('Ocurrio un error al modificar');
+            }
+
+            return true;
+        } catch (error) {
+            throw error;
+        }
     }
 
-    consultarVotosPositivosActuales(payload: number): Promise<number> {
-        throw new Error('Method not implemented.');
-    }
-    consultarVotosNegativosActuales(payload: number): Promise<number> {
-        throw new Error('Method not implemented.');
-    }
 
 }
