@@ -3,6 +3,7 @@ import cors from "cors";
 
 import autenticacionRouter from "../modules/autenticacion/adapters/autenticacion.controller";
 import entidadesFederativasRouter from "../modules/entidades/adapters/entidad-federativa.controller";
+import reporteRouter from "../modules/reportes/adapters/reporte.controller";
 import municipiosRouter from "../modules/municipios/adapters/municipios-controller";
 import personalizacionRouter from "../modules/personalizacion/adapters/personalizacion.controller";
 import opinionRouter from "../modules/opiniones/adapters/opinion.controller";
@@ -21,6 +22,8 @@ app.get('/', (_req:Request, res:Response)=>{
 });
 
 app.use('/parci-api/autenticacion', autenticacionRouter);
+
+app.use('/parci-api/reportes', reporteRouter);
 app.use('/parci-api/entidades-federativas', entidadesFederativasRouter);
 app.use('/parci-api/municipios', municipiosRouter);
 app.use('/parci-api/personalizacion', personalizacionRouter);
