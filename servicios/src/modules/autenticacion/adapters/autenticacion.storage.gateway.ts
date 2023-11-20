@@ -3,7 +3,7 @@ import { autenticado } from "../entities/autenticado";
 import { AutenticacionRepository } from "../use-cases/ports/autenticacion.repository";
 import { inicioSesionDto } from "./dtos/inicio-sesion.dto";
 import { registrarCodigoUsuarioDto } from "./dtos/registrar-codigo-usuario.dto";
-import { compararEncriptado } from "../utils/bcrypt";
+import { compararEncriptado } from "../../../kernel/bcrypt";
 import { recuperarContraseñaDto } from "./dtos/recuperar-contraseña.dto";
 
 
@@ -16,15 +16,7 @@ export class AutenticacionStorageGateway implements AutenticacionRepository {
             if (resultado.length === 0) {
                 throw new Error('Usuario o contraseña incorrectos');
             }
-
-            const usuario = resultado[0];
-
-            if (!(await compararEncriptado(parametros.contraseña, usuario.salt as string))) {
-                throw new Error('Usuario o contraseña incorrectos');
-            }
-
-            usuario.salt = undefined;
-
+            
             return resultado[0];
         } catch (error) {
             throw error;
@@ -48,7 +40,11 @@ export class AutenticacionStorageGateway implements AutenticacionRepository {
 
     async registrarCodigo(parametros: registrarCodigoUsuarioDto): Promise<boolean> {
         try {
-            const resultado = await ConexionBD<registrarCodigoUsuarioDto[]>('update usuarios set codigo = ? where id_usuario = ?',[parametros.codigo, parametros.id_usuario]);
+            const resultado = await ConexionBD<any>('update usuarios set codigo = ? where id_usuario = ?',[parametros.codigo, parametros.id_usuario]);
+
+            if(resultado.affectedRows === 0) {
+                throw new Error('Error al generar el codigo');
+            }
 
             return true;
         } catch (error) {

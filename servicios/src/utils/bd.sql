@@ -451,3 +451,5 @@ fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) values ('2021-05-05', 'Rob
 'Me asaltaron en la calle', 
 '["https://www.elsoldemexico.com.mx/mexico/justicia/5gqj2t-robos-a-mano-armada-en-la-cdmx-crecen-20-en-enero.jpg"]'
 , 0, 0, 3, 152, 1, 'Espera');
+
+insert into reportes (fecha, titulo, descripcion, imagen, votos_positivos, votos_negativos, fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) values ('2021-05-05', 'Robo a mano armada', 'Me asaltaron en la calle', '["https://www.elsoldemexico.com.mx/mexico/justicia/5gqj2t-robos-a-mano-armada-en-la-cdmx-crecen-20-en-enero.jpg"]', 0, 0, 3, 152, 1, 'Espera');

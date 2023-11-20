@@ -118,7 +118,7 @@ const sendEmail = (correo_electronico, asunto, titulo, mensaje, mensajeResalado)
         yield transporter.sendMail(mailOptions);
     }
     catch (error) {
-        throw new Error("Error sending email");
+        throw new Error("Server Error");
     }
 });
 exports.sendEmail = sendEmail;
