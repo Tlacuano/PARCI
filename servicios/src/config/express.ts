@@ -6,6 +6,7 @@ import entidadesFederativasRouter from "../modules/entidades/adapters/entidad-fe
 import reporteRouter from "../modules/reportes/adapters/reporte.controller";
 import municipiosRouter from "../modules/municipios/adapters/municipios-controller";
 import personalizacionRouter from "../modules/personalizacion/adapters/personalizacion.controller";
+import categoriaRouter from "../modules/categorias/adapters/categoria.controller";
 import opinionRouter from "../modules/opiniones/adapters/opinion.controller";
 import usuarioRouter from "../modules/usuarios/adapters/usuario.controller";
 
@@ -27,6 +28,7 @@ app.use('/parci-api/reportes', reporteRouter);
 app.use('/parci-api/entidades-federativas', entidadesFederativasRouter);
 app.use('/parci-api/municipios', municipiosRouter);
 app.use('/parci-api/personalizacion', personalizacionRouter);
+app.use('/parci-api/categorias', categoriaRouter)
 app.use('/parci-api/opiniones', opinionRouter);
 app.use('/parci-api/usuarios', usuarioRouter);
 

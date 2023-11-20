@@ -39,6 +39,13 @@ const errores = {
     "La entidad federativa es requerida": { status: 400, error: true, message: "La entidad federativa es requerido" },
     "No se pudo modificar el municipio": { status: 400, error: true, message: "No se pudo modificar el municipio" },
     "El nombre no deve contener caracteres especiales": { status: 400, error: true, message: "El nombre no debe contener caracteres especiales" },
+<<<<<<< HEAD
+    //categorias
+    "El nombre de la categoria es requerido": { status: 400, error: true, message: "El nombre es requerido" },
+    "El id de la categoria es requerido": { status: 400, error: true, message: "El id es requerido" },
+    "El nombre de la categoria ya existe": { status: 400, error: true, message: "El nombre ya existe" },
+    "El color de la categoria ya existe": { status: 400, error: true, message: "El color ya existe" },
+=======
     //opciones
     "No se pudo registrar la opinion": { status: 400, error: true, message: "No se pudo registrar la opinion" },
     "Ya no puedes dar mas opiniones por el dia de hoy": { status: 400, error: true, message: "Ya no puedes dar mas opiniones por el dia de hoy" },
@@ -46,6 +53,7 @@ const errores = {
     "No se pudo modificar la opinion": { status: 400, error: true, message: "No se pudo modificar la opinion" },
     "El voto debe ser positivo o negativo": { status: 400, error: true, message: "El voto debe ser positivo o negativo" },
     "La fecha de la opinion no puede ser mayor a la actual": { status: 400, error: true, message: "La fecha de la opinion no puede ser mayor a la actual" },
+>>>>>>> develop
 };
 const validarError = (error) => {
     return errores[error.message] || errores["Server Error"];
