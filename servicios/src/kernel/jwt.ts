@@ -11,41 +11,39 @@ export const verificarToken = (token: string) => {
 }
 
 
-export const Autenticador = (rolRequerido: string[], req: Request, res: Response, next: NextFunction) => {
-    
-        // Saca el token del header
+export const Autenticador = (rolRequerido: string[]) => {
+    return (req: Request, res: Response, next: NextFunction) => {
         const token = req.headers.authorization?.split(' ')[1];
         
-        // No autoriza si no hay token
+
         if (!token) {
+            
             return res.status(401).json({
                 message: 'No autorizado',
                 error: true
             });
         }
 
-        // Verifica el token
         try {
             const decoded = verificarToken(token);
             const rolUsuario = decoded.rol;
-
             
+
             if (rolRequerido.includes(rolUsuario)) {
-                next();
+                next();                
             } else {
                 return res.status(401).json({
                     message: 'No autorizado',
                     error: true
                 });
             }
-
-            
         } catch (error) {
             return res.status(401).json({
                 message: 'No autorizado',
                 error: true
             });
         }
-    return
+        return;
+    };
 };
 
