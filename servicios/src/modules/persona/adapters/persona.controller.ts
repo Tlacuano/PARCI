@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { validarError } from "../../../kernel/error-handler";
-import { ResponseApi } from "src/kernel/types";
+import { ResponseApi } from "../../../kernel/types";
 import { Persona } from "../entities/persona";
 import { PersonaRepository } from "../use-cases/ports/persona.repository";
 import { PersonaStorageGateway } from "./persona.storage.gateway";
@@ -11,7 +11,7 @@ import { EliminarPersonaInteractor } from "../use-cases/eliminar-persona.interac
 import { EliminarPersonaDTO } from "./dtos/eliminar-persona.dto";
 import { ModificarInformacionPersonaDTO } from "./dtos/modificar-informacion-persona.dto";
 import { RegistrarPersonaDTO } from "./dtos/registrar-persona.dto";
-import { usuariosBoundary } from "src/modules/usuarios/adapters/usuario.boundary";
+import { usuariosBoundary } from "../../../modules/usuarios/adapters/usuario.boundary";
 
 const personaRouter = Router();
 

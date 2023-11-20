@@ -6,8 +6,7 @@ import { Usuario } from "../entities/usuario";
 import { EliminarUsuarioDTO } from "../adapters/dtos/eliminar-usuario.dto";
 import { ModificarInformacionOpinionesDTO } from "./dtos/modificar-informacion-opiniones.dto";
 
-export class UsuarioStorageGateway
-implements UsuarioRepository {
+export class UsuarioStorageGateway implements UsuarioRepository {
 
     async getUsuarios(): Promise<Usuario[]> {
         try {
@@ -21,7 +20,7 @@ implements UsuarioRepository {
 
     async registrarUsuario(payload: RegistrarUsuarioDTO): Promise<boolean> {
         try {
-            await ConexionBD<boolean>("INSERT INTO usuarios (usuario, contraseña, rol, codigo, fecha_opinion, contador_opinion, fk_idPersona) VALUES (?, ?, 3, ?, ?, ?, ?)", [payload.usuario, payload.contrasena, payload.rol, payload.codigo, payload.fecha_opinion, payload.contador_opinion, payload.fk_idPersona]);
+            await ConexionBD<boolean>("INSERT INTO usuarios (usuario, contraseña, rol, codigo, fecha_opinion, contador_opinion, fk_idPersona) VALUES (?, ?, 3, ?, ?, 0, ?)", [payload.usuario, payload.contrasena, payload.rol, payload.codigo, payload.fecha_opinion, payload.fk_idPersona]);
             return true;
         } catch (error) {
             throw error;
@@ -70,8 +69,8 @@ implements UsuarioRepository {
     }
 
     async modificarInformacionOpiniones(payload: ModificarInformacionOpinionesDTO): Promise<boolean> {
-        try {
-            const result = await ConexionBD<any>("UPDATE usuarios SET fecha_opinion = ?, contador_opinion = ? WHERE id_usuario = ?", [payload.fecha_opinion, payload.contador_opinion, payload.id_usuario]);
+        try {                               
+            const result = await ConexionBD<any>("UPDATE usuarios SET fecha_opinion = ?, contador_opinion = contador_opinion + 1 WHERE usuario = ?", [payload.fecha_opinion, payload.usuario]);
             
             if (result.affectedRows === 0) {
                 throw new Error("No se pudo modificar la cuenta");
@@ -83,5 +82,33 @@ implements UsuarioRepository {
         }
     }
 
+
+    async consultarInformacionOpiniones(payload: string): Promise<Usuario> {
+        try {
+            const resultado = await ConexionBD<Usuario[]>("SELECT fecha_opinion, contador_opinion FROM usuarios WHERE usuario = ?", [payload]);
+
+            if (resultado.length === 0) {
+                throw new Error("Usuario no encontrado");
+            }
+
+            return resultado[0];
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async reiniciarContadorOpiniones(payload: string): Promise<boolean> {
+        try {
+            const result = await ConexionBD<any>("UPDATE usuarios SET contador_opinion = 0 WHERE usuario = ?", [payload]);
+            
+            if (result.affectedRows === 0) {
+                throw new Error("Ocurrio un error al modificar");
+            }
+            
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
 
 }

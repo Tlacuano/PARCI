@@ -7,6 +7,8 @@ const errores: { [x: string]: ResponseApi<undefined> } = {
   "Server Error": { status: 500, error: true, message: "Server Error" },
   "Ningún campo puede empezar o terminar con espacios": { status: 400, error: true, message: "Ningún campo puede empezar o terminar con espacios" },
   "El id es requerido": { status: 400, error: true, message: "El id es requerido" },
+  "Ocurrio un error al eliminar": { status: 400, error: true, message: "Ocurrio un error al eliminar" },
+  "Ocurrio un error al modificar": { status: 400, error: true, message: "Ocurrio un error al modificar" },
 
   //autenticacion
   "Usuario o contraseña incorrectos": { status: 400, error: true, message: "Usuario o contraseña incorrectos" },
@@ -41,6 +43,14 @@ const errores: { [x: string]: ResponseApi<undefined> } = {
   "La entidad federativa es requerida": {status: 400, error: true, message: "La entidad federativa es requerido"},
   "No se pudo modificar el municipio": {status: 400, error: true, message: "No se pudo modificar el municipio"},
   "El nombre no deve contener caracteres especiales": {status: 400, error: true, message: "El nombre no debe contener caracteres especiales" },
+
+  //opciones
+  "No se pudo registrar la opinion" : {status: 400, error: true, message: "No se pudo registrar la opinion"},
+  "Ya no puedes dar mas opiniones por el dia de hoy": {status: 400, error: true, message: "Ya no puedes dar mas opiniones por el dia de hoy"},
+  "No se pudo eliminar la opinion": {status: 400, error: true, message: "No se pudo eliminar la opinion"},
+  "No se pudo modificar la opinion": {status: 400, error: true, message: "No se pudo modificar la opinion"},
+  "El voto debe ser positivo o negativo": {status: 400, error: true, message: "El voto debe ser positivo o negativo"},
+  "La fecha de la opinion no puede ser mayor a la actual": {status: 400, error: true, message: "La fecha de la opinion no puede ser mayor a la actual"},
 };
 
 export const validarError = (error: Error): ResponseApi<undefined> => {

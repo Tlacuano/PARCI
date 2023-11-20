@@ -1,7 +1,8 @@
+import { ConsultarInformacionOpinionesInteractor } from './../use-cases/consultar-informacion-opiniones.interactor';
 import { Request, Response, Router } from "express";
 import { UsuarioRepository } from "../use-cases/ports/usuario.repository";
 import { UsuarioStorageGateway } from "./usuario.storage.gateway";
-import { ResponseApi } from "src/kernel/types";
+import { ResponseApi } from "../../../kernel/types";
 import { Usuario } from "../entities/usuario";
 import { validarError } from "../../../kernel/error-handler";
 import { RegistrarUsuarioInteractor } from "../use-cases/registrar-usuario.interactor";
@@ -12,12 +13,10 @@ import { ModificarCuentaInteractor } from "../use-cases/modificar-cuenta.interac
 import { GetUsuariosInteractor } from "../use-cases/get-usuarios.interactor";
 import { EliminarUsuarioDTO } from "./dtos/eliminar-usuario.dto";
 import { EliminarUsuarioInteractor } from "../use-cases/eliminar-usuario.interactor";
-import { Persona } from "src/modules/persona/entities/persona";
-import { PersonaRepository } from "src/modules/persona/use-cases/ports/persona.repository";
-import { GetPersonasInteractor } from "src/modules/persona/use-cases/get-personas.interactor";
-import { PersonaStorageGateway } from "src/modules/persona/adapters/persona.storage.gateway";
-import { ModificarInformacionPersonaInteractor } from "src/modules/persona/use-cases/modificar-informacion-persona.interactor";
+import { Persona } from "../../../modules/persona/entities/persona";
 import { ModificarInformacionOpinionesInteractor } from "../use-cases/modificar-informacion-opiniones.interactor";
+import { ReiniciarContadorOpinionesInteractor } from '../use-cases/reiniciar-contador-opiniones.interactor';
+import { ModificarInformacionOpinionesDTO } from './dtos/modificar-informacion-opiniones.dto';
 
 const usuarioRouter = Router();
 
@@ -51,64 +50,48 @@ export class UsuarioController {
     }
 
 
-    static getInfoOpiniones_Local = async (id_persona: number) => {
+    static getInfoOpiniones_Local = async (payload: string) => {
         try {
-            const repositorio: PersonaRepository =
-                new PersonaStorageGateway();
-            const getPersonasInteractor = new GetPersonasInteractor(
-                repositorio
-            );
+            const repositorio: UsuarioRepository = new UsuarioStorageGateway();
+            const consultarInformacionOpinionesInteractor = new ConsultarInformacionOpinionesInteractor(repositorio);
+            
+            const informacionOpinionUsuario = await consultarInformacionOpinionesInteractor.execute(payload);
 
-            const personas = await getPersonasInteractor.execute();
+            if (!informacionOpinionUsuario) {
+                throw new Error("Usuario no encontrado");
+            }
 
-            const personasFiltradas = personas.filter(persona => persona.id_persona === id_persona);
-
-            const body: ResponseApi<Persona[]> = {
-                data: personasFiltradas,
-                message: "Personas consultados correctamente",
-                status: 200,
-                error: false,
-            };
-
-            return body;
+            return informacionOpinionUsuario;
         } catch (error) {
-            return error;
+            throw error;
         }
     }
 
-
-    static actualizarInfoOpiniones_Local = async (
-        id_persona: number,
-        fecha_opinion: Date,
-        contador_opinion: number
-    ) => {
+    static reiniciarContadorOpiniones_Local = async (payload: string) => {
         try {
             const repositorio: UsuarioRepository = new UsuarioStorageGateway();
-            const modificarInfoOpiniones = new ModificarInformacionOpinionesInteractor(
+            const reiniciarContadorOpinionesInteractor = new ReiniciarContadorOpinionesInteractor(
                 repositorio
             );
-    
-            const usuario = await repositorio.getUsuarioById(id_persona);
-    
-            if (!usuario) {
-                throw new Error("Usuario no encontrado");
-            }
-    
-            usuario.fecha_opinion = fecha_opinion;
-            usuario.contador_opinion = contador_opinion;
-    
-            await repositorio.modificarInformacionOpiniones(usuario);
-    
-            const body: ResponseApi<Usuario[]> = {
-                data: [usuario],
-                message: "Información de usuario actualizada correctamente",
-                status: 200,
-                error: false,
-            };
-    
-            return body;
+            
+            const resultado = await reiniciarContadorOpinionesInteractor.execute(payload);
+            
+            return resultado;
         } catch (error) {
-            return error;
+            throw error;
+        }
+    }
+
+    static actualizarInfoOpiniones_Local = async (modificarInformacionOpiniones:ModificarInformacionOpinionesDTO) => {
+        try {
+            const repositorio: UsuarioRepository = new UsuarioStorageGateway();
+
+    
+            const resultado = await repositorio.modificarInformacionOpiniones(modificarInformacionOpiniones);
+    
+            return resultado;
+        } catch (error) {
+            throw error;
         }
     };
     
@@ -183,7 +166,7 @@ export class UsuarioController {
                 new UsuarioStorageGateway();
                 const getUsuariosInteractor = new GetUsuariosInteractor(
                     repositorio
-                  );
+                );
             const usuarios = await getUsuariosInteractor.execute();
 
             const body: ResponseApi<Usuario[]> = {

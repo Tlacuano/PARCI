@@ -1,5 +1,4 @@
 export type ModificarInformacionOpinionesDTO = {
-    id_usuario: number;
+    usuario: string;
     fecha_opinion: Date;
-    contador_opinion: number;
 };
