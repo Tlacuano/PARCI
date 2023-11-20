@@ -1,3 +1,5 @@
+import { Persona } from "src/modules/persona/entities/persona";
+
 export type Usuario = {
     id_usuario: number;
     usuario: string;
@@ -6,5 +8,5 @@ export type Usuario = {
     codigo: string;
     fecha_opinion: Date;
     contador_opinion: number;
-    fk_idPersona: number;
+    fk_idPersona: Persona;
 };

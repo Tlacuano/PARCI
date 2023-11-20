@@ -1,4 +1,3 @@
-//eliminar-usuario.interactor.ts
 import { UsuarioRepository } from "./ports/usuario.repository";
 import { UseCase } from "src/kernel/contracts";
 import { Usuario } from "../entities/usuario";

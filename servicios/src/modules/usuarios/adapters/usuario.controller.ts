@@ -12,12 +12,108 @@ import { ModificarCuentaInteractor } from "../use-cases/modificar-cuenta.interac
 import { GetUsuariosInteractor } from "../use-cases/get-usuarios.interactor";
 import { EliminarUsuarioDTO } from "./dtos/eliminar-usuario.dto";
 import { EliminarUsuarioInteractor } from "../use-cases/eliminar-usuario.interactor";
-import { ModificarRolUsuarioDTO } from "./dtos/modificar-rol-usuario.dto";
-import { ModificarRolUsuarioInteractor } from "../use-cases/modificar-rol-usuario.interactor";
+import { Persona } from "src/modules/persona/entities/persona";
+import { PersonaRepository } from "src/modules/persona/use-cases/ports/persona.repository";
+import { GetPersonasInteractor } from "src/modules/persona/use-cases/get-personas.interactor";
+import { PersonaStorageGateway } from "src/modules/persona/adapters/persona.storage.gateway";
+import { ModificarInformacionPersonaInteractor } from "src/modules/persona/use-cases/modificar-informacion-persona.interactor";
+import { ModificarInformacionOpinionesInteractor } from "../use-cases/modificar-informacion-opiniones.interactor";
 
-const usuariosRouter = Router();
+const usuarioRouter = Router();
 
-export class UsuariosController {
+export class UsuarioController {
+
+    // REGISTRAR LOCAL
+    static registrarUsuario_Local = async (persona: Persona) => {
+        try {
+            const repositorio: UsuarioRepository =
+                new UsuarioStorageGateway();
+            const registrarUsuarioInteractor = new RegistrarUsuarioInteractor(
+                repositorio
+            );
+
+            const payload = {
+                usuario: new String,
+                contrasena: new String,
+                rol: new Number,
+                codigo: new String,
+                fecha_opinion: new Date(),
+                contador_opinion: new Number,
+                fk_idPersona: persona
+            } as RegistrarUsuarioDTO;
+
+            await registrarUsuarioInteractor.execute(payload);
+
+            return true;
+        } catch (error) {
+            return error;
+        }
+    }
+
+
+    static getInfoOpiniones_Local = async (id_persona: number) => {
+        try {
+            const repositorio: PersonaRepository =
+                new PersonaStorageGateway();
+            const getPersonasInteractor = new GetPersonasInteractor(
+                repositorio
+            );
+
+            const personas = await getPersonasInteractor.execute();
+
+            const personasFiltradas = personas.filter(persona => persona.id_persona === id_persona);
+
+            const body: ResponseApi<Persona[]> = {
+                data: personasFiltradas,
+                message: "Personas consultados correctamente",
+                status: 200,
+                error: false,
+            };
+
+            return body;
+        } catch (error) {
+            return error;
+        }
+    }
+
+
+    static actualizarInfoOpiniones_Local = async (
+        id_persona: number,
+        fecha_opinion: Date,
+        contador_opinion: number
+    ) => {
+        try {
+            const repositorio: UsuarioRepository = new UsuarioStorageGateway();
+            const modificarInfoOpiniones = new ModificarInformacionOpinionesInteractor(
+                repositorio
+            );
+    
+            const usuario = await repositorio.getUsuarioById(id_persona);
+    
+            if (!usuario) {
+                throw new Error("Usuario no encontrado");
+            }
+    
+            usuario.fecha_opinion = fecha_opinion;
+            usuario.contador_opinion = contador_opinion;
+    
+            await repositorio.modificarInformacionOpiniones(usuario);
+    
+            const body: ResponseApi<Usuario[]> = {
+                data: [usuario],
+                message: "Información de usuario actualizada correctamente",
+                status: 200,
+                error: false,
+            };
+    
+            return body;
+        } catch (error) {
+            return error;
+        }
+    };
+    
+
+
 
     // REGISTRAR
     registrarUsuario = async (req: Request, res: Response) => {
@@ -152,44 +248,14 @@ export class UsuariosController {
             res.status(errorBody.status).json(errorBody);
         }
     };
-
-    //MODIFICAR ROL
-    modificarRolUsuario = async (req: Request, res: Response) => {
-        try {
-            const payload = req.body as ModificarRolUsuarioDTO;
-
-            const repositorio: UsuarioRepository =
-                new UsuarioStorageGateway();
-            const modificarCuentaInteractor = new ModificarRolUsuarioInteractor(
-                repositorio
-            );
-
-            await modificarCuentaInteractor.execute(payload);
-
-            const body: ResponseApi<boolean> = {
-                data: true,
-                message: "Rol modificado correctamente",
-                status: 200,
-                error: false,
-            };
-
-            res.status(body.status).json(body);
-        } catch (error) {
-            const errorBody = validarError(error as Error);
-            res.status(errorBody.status).json(errorBody);
-        }
-    };
-
-
 }
 
-const usuariosController = new UsuariosController();
+const usuarioController = new UsuarioController();
 
-usuariosRouter.post("/registrar", usuariosController.registrarUsuario);
-usuariosRouter.put("/modificar", usuariosController.modificarUsuario);
-usuariosRouter.get("/consultar", usuariosController.getUsuarios);
-usuariosRouter.delete("/eliminar", usuariosController.eliminarUsuario);
-usuariosRouter.get("/consultar/:id_usuario", usuariosController.getUsuarioById);
-usuariosRouter.put("/modificar-rol", usuariosController.modificarRolUsuario);
+usuarioRouter.post("/registrar", usuarioController.registrarUsuario);
+usuarioRouter.put("/modificar", usuarioController.modificarUsuario);
+usuarioRouter.get("/consultar", usuarioController.getUsuarios);
+usuarioRouter.delete("/eliminar", usuarioController.eliminarUsuario);
+usuarioRouter.get("/consultar/:id_usuario", usuarioController.getUsuarioById);
 
-export default usuariosRouter;
+export default usuarioRouter;

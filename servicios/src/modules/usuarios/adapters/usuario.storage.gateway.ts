@@ -4,7 +4,7 @@ import { ConexionBD } from "../../../utils/dbconfig";
 import { ModificarCuentaDTO } from "../adapters/dtos/modificar-cuenta.dto";
 import { Usuario } from "../entities/usuario";
 import { EliminarUsuarioDTO } from "../adapters/dtos/eliminar-usuario.dto";
-import { ModificarRolUsuarioDTO } from "./dtos/modificar-rol-usuario.dto";
+import { ModificarInformacionOpinionesDTO } from "./dtos/modificar-informacion-opiniones.dto";
 
 export class UsuarioStorageGateway
 implements UsuarioRepository {
@@ -30,7 +30,12 @@ implements UsuarioRepository {
 
     async modificarCuenta(payload: ModificarCuentaDTO): Promise<boolean> {
         try {
-            await ConexionBD<boolean>("UPDATE usuarios SET contraseña = ? WHERE id_usuario = ?", [payload.contrasena, payload.id_usuario]);
+            const result = await ConexionBD<any>("UPDATE usuarios SET contraseña = ? WHERE id_usuario = ?", [payload.contrasena, payload.id_usuario]);
+            
+            if (result.affectedRows === 0) {
+                throw new Error("No se pudo modificar la cuenta");
+            }
+            
             return true;
         } catch (error) {
             throw error;
@@ -55,13 +60,28 @@ implements UsuarioRepository {
         }
     }
 
-    async modificarRolUsuario(payload: ModificarRolUsuarioDTO): Promise<boolean> {
+    async buscarUsuarioPorNombre(payload: RegistrarUsuarioDTO): Promise<Usuario[] | null> {
         try {
-            await ConexionBD<boolean>("UPDATE usuarios SET rol = ? WHERE id_usuario = ?", [payload.rol, payload.id_usuario]);
+            const resultado = await ConexionBD<Usuario[]>("SELECT id_usuario, usuario, rol, codigo, fecha_opinion, contador_opinion, fk_idPersona FROM usuarios WHERE usuario LIKE ?", [`%${payload.usuario}%`]);
+            return resultado;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async modificarInformacionOpiniones(payload: ModificarInformacionOpinionesDTO): Promise<boolean> {
+        try {
+            const result = await ConexionBD<any>("UPDATE usuarios SET fecha_opinion = ?, contador_opinion = ? WHERE id_usuario = ?", [payload.fecha_opinion, payload.contador_opinion, payload.id_usuario]);
+            
+            if (result.affectedRows === 0) {
+                throw new Error("No se pudo modificar la cuenta");
+            }
+            
             return true;
         } catch (error) {
             throw error;
         }
     }
+
 
 }

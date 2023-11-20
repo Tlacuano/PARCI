@@ -5,7 +5,7 @@ import autenticacionRouter from "../modules/autenticacion/adapters/autenticacion
 import entidadesFederativasRouter from "../modules/entidades/adapters/entidad-federativa.controller";
 import municipiosRouter from "../modules/municipios/adapters/municipios-controller";
 import personalizacionRouter from "../modules/personalizacion/adapters/personalizacion.controller";
-import usuariosRouter from "../modules/usuarios/adapters/usuario.controller";
+import usuarioRouter from "../modules/usuarios/adapters/usuario.controller";
 
 const app = express();
 
@@ -23,6 +23,6 @@ app.use('/parci-api/autenticacion', autenticacionRouter);
 app.use('/parci-api/entidades-federativas', entidadesFederativasRouter);
 app.use('/parci-api/municipios', municipiosRouter);
 app.use('/parci-api/personalizacion', personalizacionRouter);
-app.use('/parci-api/usuarios', usuariosRouter);
+app.use('/parci-api/usuarios', usuarioRouter);
 
 export default app;

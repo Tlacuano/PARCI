@@ -1,3 +1,4 @@
+import { Persona } from "src/modules/persona/entities/persona";
 
 export type RegistrarUsuarioDTO = {
     usuario: string;
@@ -6,5 +7,5 @@ export type RegistrarUsuarioDTO = {
     codigo: string;
     fecha_opinion: Date;
     contador_opinion: number;
-    fk_idPersona: number;
+    fk_idPersona: Persona;
 };
