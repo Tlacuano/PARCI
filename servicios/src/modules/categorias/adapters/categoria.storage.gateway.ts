@@ -4,6 +4,7 @@ import { modifyCategoriaDTO } from "./dtos/modify-categoria.dto";
 import { insertCategoriaDto } from "./dtos/insert-categoria.dto";
 import { CategoriaRepository } from "../use-cases/ports/categoria.repository";
 import { modificarEstadoCategoriaDTO } from "./dtos/modificar-estado-categoria";
+import { RegistrarCategoriaDTO } from "./dtos/registrar-categoria.dto";
 
 export class CategoriaStorageGateway implements CategoriaRepository {
 
@@ -56,5 +57,16 @@ export class CategoriaStorageGateway implements CategoriaRepository {
             throw error;
         }
     } 
+
+    async buscarCategoriaPorNombre(payload: RegistrarCategoriaDTO): Promise<categoria[] | null> {
+        try {
+          const resultado = await ConexionBD<categoria[]>("SELECT id_categoria, nombre_categoria FROM categorias WHERE nombre_categoria LIKE ?", [
+            `%${payload.nombre_categoria}%`,
+          ]);
+          return resultado;
+        } catch (error) {
+          throw error;
+        }
+      }
     
 }
