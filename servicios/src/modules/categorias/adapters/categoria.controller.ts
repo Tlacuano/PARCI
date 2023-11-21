@@ -11,6 +11,9 @@ import { CategoriaRepository } from "../use-cases/ports/categoria.repository";
 import { insertCategoriaDto } from "./dtos/insert-categoria.dto";
 import { modificarEstadoCategoriaDTO } from "./dtos/modificar-estado-categoria";
 import { ModificarEstadoCategoriaInteractor } from "../use-cases/modificar-estado-categoria.interactor";
+import { RegistrarCategoriaDTO } from "./dtos/registrar-categoria.dto";
+import { BuscarEntidadPorNombreInteractor } from "src/modules/entidades/use-cases/buscar-entidad-por-nombre.interactor";
+import { BuscarCategoriaPorNombreInteractor } from "../use-cases/buscar-categoria-por-nombre.interactor";
 
 const categoriaRouter = Router();
 
@@ -108,7 +111,30 @@ export class CategoriaController {
         }
     }
 
-}
+    buscarCategoriaPorNombre = async (req: Request, res: Response) => {
+        try {
+          const payload = req.body as RegistrarCategoriaDTO;
+    
+          const repositorio: CategoriaRepository = new CategoriaStorageGateway();
+          const buscarCategoriaPorNombreInteractor = new BuscarCategoriaPorNombreInteractor(repositorio);
+    
+          const categorias = await buscarCategoriaPorNombreInteractor.execute(payload);
+    
+          const body: ResponseApi<categoria[] | null> = {
+            data: categorias,
+            message: "Categorias obtenidas correctamente",
+            status: 200,
+            error: false,
+          };
+    
+          res.status(body.status).json(body);
+        } catch (error) {
+          const errorBody = validarError(error as Error);
+          res.status(errorBody.status).json(errorBody);
+        }
+      };
+    }
+    
 
 const categoriaController = new CategoriaController();
 
@@ -116,5 +142,6 @@ categoriaRouter.get('/consultar', categoriaController.getCategoria);
 categoriaRouter.post('/registrar', categoriaController.insertCategoria);
 categoriaRouter.put('/modificar', categoriaController.modificarCategoria);
 categoriaRouter.put('/modificar-estado', categoriaController.modificarEstadoCategoria);
+categoriaRouter.post("/buscar-nombre", categoriaController.buscarCategoriaPorNombre);
 
 export default categoriaRouter;
