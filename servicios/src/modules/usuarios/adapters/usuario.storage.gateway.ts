@@ -20,7 +20,7 @@ export class UsuarioStorageGateway implements UsuarioRepository {
 
     async registrarUsuario(payload: RegistrarUsuarioDTO): Promise<boolean> {
         try {
-            await ConexionBD<boolean>("INSERT INTO usuarios (usuario, contraseña, rol, codigo, fecha_opinion, contador_opinion, fk_idPersona) VALUES (?, ?, 3, ?, ?, 0, ?)", [payload.usuario, payload.contrasena, payload.rol, payload.codigo, payload.fecha_opinion, payload.fk_idPersona]);
+            await ConexionBD<boolean>("INSERT INTO usuarios (usuario, contraseña, rol, codigo, fecha_opinion, contador_opinion, fk_idPersona) VALUES (?, ?, ?, ?, ?, 0, ?)", [payload.usuario, payload.contrasena, payload.rol, payload.codigo, payload.fecha_opinion, payload.fk_idPersona]);
             return true;
         } catch (error) {
             throw error;
@@ -105,6 +105,20 @@ export class UsuarioStorageGateway implements UsuarioRepository {
                 throw new Error("Ocurrio un error al modificar");
             }
             
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async existeUsuario(usuario: string): Promise<boolean> {
+        try {
+            const resultado = await ConexionBD<Usuario[]>("SELECT id_usuario, usuario, rol, codigo, fecha_opinion, contador_opinion, fk_idPersona FROM usuarios WHERE usuario = ?", [usuario]);
+
+            if (resultado.length === 0) {
+                return false;
+            }
+
             return true;
         } catch (error) {
             throw error;
