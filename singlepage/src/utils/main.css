@@ -1,0 +1,32 @@
+.Oscuro {
+    background-color: #222222;
+    color: #fff;
+}
+
+.OscuroNav {
+    background-color: #212020;
+    color: #fff;
+}
+
+.Claro {
+    background-color: #fff;
+    color: #000;
+}
+
+.ClaroNav {
+    background-color: #ffffff;
+    color: #000;
+}
+
+.Chica {
+    font-size: 14px;
+}
+
+.Mediana {
+    font-size: 16px;
+}
+
+.Grande {
+    font-size: 18px;
+}
+
