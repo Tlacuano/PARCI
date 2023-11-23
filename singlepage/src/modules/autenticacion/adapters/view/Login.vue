@@ -60,6 +60,7 @@
     import Vue from 'vue';
     import {inicioSesionDto} from '../dtos/inicio-sesion.dto';
 import { AutenticacionController } from '../autenticacion.controller';
+import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
 
     export default Vue.extend({
         name: 'Login',
@@ -91,6 +92,9 @@ import { AutenticacionController } from '../autenticacion.controller';
                             rol: respuesta.data.rol,
                             municipio: respuesta.data.municipio
                         }));
+
+                        cambioPersonalizacion(respuesta.data.personalizacion);
+
                         this.$router.push('/');
                     }
                     

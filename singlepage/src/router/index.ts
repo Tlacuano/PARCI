@@ -21,7 +21,12 @@ const routes: Array<RouteConfig> = [
         path:'m',
       },
       {
-        path:'u'
+        path:'u',
+      },
+      {
+        path:'configuracion',
+        name:'Configuracion',
+        component:() => import('../modules/personalizacion/adapters/view/Personalizacion.vue')
       }
     ]
   }
