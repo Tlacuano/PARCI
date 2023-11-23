@@ -54,6 +54,11 @@ AxiosClient.interceptors.response.use(
                                 messageAlert = "Credenciales incorrectas";
                                 titleAlert = "Usuario y/o contraseña erróneos";
                                 break;
+                            case "Código incorrecto":
+                                messageAlert = "Código incorrecto";
+                                titleAlert = "Código incorrecto";
+                                break;
+                                
                         }                        
                         Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning" });
                         break;
