@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="configuracion.tema ? configuracion.tema : ''">
+  <div id="app">
     <router-view/>
   </div>
 </template>
@@ -9,7 +9,6 @@
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
   min-height: 100vh;
   overflow: hidden;
 }
@@ -18,6 +17,7 @@
 <script lang="ts">
   import Vue from 'vue';
 import { Personalizacion } from './modules/personalizacion/entities/personalizacion';
+import { cambioPersonalizacion } from './kernel/cambioPersonalizacion';
 
   export default Vue.extend({
     name: 'App',
@@ -60,20 +60,12 @@ import { Personalizacion } from './modules/personalizacion/entities/personalizac
           }
         }
       },
-      obtenerPersonalizacion(){
+      setPersonalizacion(){
         const personalizacionString = localStorage.getItem('personalizacion');
         const personalizacion = personalizacionString ? JSON.parse(personalizacionString) : null;
 
-        if(personalizacion){
-          this.configuracion = personalizacion;  
-        }else{
-          this.configuracion = {
-            tema: 'Claro',
-            tamaño_letra:''
-          } as Personalizacion
-        }
-              
-      },
+        cambioPersonalizacion(personalizacion);
+      }
     },
     mounted() {
       this.authenticador();
@@ -81,7 +73,7 @@ import { Personalizacion } from './modules/personalizacion/entities/personalizac
     watch: {
       $route(to, from) {
         this.authenticador();
-        this.obtenerPersonalizacion();
+        this.setPersonalizacion();
       },
     }
   });

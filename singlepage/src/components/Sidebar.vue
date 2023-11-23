@@ -8,31 +8,43 @@
                     </b-col>
                     
 
-                    <b-col cols="12" class="text-start mt-4" :class="configuracion.tema === 'Oscuro' ? 'optionOscuro' : 'optionClaro'">
+                    <b-col cols="12" class="text-start mt-4" >
                         <span :class="configuracion.tamaño_letra"><b-icon icon="person" /> Perifl</span>
                     </b-col>
 
 
-                    <b-col cols="12" class="text-start mt-2" :class="configuracion.tema === 'Oscuro' ? 'optionOscuro' : 'optionClaro'">
-                        <span v-if="rol==='Administrador'" :class="configuracion.tamaño_letra"><b-icon icon="person"/>&nbsp;&nbsp;Gestión de Usuarios</span>
+                    <b-col cols="12" v-if="rol==='Administrador'">
+                        <div class="text-start mt-2">
+                            <span  :class="configuracion.tamaño_letra"><b-icon icon="person"/>&nbsp;&nbsp;Gestión de Usuarios</span>
+                        </div>
                     </b-col>
-                    <b-col cols="12" class="text-start mt-2" :class="configuracion.tema === 'Oscuro' ? 'optionOscuro' : 'optionClaro'">
-                        <span v-if="rol==='Administrador'" :class="configuracion.tamaño_letra"><b-icon icon="person" />&nbsp;&nbsp;Categorías de reportes</span>
+                    <b-col cols="12"   v-if="rol==='Administrador'">
+                        <div class="text-start mt-2">
+                            <span :class="configuracion.tamaño_letra"><b-icon icon="person" />&nbsp;&nbsp;Categorías de reportes</span>
+                        </div>
                     </b-col>
-                    <b-col cols="12" class="text-start mt-2" :class="configuracion.tema === 'Oscuro' ? 'optionOscuro' : 'optionClaro'">
-                        <span v-if="rol==='Administrador'" :class="configuracion.tamaño_letra"><b-icon icon="person" />&nbsp;&nbsp;Entidades federativas</span>
+                    <b-col cols="12" v-if="rol==='Administrador'" >
+                        <div  class="text-start mt-2">
+                            <span :class="configuracion.tamaño_letra"><b-icon icon="person" />&nbsp;&nbsp;Entidades federativas</span>
+                        </div>
                     </b-col>
-                    <b-col cols="12" class="text-start mt-2" :class="configuracion.tema === 'Oscuro' ? 'optionOscuro' : 'optionClaro'">
-                        <span v-if="rol==='Administrador'" :class="configuracion.tamaño_letra"><b-icon icon="person" />&nbsp;&nbsp;Municipios</span>
+                    <b-col cols="12"  v-if="rol==='Administrador'">
+                        <div class="text-start mt-2">
+                            <span  :class="configuracion.tamaño_letra"><b-icon icon="person" />&nbsp;&nbsp;Municipios</span>
+                        </div>
                     </b-col>
 
 
-                    <b-col cols="12" class="text-start mt-2" :class="configuracion.tema === 'Oscuro' ? 'optionOscuro' : 'optionClaro'">
-                        <span v-if="rol==='Moderador'" :class="configuracion.tamaño_letra" ><b-icon icon="person" />&nbsp;&nbsp;Reportes</span>
+                    <b-col cols="12"  v-if="rol==='Moderador'">
+                        <div class="text-start mt-2">
+                            <span  :class="configuracion.tamaño_letra" ><b-icon icon="person" />&nbsp;&nbsp;Reportes</span>
+                        </div>
                     </b-col>
 
-                    <b-col cols="12" class="text-start mt-2" :class="configuracion.tema === 'Oscuro' ? 'optionOscuro' : 'optionClaro'">
-                        <span v-if="rol==='Usuario'"  :class="configuracion.tamaño_letra"><b-icon icon="person" />&nbsp;&nbsp;Reportes</span>
+                    <b-col cols="12"  v-if="rol ==='Usuario'">
+                        <div class="text-start mt-2">
+                            <span  :class="configuracion.tamaño_letra"><b-icon icon="person" />&nbsp;&nbsp;Reportes</span>
+                        </div>
                     </b-col>
                     
                 </b-row>

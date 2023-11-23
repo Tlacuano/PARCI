@@ -1,4 +1,4 @@
-.Oscuro {
+/*.Oscuro {
     background-color: #222222;
     color: #fff;
 }
@@ -28,5 +28,60 @@
 
 .Grande {
     font-size: 18px;
+}*/
+
+/* VARIABLES */
+
+:root{
+    --background-color: #fff;
+    --text-color: #000000;
+    --background-component: #fff;
+}
+
+html[data-theme="Oscuro"]{
+    --background-color: #060e02;
+    --text-color: #fff;
+    --background-component:#343a40;
+}
+
+html[data-theme="Claro"]{
+    --background-color: #fff;
+    --text-color: #000;
+    --background-component: #fff;
+}
+
+html[font="Chica"]{
+    --font-size: 14px;
+}
+
+html[font="Mediana"]{
+    --font-size: 16px;
+}
+
+html[font="Grande"]{
+    --font-size: 18px;
+}
+
+
+/* declaracion de colores en las etiquetas*/
+
+body{
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+    font-size: var(--font-size);
+}
+
+.card{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
+h1, h2, h3, h4, h5, h6{
+    color: var(--text-color) !important;
+}
+
+.swal2-popup{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
 }
 

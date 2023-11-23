@@ -53,6 +53,7 @@
     import Vue from 'vue';
     import {Personalizacion} from '../modules/personalizacion/entities/personalizacion'
     import Sidebar from './Sidebar.vue';
+import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
 
     export default Vue.extend({
         name: 'Navbar',
@@ -61,7 +62,9 @@
                 configuracion:{
                     tema: '',
                     tamaño_letra:''
-                } as Personalizacion
+                } as Personalizacion,
+
+
                 
             }
         },
@@ -93,10 +96,15 @@
                     confirmButtonText: 'Si, cerrar sesion'
                 }).then((result) => {
                     if (result.isConfirmed) {
+
                         localStorage.removeItem('token');
                         localStorage.removeItem('usuario');
                         localStorage.removeItem('personalizacion');
                         this.$router.push('/login');
+                        cambioPersonalizacion({
+                            tema: 'Claro',
+                            tamaño_letra: 'Mediana'
+                        });
                     }
                 })
                 
