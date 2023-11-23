@@ -50,7 +50,7 @@ import { Personalizacion } from './modules/personalizacion/entities/personalizac
             }
           }
           if(usuario.rol === 'Moderador'){
-            if (!this.$route.path.includes('/u')  && this.$route.path !== '/' && this.$route.path !== '/configuracion' ) {
+            if (!this.$route.path.includes('/m')  && this.$route.path !== '/' && this.$route.path !== '/configuracion' ) {
               this.$router.push('/');
             }
           }
