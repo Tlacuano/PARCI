@@ -1,3 +1,5 @@
+import { Usuario } from "src/modules/usuarios/entities/usuario";
+
 export type ModificarInformacionPersonaDTO = {
     id_persona: number;
     nombre: string;
