@@ -1,7 +1,10 @@
 .node_modules
 .env
 .vscode
-
+.dist
+servicios/node_modules/
+servicios/dist/
 node_modules
 env
 vscode
+dist
