@@ -33,7 +33,7 @@
                                         </b-form-group>
                                     </b-col>
                                     <b-col cols="12" class="text-center mt-5">
-                                        <b-button variant="primary"  @click="iniciarSesion">Iniciar Sesión</b-button>
+                                        <b-button style="background-color: var(--color-primary);"  @click="iniciarSesion">Iniciar Sesión</b-button>
                                     </b-col>
                                     <b-col cols="12" class="text-center my-4">
                                         <b-row>

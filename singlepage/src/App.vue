@@ -69,6 +69,7 @@ import { cambioPersonalizacion } from './kernel/cambioPersonalizacion';
     },
     mounted() {
       this.authenticador();
+      
     },
     watch: {
       $route(to, from) {

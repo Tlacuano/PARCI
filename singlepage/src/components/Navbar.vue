@@ -1,14 +1,14 @@
 <template>
     <div>
-        <b-navbar :variant="configuracion.tema === 'Oscuro' ? 'dark' : 'light'" :type="configuracion.tema === 'Oscuro' ? 'dark' : 'light'">
-                <!-- titulo responsivo -->
+        <b-navbar style="background-color:var(--background-component); color: var(--text-component);">
+                
                 <b-navbar-brand>
                     <span >
-                        <b-button size="sm" v-b-toggle.sidebar class="me-3" :variant="configuracion.tema === 'Oscuro' ? 'dark' : 'light'">
-                                <b-icon icon="list" :variant="configuracion.tema === 'Oscuro' ? 'light' : 'dark'" />
+                        <b-button size="sm" v-b-toggle.sidebar class="me-3" >
+                                <b-icon icon="list" />
                         </b-button>
                     </span>   
-                    &nbsp;&nbsp;PARCI <span class="d-none d-md-inline">|     Sistema de Participacion Ciudadana</span>
+                    &nbsp;&nbsp;PARCI <span class="d-none d-md-inline">|     Sistema de Participación Ciudadana</span>
                 </b-navbar-brand>
                 
 
@@ -73,6 +73,13 @@ import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
         },
         methods: {
             obtenerPersonalizacion(){
+                window.addEventListener('storage', () => {
+                    console.log('cambio');
+                    
+                    this.obtenerPersonalizacion();
+                });
+                console.log('hola');
+                
                 const personalizacionString = localStorage.getItem('personalizacion');
                 const personalizacion = personalizacionString ? JSON.parse(personalizacionString) : null;
 
@@ -90,8 +97,8 @@ import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
                     text: "Se cerrara la sesion actual",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
+                    confirmButtonColor: 'var(--color-primary)',
+                    cancelButtonColor: 'var(--color-secondary)',
                     cancelButtonText:'Cancelar',
                     confirmButtonText: 'Si, cerrar sesion'
                 }).then((result) => {
@@ -108,11 +115,17 @@ import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
                     }
                 })
                 
+            },
+
+            colocarPersonalizacion(){
+                
             }
         },
         mounted() {
+            
             this.obtenerPersonalizacion();
-        },
+            
+        }
     });
 </script>
 

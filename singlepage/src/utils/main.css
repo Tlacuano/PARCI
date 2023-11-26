@@ -33,33 +33,37 @@
 /* VARIABLES */
 
 :root{
-    --background-color: #fff;
+    --background-color: #f7f7f7;
     --text-color: #000000;
-    --background-component: #fff;
+    --background-component: rgb(255, 255, 255)bcb;
+    --background-select: #fff;
+    --color-primary: #236b47;
+    --color-secondary: #9e030a;
 }
 
 html[data-theme="Oscuro"]{
     --background-color: #060e02;
     --text-color: #fff;
     --background-component:#343a40;
+    --background-select: #52585e;
 }
 
 html[data-theme="Claro"]{
-    --background-color: #fff;
+    --background-color: #f7f7f7;
     --text-color: #000;
     --background-component: #fff;
 }
 
 html[font="Chica"]{
-    --font-size: 14px;
+    --font-size: 14px !important;
 }
 
 html[font="Mediana"]{
-    --font-size: 16px;
+    --font-size: 16px !important;
 }
 
 html[font="Grande"]{
-    --font-size: 18px;
+    --font-size: 18px !important;
 }
 
 
@@ -68,7 +72,7 @@ html[font="Grande"]{
 body{
     background-color: var(--background-color) !important;
     color: var(--text-color) !important;
-    font-size: var(--font-size);
+    font-size: var(--font-size) !important;
 }
 
 .card{
@@ -76,8 +80,27 @@ body{
     color: var(--text-color) !important;
 }
 
+.custom-select{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
+.bg-light{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
+.bg-dark{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
 h1, h2, h3, h4, h5, h6{
     color: var(--text-color) !important;
+}
+
+hr{
+    border-top: 1px solid var(--text-color) !important;
 }
 
 .swal2-popup{
