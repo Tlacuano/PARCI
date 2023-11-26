@@ -130,7 +130,8 @@ CREATE TABLE opiniones (
 );
 
 CREATE TABLE visitas (
-numero_visitas BIGINT
+numero_visitas BIGINT,
+  fecha DATE NULL
 );
 
 CREATE TABLE votos_opinion (
