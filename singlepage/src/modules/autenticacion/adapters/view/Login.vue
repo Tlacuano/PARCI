@@ -33,12 +33,12 @@
                                         </b-form-group>
                                     </b-col>
                                     <b-col cols="12" class="text-center mt-5">
-                                        <b-button variant="primary"  @click="iniciarSesion">Iniciar Sesión</b-button>
+                                        <b-button style="background-color: var(--color-primary);"  @click="iniciarSesion">Iniciar Sesión</b-button>
                                     </b-col>
                                     <b-col cols="12" class="text-center my-4">
                                         <b-row>
                                             <b-col cols="12" md="6">
-                                                <b-button variant="link">Olvide mi contraseña</b-button>
+                                                <b-button variant="link" v-b-modal.recuperarContra>Olvide mi contraseña</b-button>
                                             </b-col>
                                             <b-col cols="12" md="6">
                                                 <b-button variant="link">Registrate</b-button>
@@ -52,18 +52,22 @@
                 </b-card>
             </b-col>
         </b-row>
+        <RecuperarContraseña/>
     </b-container>
-        
 </template>
 
 <script lang="ts">
     import Vue from 'vue';
     import {inicioSesionDto} from '../dtos/inicio-sesion.dto';
-import { AutenticacionController } from '../autenticacion.controller';
-import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
+    import { AutenticacionController } from '../autenticacion.controller';
+    import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
+    import RecuperarContraseña from './components/RecuperarContraseña.modal.vue';
 
     export default Vue.extend({
         name: 'Login',
+        components: {
+            RecuperarContraseña
+        },
         data() {
             return {
                 formulario: {

@@ -4,6 +4,6 @@ import { Personalizacion } from "../modules/personalizacion/entities/personaliza
 export const cambioPersonalizacion =  (personalizacion: Personalizacion) => {
     
     document.documentElement.setAttribute('data-theme', personalizacion.tema)
-    var currentTheme = document.documentElement.getAttribute('data-theme')
+    document.documentElement.setAttribute('font', personalizacion.tamaño_letra)
     
 }

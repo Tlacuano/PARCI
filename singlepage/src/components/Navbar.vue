@@ -1,38 +1,44 @@
 <template>
     <div>
-        <b-navbar :variant="configuracion.tema === 'Oscuro' ? 'dark' : 'light'" :type="configuracion.tema === 'Oscuro' ? 'dark' : 'light'">
-                <!-- titulo responsivo -->
+        <b-navbar style="background-color:var(--background-component);">
+                
                 <b-navbar-brand>
-                    <span >
-                        <b-button size="sm" v-b-toggle.sidebar class="me-3" :variant="configuracion.tema === 'Oscuro' ? 'dark' : 'light'">
-                                <b-icon icon="list" :variant="configuracion.tema === 'Oscuro' ? 'light' : 'dark'" />
+                    <span  >
+                        <b-button  style="background-color:var(--background-component);" size="sm" v-b-toggle.sidebar class="me-3" >
+                                <b-icon style=" color: var(--text-color)"  icon="list" />
                         </b-button>
                     </span>   
-                    &nbsp;&nbsp;PARCI <span class="d-none d-md-inline">|     Sistema de Participacion Ciudadana</span>
+                    <span  style=" color: var(--text-color)" @click="inicio()" class="titulo">
+                        &nbsp;&nbsp;PARCI <span  class="d-none d-md-inline">|     Sistema de Participación Ciudadana</span>
+                    </span>
                 </b-navbar-brand>
                 
 
                 <b-navbar-nav class="ml-auto d-flex flex-row" >
-                    <!-- Using 'button-content' slot -->
                     <div>
-                    <button
-                        class="btn btn-sm bgprimary btn-block"
-                        @click="dirigirConfiguracion"
-                    >
-                        <b-icon icon="tools" :variant="configuracion.tema === 'Oscuro' ? 'light' : 'dark'" />
-                    </button>
+                        <button
+                            style=" color: var(--text-color)"
+                            class="btn btn-sm btn-block"
+                            @click="dirigirConfiguracion"
+                        >
+                            <b-icon 
+                                style=" color: var(--text-color)"
+                                icon="columns-gap"  />
+                        </button>
                     </div>
 
-                <div class="d-flex align-items-center">
-                    <b-button
-                    size="sm"
-                    class=" mx-3 btn-block"
-                    @click="cerrarSesion"
-                    :variant="configuracion.tema === 'Oscuro' ? 'dark' : 'light'"
-                    >
-                    <b-icon icon="power" :variant="configuracion.tema === 'Oscuro' ? 'light' : 'dark'" />
-                    </b-button>
-                </div>
+                    <div class="d-flex align-items-center">
+                        <b-button
+                        size="sm"
+                        class=" mx-3 btn-block"
+                        @click="cerrarSesion"
+                        style="background-color:var(--background-component);"
+                        >
+                            <b-icon
+                                style=" color: var(--text-color)"
+                                icon="power"  />
+                        </b-button>
+                    </div>
                 
                 </b-navbar-nav>
                 <!-- menu de cierre de sesion y perfil -->
@@ -73,6 +79,13 @@ import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
         },
         methods: {
             obtenerPersonalizacion(){
+                window.addEventListener('storage', () => {
+                    console.log('cambio');
+                    
+                    this.obtenerPersonalizacion();
+                });
+                console.log('hola');
+                
                 const personalizacionString = localStorage.getItem('personalizacion');
                 const personalizacion = personalizacionString ? JSON.parse(personalizacionString) : null;
 
@@ -90,8 +103,8 @@ import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
                     text: "Se cerrara la sesion actual",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
+                    confirmButtonColor: 'var(--color-primary)',
+                    cancelButtonColor: 'var(--color-secondary)',
                     cancelButtonText:'Cancelar',
                     confirmButtonText: 'Si, cerrar sesion'
                 }).then((result) => {
@@ -108,14 +121,23 @@ import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
                     }
                 })
                 
+            },
+            inicio(){
+                if(this.$route.path !== '/'){  
+                    this.$router.push('/');
+                }
             }
         },
         mounted() {
+            
             this.obtenerPersonalizacion();
-        },
+            
+        }
     });
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+    .titulo{
+        cursor: pointer;
+    }
 </style>

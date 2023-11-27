@@ -3,10 +3,9 @@
         <Navbar/>
 
         <b-row :class="configuracion.tema" class="main">
-            <b-card>
-                ssssd
-            </b-card>
-            <router-view/>
+            <b-container fluid>
+                <router-view/>
+            </b-container>     
         </b-row>
     </div>
 </template>
