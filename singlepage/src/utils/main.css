@@ -35,7 +35,7 @@
 :root{
     --background-color: #f7f7f7;
     --text-color: #000000;
-    --background-component: rgb(255, 255, 255)bcb;
+    --background-component:  #fff;
     --background-select: #fff;
     --color-primary: #236b47;
     --color-secondary: #9e030a;
@@ -85,12 +85,15 @@ body{
     color: var(--text-color) !important;
 }
 
-.bg-light{
+.b-sidebar-header{
     background-color: var(--background-component) !important;
     color: var(--text-color) !important;
 }
 
-.bg-dark{
+.b-sidebar-header .close{
+    color: var(--text-color) !important;
+}
+.b-sidebar-body{
     background-color: var(--background-component) !important;
     color: var(--text-color) !important;
 }

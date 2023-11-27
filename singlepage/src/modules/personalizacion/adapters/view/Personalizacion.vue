@@ -39,17 +39,20 @@
 </template>
 
 <script lang="ts">
-    import { cambioPersonalizacion } from '../../../../kernel/cambioPersonalizacion';
+import { cambioPersonalizacion } from '../../../../kernel/cambioPersonalizacion';
 
 import Vue from 'vue';
 import { Personalizacion } from '../../entities/personalizacion';
+import { PersonalizacionController } from '../personalizacion.controller';
+
     export default Vue.extend({
         name: 'Configuracion',
         data() {
             return {
                 configuracion:{
                     tema: '',
-                    tamaño_letra:''
+                    tamaño_letra:'',
+                    usuario: ''
                 } as Personalizacion,
                 temas: [
                     { value: 'Claro', text: 'Claro' },
@@ -64,20 +67,63 @@ import { Personalizacion } from '../../entities/personalizacion';
             }
         },
         methods: {
-            guardarConfiguracion(){
+            async guardarConfiguracion(){
+                Vue.swal({
+                    title: '¿Estás seguro?',
+                    text: "Se guardará la configuración",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: "var(--color-primary)",
+                    cancelButtonColor: "var(--color-secondary)",
+                    cancelButtonText:'Cancelar',
+                    confirmButtonText: 'Si, guardar'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        const personalizacionController = new PersonalizacionController();
+                        const respuesta = await personalizacionController.modificarPersonalizacion(this.configuracion);
+
+                        if(!respuesta.error){
+                            Vue.swal({
+                                title: '¡Guardado!',
+                                text: 'Se guardó la configuración',
+                                icon: 'success',
+                                confirmButtonColor: "var(--color-primary)",
+                                confirmButtonText: 'Aceptar'
+                            });
+                            localStorage.setItem('personalizacion', JSON.stringify(this.configuracion));
+                            cambioPersonalizacion(this.configuracion);
+                        }else{
+                            Vue.swal({
+                                title: '¡Error!',
+                                text: respuesta.message,
+                                icon: 'error',
+                                confirmButtonColor: "var(--color-primary)",
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+                    }
+                })
+
                 
             },
+
             obtenerPersonalizacion(){
                 const personalizacionString = localStorage.getItem('personalizacion');
                 const personalizacion = personalizacionString ? JSON.parse(personalizacionString) : null;
 
-                this.configuracion = personalizacion;                
+                const usuarioString = localStorage.getItem('usuario');
+                const usuario = usuarioString ? JSON.parse(usuarioString) : null;
+
+                this.configuracion = {
+                    tema: personalizacion.tema,
+                    tamaño_letra: personalizacion.tamaño_letra,
+                    usuario: usuario.usuario
+                };        
             },
+
             cambiarPersonalizacion(){
-                localStorage.setItem('personalizacion', JSON.stringify(this.configuracion));
                 cambioPersonalizacion(this.configuracion);
             }
-            
         },
         mounted() {
             this.obtenerPersonalizacion();

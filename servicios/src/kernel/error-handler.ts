@@ -26,6 +26,7 @@ const errores: { [x: string]: ResponseApi<undefined> } = {
   "La contraseña debe tener al menos una letra mayúscula": { status: 400, error: true, message: "La contraseña debe tener al menos una letra mayúscula" },
   "La contraseña debe tener al menos una letra minúscula": { status: 400, error: true, message: "La contraseña debe tener al menos una letra minuscula" },
   "La contraseña debe tener al menos un número": { status: 400, error: true, message: "La contraseña debe tener al menos un número" },
+  "Formato de contraseña incorrecto": { status: 400, error: true, message: "Formato de contraseña incorrecto" },
 
   //personalizacion
   "No se pudo modificar la personalizacion": { status: 400, error: true, message: "No se pudo modificar la personalizacion" },

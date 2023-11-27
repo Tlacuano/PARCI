@@ -1,38 +1,44 @@
 <template>
     <div>
-        <b-navbar style="background-color:var(--background-component); color: var(--text-component);">
+        <b-navbar style="background-color:var(--background-component);">
                 
                 <b-navbar-brand>
-                    <span >
-                        <b-button size="sm" v-b-toggle.sidebar class="me-3" >
-                                <b-icon icon="list" />
+                    <span  >
+                        <b-button  style="background-color:var(--background-component);" size="sm" v-b-toggle.sidebar class="me-3" >
+                                <b-icon style=" color: var(--text-color)"  icon="list" />
                         </b-button>
                     </span>   
-                    &nbsp;&nbsp;PARCI <span class="d-none d-md-inline">|     Sistema de Participación Ciudadana</span>
+                    <span  style=" color: var(--text-color)" @click="inicio()" class="titulo">
+                        &nbsp;&nbsp;PARCI <span  class="d-none d-md-inline">|     Sistema de Participación Ciudadana</span>
+                    </span>
                 </b-navbar-brand>
                 
 
                 <b-navbar-nav class="ml-auto d-flex flex-row" >
-                    <!-- Using 'button-content' slot -->
                     <div>
-                    <button
-                        class="btn btn-sm bgprimary btn-block"
-                        @click="dirigirConfiguracion"
-                    >
-                        <b-icon icon="tools" :variant="configuracion.tema === 'Oscuro' ? 'light' : 'dark'" />
-                    </button>
+                        <button
+                            style=" color: var(--text-color)"
+                            class="btn btn-sm btn-block"
+                            @click="dirigirConfiguracion"
+                        >
+                            <b-icon 
+                                style=" color: var(--text-color)"
+                                icon="columns-gap"  />
+                        </button>
                     </div>
 
-                <div class="d-flex align-items-center">
-                    <b-button
-                    size="sm"
-                    class=" mx-3 btn-block"
-                    @click="cerrarSesion"
-                    :variant="configuracion.tema === 'Oscuro' ? 'dark' : 'light'"
-                    >
-                    <b-icon icon="power" :variant="configuracion.tema === 'Oscuro' ? 'light' : 'dark'" />
-                    </b-button>
-                </div>
+                    <div class="d-flex align-items-center">
+                        <b-button
+                        size="sm"
+                        class=" mx-3 btn-block"
+                        @click="cerrarSesion"
+                        style="background-color:var(--background-component);"
+                        >
+                            <b-icon
+                                style=" color: var(--text-color)"
+                                icon="power"  />
+                        </b-button>
+                    </div>
                 
                 </b-navbar-nav>
                 <!-- menu de cierre de sesion y perfil -->
@@ -116,9 +122,10 @@ import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
                 })
                 
             },
-
-            colocarPersonalizacion(){
-                
+            inicio(){
+                if(this.$route.path !== '/'){  
+                    this.$router.push('/');
+                }
             }
         },
         mounted() {
@@ -129,6 +136,8 @@ import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
     });
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+    .titulo{
+        cursor: pointer;
+    }
 </style>

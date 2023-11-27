@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <router-view/>
+
+    <transition name="fade" mode="out-in">
+      <router-view />
+    </transition>
   </div>
 </template>
 
@@ -11,13 +14,20 @@
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   overflow: hidden;
+
+  .fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
 }
 </style>
 
 <script lang="ts">
   import Vue from 'vue';
-import { Personalizacion } from './modules/personalizacion/entities/personalizacion';
-import { cambioPersonalizacion } from './kernel/cambioPersonalizacion';
+  import { Personalizacion } from './modules/personalizacion/entities/personalizacion';
+  import { cambioPersonalizacion } from './kernel/cambioPersonalizacion';
 
   export default Vue.extend({
     name: 'App',

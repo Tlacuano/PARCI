@@ -1,7 +1,7 @@
 <template>
     <div>
-        <b-sidebar id="sidebar" :bg-variant="configuracion.tema === 'Oscuro' ? 'dark' : 'light'" :text-variant="configuracion.tema === 'Oscuro' ? 'light' : 'dark'" shadow>
-            <b-container>
+        <b-sidebar id="sidebar"  class="mi-sidebar"  shadow>
+            <b-container  >
                 <b-row>
                     <b-col cols="12" class="text-center mt-3">
                         <h5>Menú</h5>
@@ -117,7 +117,6 @@ import Vue from 'vue';
     .optionClaro:hover{
         background-color: #e6e6e6;
     }
-
 
 
 </style>

@@ -1,3 +1,4 @@
+import { regexValidationContrasena } from './../../../kernel/validation';
 import { regexValidationAlMenosUnaMayuscula, regexValidationNoEspaciosInicioFin, regexValidationUnAlMenosNumero, regexValidationUnaAlMenosMinuscula, validateRegex } from "../../../kernel/validation";
 import { UseCase } from "../../../kernel/contracts";
 import { recuperarContraseñaDto } from "../adapters/dtos/recuperar-contraseña.dto";
@@ -27,18 +28,8 @@ export class RecuperarContraseñaInteractor implements UseCase<recuperarContrase
         }
         
         //al menos una letra mayuscula
-        if (!validateRegex(regexValidationAlMenosUnaMayuscula, payload.nueva_contraseña)) {
-            throw new Error('La contraseña debe tener al menos una letra mayúscula');
-        }
-
-        //al menos una letra minuscula
-        if (!validateRegex(regexValidationUnaAlMenosMinuscula, payload.nueva_contraseña)) {
-            throw new Error('La contraseña debe tener al menos una letra minúscula');
-        }
-
-        //al menos un numero
-        if (!validateRegex(regexValidationUnAlMenosNumero, payload.nueva_contraseña)) {
-            throw new Error('La contraseña debe tener al menos un número');
+        if(!validateRegex(regexValidationContrasena, payload.nueva_contraseña)) {
+            throw new Error('Formato de contraseña incorrecto');
         }
 
         //sin espacion al inicio y al final
