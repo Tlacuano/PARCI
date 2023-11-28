@@ -10,77 +10,32 @@ import { ModificarReporteInteractor } from "../use-cases/modify-reporte.interact
 import { modifyReporteDTO } from "./dtos/modify-reporte.dto";
 import { InsertReporteInteractor} from './../use-cases/insert-reporte.interactor';
 import { EliminarReporteInteractor } from "../use-cases/delete-reporte.interactor";
-import { ObtenerReportePorFechaInteractor } from './../use-cases/obtener-reporte-fecha.interactor';
-import { ObtenerReportePorCategoriaInteractor } from "./../use-cases/obtener-reporte-categoria.interactor";
 import { votarReporteDTO } from "./dtos/votar-reporte.dto";
 import { VotarReporteInteractor } from './../use-cases/votar-reporte.interactor';
 import { ModificarEstadoReporteInteractor } from "../use-cases/modificar-estado-reporte.interactor";
 import { modificarEstadoReporteDTO } from "./dtos/modificar-estado-reporte.dto";
+import { ObtenerReporteDTO } from "./dtos/obtener-reporte.dto";
+import { ObtenerReportesEnEsperaInteractor } from "../use-cases/obtener-reportes-en-espera.interactor";
 
 const reporteRouter = Router();
 
 export class ReporteController {
 
-    obtenerReporte = async (_req: Request, res: Response) => {
+    getReporte = async (_req: Request, res: Response) => {
         try {
-            const repository:ReporteRepository = new ReporteStorageGateway();
-            const interactor = new GetReporteInteractor(repository);
-            const result = await interactor.execute(null);
+           const payload = _req.body as ObtenerReporteDTO;
+
+            const repositorio: ReporteRepository = new ReporteStorageGateway();
+            const getReporteInteractor = new GetReporteInteractor(repositorio);
+
+            const reportes = await getReporteInteractor.execute(payload);
 
             const body: ResponseApi<Reporte[]> = {
-                data: result,
-                message: 'Los reportes han sido encontrados',
+                data: reportes,
+                message: 'Los reportes han sido encontradas esplendidamente',
                 error: false,
                 status: 200,
-            };
-
-            res.status(body.status).json(body);
-        } catch (error) {
-            const errorBody = validarError(error as Error);
-            res.status(errorBody.status).json(errorBody);
-        }
-    }
-
-    //obtener reporte por fecha
-    obtenerReporteFecha = async (_req: Request, res: Response) => {
-        try {
-            const {fecha} = _req.body
-
-            const repository:ReporteRepository = new ReporteStorageGateway();
-            const interactor = new ObtenerReportePorFechaInteractor(repository);
-
-            const result = await interactor.execute(fecha);
-
-            const body: ResponseApi<Reporte[]> = {
-                data: result,
-                message: 'Los reportes de la fecha indicada han sido encontrados',
-                error: false,
-                status: 200, 
-            };
-
-            res.status(body.status).json(body);
-        } catch (error) {
-            const errorBody = validarError(error as Error);
-            res.status(errorBody.status).json(errorBody);
-        }
-    }
-
-    //obtener reporte por fecha
-    obtenerReporteCategoria = async (_req: Request, res: Response) => {
-        try {
-            const {fk_idCategoria} = _req.body
-
-            const repository:ReporteRepository = new ReporteStorageGateway();
-            const interactor = new ObtenerReportePorCategoriaInteractor(repository);
-
-            const result = await interactor.execute(fk_idCategoria);
-
-            const body: ResponseApi<Reporte[]> = {
-                data: result,
-                message: 'Los reportes de la categoria indicada han sido encontrados',
-                error: false,
-                status: 200,
-            };
+            }
 
             res.status(body.status).json(body);
         } catch (error) {
@@ -92,7 +47,7 @@ export class ReporteController {
     obtenerReportesEnEspera = async (_req: Request, res: Response) => {
         try {
             const repository:ReporteRepository = new ReporteStorageGateway();
-            const interactor = new GetReporteInteractor(repository);
+            const interactor = new ObtenerReportesEnEsperaInteractor(repository);
             const result = await interactor.execute(null);
 
             const body: ResponseApi<Reporte[]> = {
@@ -101,7 +56,7 @@ export class ReporteController {
                 error: false,
                 status: 200,
             };
-
+            
             res.status(body.status).json(body);
         } catch (error) {
             const errorBody = validarError(error as Error);
@@ -231,10 +186,8 @@ export class ReporteController {
 
 const reporteController = new ReporteController();
 
-reporteRouter.get('/consultar', reporteController.obtenerReporte);
-reporteRouter.get('/consultar-en-espera', reporteController.obtenerReporte);
-reporteRouter.get('/consultar-por-fecha', reporteController.obtenerReporteFecha);
-reporteRouter.get('/consultar-por-categoria', reporteController.obtenerReporteCategoria);
+reporteRouter.get('/consultar', reporteController.getReporte);
+reporteRouter.get('/consultar-en-espera', reporteController.obtenerReportesEnEspera);
 reporteRouter.put('/modificar', reporteController.modificarReporte);
 reporteRouter.post('/registrar', reporteController.registrarReporte);
 reporteRouter.delete('/eliminar', reporteController.eliminarReporte);
