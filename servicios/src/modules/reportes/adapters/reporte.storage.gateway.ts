@@ -5,31 +5,23 @@ import { insertReporteDTO } from "./dtos/registrar-reporte.dto";
 import { modifyReporteDTO } from "./dtos/modify-reporte.dto";
 import { votarReporteDTO } from "./dtos/votar-reporte.dto";
 import { modificarEstadoReporteDTO } from "./dtos/modificar-estado-reporte.dto";
+import { ObtenerReporteDTO } from "./dtos/obtener-reporte.dto";
 
 export class ReporteStorageGateway implements ReporteRepository {
 
-    async obtenerReporte(): Promise<Reporte[]> {
-        try {
-            const result = await ConexionBD<Reporte[]>('SELECT fecha, titulo, descripcion, imagen, votos_positivos, votos_negativos, fk_idMunicipio FROM reportes', []);
+    async getReporte(obtenerReporteDTO: ObtenerReporteDTO): Promise<Reporte[]>{
+        try{
+            let query = 'SELECT titulo, descripcion, imagen, votos_positivos, votos_negativos, fk_idMunicipio FROM reportes WHERE estado = "Publicado"';
+            if(obtenerReporteDTO?.fecha){
+                query += ' AND fecha = ?';
+            } else if (obtenerReporteDTO?.fk_idCategoria){
+                query += ' AND fk_idCategoria = ?';
+            }
+            const result = await ConexionBD<Reporte[]>(query, [obtenerReporteDTO?.fecha || obtenerReporteDTO?.fk_idCategoria].filter(Boolean));
+            if(result.length === 0){
+                console.log("no hay nadaaa")
+            }
             return result;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async obtenerReportePorFecha(fecha: Date): Promise<Reporte[]> {
-        try {
-            const resultado = await ConexionBD<Reporte[]>("SELECT fecha, titulo, descripcion, imagen, votos_positivos, votos_negativos FROM reportes WHERE fecha = ?", [fecha]);
-            return resultado;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async obtenerReportePorCategoria(fk_idCategoria: number): Promise<Reporte[]> {
-        try {
-            const resultado = await ConexionBD<Reporte[]>("SELECT fecha, titulo, descripcion, imagen, votos_positivos, votos_negativos, fk_idCategoria FROM reportes WHERE fk_idCategoria = ?", [fk_idCategoria]);
-            return resultado;
         } catch (error) {
             throw error;
         }
@@ -37,9 +29,12 @@ export class ReporteStorageGateway implements ReporteRepository {
 
     async obtenerReportesEnEspera(): Promise<Reporte[]> {
         try {
-            const resultado = await ConexionBD<Reporte[]>("SELECT r.fecha, r.descripcion, m.nombre_municipio as nombre_municipio, ef.nombre_entidad FROM reportes r JOIN municipios m ON r.fk_idMunicipio = m.id_municipio JOIN entidades_federativas ef ON m.fk_idEntidad = ef.id_entidad WHERE  estado = 'Espera'", []);
+            const resultado = await ConexionBD<Reporte[]>('SELECT r.fecha, r.descripcion, m.nombre_municipio as nombre_municipio, ef.nombre_entidad FROM reportes r JOIN municipios m ON r.fk_idMunicipio = m.id_municipio JOIN entidades_federativas ef ON m.fk_idEntidad = ef.id_entidad WHERE r.estado = "Espera"', []);
+            console.log(resultado)
+            console.log("entroCon")
             return resultado;
         } catch (error) {
+            console.error(error)
             throw error;
         }
     }

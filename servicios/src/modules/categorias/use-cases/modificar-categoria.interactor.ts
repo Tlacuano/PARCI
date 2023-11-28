@@ -1,4 +1,4 @@
-import { UseCase } from "src/kernel/contracts";
+import { UseCase } from "../../../kernel/contracts";
 import { modifyCategoriaDTO } from "../adapters/dtos/modify-categoria.dto";
 import { CategoriaRepository } from "./ports/categoria.repository";
 import { nombreCategoriaExistente } from "../utils/nombre-categoria-existente";
