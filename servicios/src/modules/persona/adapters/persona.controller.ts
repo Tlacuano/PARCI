@@ -29,7 +29,6 @@ export class PersonaController {
             );
 
             const persona: Persona = {
-                id_persona: 0,
                 nombre: payload.nombre,
                 apellido_paterno: payload.apellido_paterno,
                 apellido_materno: payload.apellido_materno,

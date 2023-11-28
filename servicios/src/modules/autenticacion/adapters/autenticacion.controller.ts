@@ -132,6 +132,9 @@ export class AutenticacionController {
         try {
             const payload = req.body as recuperarContraseñaDto;
 
+            console.log(payload);
+            
+
             const repositorio: AutenticacionRepository = new AutenticacionStorageGateway;
             const recuperarContraseñaInteractor = new RecuperarContraseñaInteractor(repositorio);
 
@@ -143,6 +146,8 @@ export class AutenticacionController {
                 status: 200,
                 error: false
             }
+
+            res.status(body.status).json(body);
             
         } catch (error) {
             const errorBody = validarError(error as Error);
@@ -157,7 +162,7 @@ const autenticacionController = new AutenticacionController();
 autenticacionRouter.post('/inicio-sesion', autenticacionController.inicioSesion);
 autenticacionRouter.post('/registrar-codigo', autenticacionController.registrarCodigoRC);
 autenticacionRouter.post('/verificar-codigo', autenticacionController.verificarCodigoRC);
-autenticacionRouter.post('/recuperar-contraseña', autenticacionController.recuperarContraseña);
+autenticacionRouter.post('/recuperar-contrasena', autenticacionController.recuperarContraseña);
 
 
 export default autenticacionRouter;

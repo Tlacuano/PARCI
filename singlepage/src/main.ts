@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import '../src/utils/main.css'
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
@@ -14,6 +15,7 @@ Vue.use(IconsPlugin)
 
 
 import VueSweetalert2 from "vue-sweetalert2";
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 const options = {
   confirmButtonColor: "#009574",

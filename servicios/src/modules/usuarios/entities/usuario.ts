@@ -1,4 +1,4 @@
-import { Persona } from "src/modules/persona/entities/persona";
+import { Persona } from "../../../modules/persona/entities/persona";
 
 export type Usuario = {
     id_usuario: number;

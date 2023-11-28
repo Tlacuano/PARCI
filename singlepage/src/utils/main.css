@@ -1,0 +1,113 @@
+/*.Oscuro {
+    background-color: #222222;
+    color: #fff;
+}
+
+.OscuroNav {
+    background-color: #212020;
+    color: #fff;
+}
+
+.Claro {
+    background-color: #fff;
+    color: #000;
+}
+
+.ClaroNav {
+    background-color: #ffffff;
+    color: #000;
+}
+
+.Chica {
+    font-size: 14px;
+}
+
+.Mediana {
+    font-size: 16px;
+}
+
+.Grande {
+    font-size: 18px;
+}*/
+
+/* VARIABLES */
+
+:root{
+    --background-color: #f7f7f7;
+    --text-color: #000000;
+    --background-component:  #fff;
+    --background-select: #fff;
+    --color-primary: #236b47;
+    --color-secondary: #9e030a;
+}
+
+html[data-theme="Oscuro"]{
+    --background-color: #060e02;
+    --text-color: #fff;
+    --background-component:#343a40;
+    --background-select: #52585e;
+}
+
+html[data-theme="Claro"]{
+    --background-color: #f7f7f7;
+    --text-color: #000;
+    --background-component: #fff;
+}
+
+html[font="Chica"]{
+    --font-size: 14px !important;
+}
+
+html[font="Mediana"]{
+    --font-size: 16px !important;
+}
+
+html[font="Grande"]{
+    --font-size: 18px !important;
+}
+
+
+/* declaracion de colores en las etiquetas*/
+
+body{
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+    font-size: var(--font-size) !important;
+}
+
+.card{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
+.custom-select{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
+.b-sidebar-header{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
+.b-sidebar-header .close{
+    color: var(--text-color) !important;
+}
+.b-sidebar-body{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
+h1, h2, h3, h4, h5, h6{
+    color: var(--text-color) !important;
+}
+
+hr{
+    border-top: 1px solid var(--text-color) !important;
+}
+
+.swal2-popup{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+

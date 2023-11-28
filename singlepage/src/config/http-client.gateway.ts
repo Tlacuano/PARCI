@@ -51,11 +51,28 @@ AxiosClient.interceptors.response.use(
                         // Agregar swtich con los mensajes genéricos
                         switch (message) {
                             case "Usuario o contraseña incorrectos":
-                                messageAlert = "Credenciales incorrectas";
-                                titleAlert = "Usuario y/o contraseña erróneos";
+                                titleAlert= "Credenciales incorrectas";
+                                messageAlert = "Usuario y/o contraseña erróneos";
                                 break;
+                            case "Código incorrecto":
+                                titleAlert = "Código incorrecto";
+                                messageAlert = "Código incorrecto";
+                                break;
+                            case "El usuario es requerido":
+                                titleAlert = "El usuario es requerido";
+                                messageAlert = "Usuario requerido";
+                                break;
+                            case "La contraseña es requerida":
+                                titleAlert = "La contraseña es requerida";
+                                messageAlert = "Contraseña requerida";
+                                break;
+                            case "Formato de contraseña incorrecto":
+                                titleAlert = "Formato de contraseña incorrecto";
+                                messageAlert = "El formato de la contraseña es incorrecto";
+                                break;
+                                
                         }                        
-                        Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning" });
+                        Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning", confirmButtonColor: "var(--color-primary)" });
                         break;
                     }
                     break;
@@ -83,9 +100,9 @@ AxiosClient.interceptors.response.use(
                         let titleAlert = "";
                         // Agregar swtich con los mensajes genéricos
                         switch (message) {
-                            case "Not found":
-                                messageAlert = "El recurso solicitado no ha sido encontrado";
-                                titleAlert = "Recurso no encontrado";
+                            case "Usuario no encontrado":
+                                messageAlert = "";
+                                titleAlert = "Usuario no encontrado";
                                 break;
                             case "No match":
                                 messageAlert = "No se encontraron coincidencias";
@@ -100,7 +117,7 @@ AxiosClient.interceptors.response.use(
                                 titleAlert = "Capacitación no encontrada";
                                 break;
                         }
-                        Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning" });
+                        Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning", confirmButtonColor: "var(--color-primary)" });
                     }
                     break;
                 }

@@ -14,4 +14,5 @@ export interface UsuarioRepository {
     modificarInformacionOpiniones(payload: ModificarInformacionOpinionesDTO): Promise<boolean>;
     consultarInformacionOpiniones(payload: string): Promise<Usuario>;
     reiniciarContadorOpiniones(payload: string): Promise<boolean>;
+    existeUsuario(usuario: string): Promise<boolean>;
 }

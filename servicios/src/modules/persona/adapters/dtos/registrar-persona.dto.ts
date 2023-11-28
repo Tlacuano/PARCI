@@ -1,3 +1,6 @@
+import { Usuario } from "../../../../modules/usuarios/entities/usuario";
+import { Persona } from "../../entities/persona";
+
 export type RegistrarPersonaDTO = {
     nombre: string;
     apellido_paterno: string;
