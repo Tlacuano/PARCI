@@ -2,7 +2,7 @@
   <b-modal
     id="modal-registro"
     centered
-    title="Registrar de entidad federativa"
+    title="Registrar entidad federativa"
     hide-header-close
     no-close-on-backdrop
     no-close-on-esc

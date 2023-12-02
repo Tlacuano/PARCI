@@ -6,6 +6,8 @@ import { RegistrarEntidadDTO } from "./dtos/registrar-entidad.dto";
 import { RegistrarEntidadFederativaInteractor } from "../use-cases/registrar-entidad.interactor";
 import { CambiarEstadoEntidadDTO } from "./dtos/cambiar-estado-entidad.dto";
 import { CambiarEstadoEntidadFederativaInteractor } from "../use-cases/cambiar-estado-entidad.interactor";
+import { ModificarEntidadFederativaInteractor } from "../use-cases/modificar-entidad.interactor";
+import { ModificarEntidadDTO } from "./dtos/modificar-entidad.dto";
 
 export class EntidadFederativaController {
   private obtenerError(error: any) {
@@ -37,6 +39,20 @@ export class EntidadFederativaController {
       const registrarEntidadFederativaInteractor = new RegistrarEntidadFederativaInteractor(repositorio);
 
       const respuesta = await registrarEntidadFederativaInteractor.execute(payload);
+
+      return respuesta;
+    } catch (error) {
+      return this.obtenerError(error);
+    }
+  };
+
+  // MODIFICAR ENTIDAD FEDERATIVA
+  modificarEntidadFederativa = async (payload: ModificarEntidadDTO) => {
+    try {
+      const repositorio: EntidadFederativaRepository = new EntidadFederativaStorageGateway();
+      const modificarEntidadFederativaInteractor = new ModificarEntidadFederativaInteractor(repositorio);
+
+      const respuesta = await modificarEntidadFederativaInteractor.execute(payload);
 
       return respuesta;
     } catch (error) {

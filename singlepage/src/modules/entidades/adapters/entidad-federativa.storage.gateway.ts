@@ -4,8 +4,16 @@ import { EntidadFederativaRepository } from "../use-cases/ports/entidad-federati
 import api from "../../../config/http-client.gateway";
 import { RegistrarEntidadDTO } from "./dtos/registrar-entidad.dto";
 import { CambiarEstadoEntidadDTO } from "./dtos/cambiar-estado-entidad.dto";
+import { ModificarEntidadDTO } from "./dtos/modificar-entidad.dto";
 
 export class EntidadFederativaStorageGateway implements EntidadFederativaRepository {
+  async modificarEntidadFederativa(payload: ModificarEntidadDTO): Promise<ResponseApi<boolean>> {
+    const respuesta = await api.doPut("/entidades-federativas/modificar", payload);
+    return {
+      ...respuesta.data,
+    } as ResponseApi<boolean>;
+  }
+
   async cambiarEstadoEntidadFederativa(payload: CambiarEstadoEntidadDTO): Promise<ResponseApi<boolean>> {
     const respuesta = await api.doPut("/entidades-federativas/cambiar-estado", payload);
     return {

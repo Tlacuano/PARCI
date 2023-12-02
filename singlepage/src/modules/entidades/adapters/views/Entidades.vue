@@ -10,6 +10,7 @@
           Agregar
         </b-button>
         <ModalRegistro @registrado="getEntidades" />
+        <ModalEditar :entidad="entidadSeleccionada" @editado="getEntidades" />
       </b-col>
       <b-col cols="6">
         <b-input-group class="mb-2">
@@ -41,7 +42,11 @@
             <b-col class="text-center" cols="1">
               <b-row>
                 <b-col cols="6">
-                  <b-button v-b-modal.modal-registro variant="primary">
+                  <b-button
+                    @click="seleccionarEntidad(entidad)"
+                    v-b-modal.modal-editar
+                    variant="primary"
+                  >
                     <b-icon icon="pencil-square" />
                   </b-button>
                 </b-col>
@@ -82,14 +87,23 @@ export default Vue.extend({
     ModalRegistro: defineAsyncComponent(
       () => import("./components/ModalRegistro.vue")
     ),
+    ModalEditar: defineAsyncComponent(
+      () => import("./components/ModalEditar.vue")
+    ),
   },
   data() {
     return {
       // Entidades
       entidades: [] as EntidadFederativa[],
+      entidadSeleccionada: {} as EntidadFederativa,
     };
   },
   methods: {
+    // Seleccionar entidad federativa
+    seleccionarEntidad(entidad: EntidadFederativa) {
+      this.entidadSeleccionada = { ...entidad };
+    },
+
     // Obtener entidades federativas
     async getEntidades() {
       this.entidades = [];
