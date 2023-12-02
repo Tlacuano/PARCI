@@ -19,6 +19,11 @@ const routes: Array<RouteConfig> = [
         component:() => import('../modules/autenticacion/adapters/view/SinHome.vue')
       },
       {
+        path:'a/entidades-federativas',
+        name:'EntidadesFederativas',
+        component:() => import('../modules/entidades/adapters/views/Entidades.vue')
+      },
+      {
         path:'m',
       },
       {
