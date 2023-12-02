@@ -33,25 +33,21 @@
                 {{ entidad.id_entidad }}
               </div>
             </b-col>
-            <b-col cols="9">
+            <b-col cols="10">
               <b-card-text class="gray-box rounded">
                 {{ entidad.nombre_entidad }}
               </b-card-text>
             </b-col>
-            <b-col class="text-center" cols="2">
+            <b-col class="text-center" cols="1">
               <b-row>
-                <b-col cols="4">
+                <b-col cols="6">
                   <b-button v-b-modal.modal-registro variant="primary">
                     <b-icon icon="pencil-square" />
                   </b-button>
                 </b-col>
-                <b-col cols="4">
-                  <b-button variant="danger">
-                    <b-icon icon="trash" />
-                  </b-button>
-                </b-col>
-                <b-col cols="4">
+                <b-col cols="6">
                   <b-button
+                    @click="cambiarEstadoEntidad(entidad)"
                     :variant="entidad.estado === 1 ? 'success' : 'warning'"
                   >
                     <b-icon
@@ -94,13 +90,39 @@ export default Vue.extend({
     };
   },
   methods: {
+    // Obtener entidades federativas
     async getEntidades() {
+      this.entidades = [];
       try {
         const controlador = new EntidadFederativaController();
         const respuesta = await controlador.obtenerEntidadesFederativas();
 
         if (!respuesta.error) {
           this.entidades = respuesta.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    // Cambiar estado de entidad federativa
+    async cambiarEstadoEntidad(entidad: EntidadFederativa) {
+      try {
+        entidad.estado = entidad.estado === 1 ? 0 : 1;
+
+        const controlador = new EntidadFederativaController();
+        const respuesta = await controlador.cambiarEstadoEntidadFederativa(
+          entidad
+        );
+
+        if (!respuesta.error) {
+          console.log(respuesta);
+          this.$bvToast.toast("Estado de entidad federativa actualizado", {
+            title: "Éxito",
+            variant: "success",
+            solid: true,
+          });
+          this.getEntidades();
         }
       } catch (error) {
         console.log(error);
@@ -128,9 +150,10 @@ export default Vue.extend({
   align-items: center;
   background-color: #cecece;
   color: black;
+  font-weight: bold;
   display: flex;
   height: 100%;
   justify-content: center;
-  width: 50%;
+  width: 100%;
 }
 </style>

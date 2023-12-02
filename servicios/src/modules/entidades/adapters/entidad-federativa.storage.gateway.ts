@@ -8,7 +8,7 @@ import { RegistrarEntidadFederativaDTO } from "./dtos/registrar-entidad-federati
 export class EntidadFederativaStorageGateway implements EntidadFederativaRepository {
   async getEntidadesFederativas(): Promise<EntidadFederativa[]> {
     try {
-      const resultado = await ConexionBD<EntidadFederativa[]>("SELECT id_entidad, nombre_entidad FROM entidades_federativas WHERE estado = 1", []);
+      const resultado = await ConexionBD<EntidadFederativa[]>("SELECT id_entidad, nombre_entidad, estado FROM entidades_federativas", []);
       return resultado;
     } catch (error) {
       throw error;
