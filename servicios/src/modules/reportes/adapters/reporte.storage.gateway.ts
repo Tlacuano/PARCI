@@ -6,18 +6,62 @@ import { modifyReporteDTO } from "./dtos/modify-reporte.dto";
 import { votarReporteDTO } from "./dtos/votar-reporte.dto";
 import { modificarEstadoReporteDTO } from "./dtos/modificar-estado-reporte.dto";
 import { ObtenerReporteDTO } from "./dtos/obtener-reporte.dto";
+import { ObtenerReportesDTO } from "./dtos/reponse-get-reporte";
 
 export class ReporteStorageGateway implements ReporteRepository {
 
-    async getReporte(obtenerReporteDTO: ObtenerReporteDTO): Promise<Reporte[]>{
+    async getReporte(obtenerReporteDTO: ObtenerReporteDTO): Promise<ObtenerReportesDTO[]>{
         try{
-            let query = 'SELECT titulo, descripcion, imagen, votos_positivos, votos_negativos, fk_idMunicipio FROM reportes WHERE estado = "Publicado"';
+            let queryPart1 =   `SELECT
+                                    r.id_reporte,
+                                    r.titulo,
+                                    r.imagen,
+                                    DATE_FORMAT(r.fecha, '%Y-%m-%d') as fecha,
+                                    p.nombre,
+                                    p.apellido_paterno,
+                                    p.apellido_materno,
+                                    c.nombre_categoria,
+                                    c.color,
+                                    COUNT(CASE WHEN vr.voto = 'positivo' THEN 1 END) AS votos_positivos,
+                                    COUNT(CASE WHEN vr.voto = 'negativo' THEN 1 END) AS votos_negativos,
+                                    MAX((SELECT vr_inner.voto
+                                        FROM votos_reporte vr_inner 
+                                        JOIN personas p_inner ON vr_inner.fk_idPersona = p_inner.id_persona
+                                        JOIN usuarios u_inner ON p_inner.id_persona = u_inner.fk_idPersona
+                                        WHERE vr_inner.fk_idReporte = r.id_reporte
+                                        AND u_inner.usuario = ?
+                                        LIMIT 1)) AS voto_usuario
+                                FROM
+                                    reportes r
+                                JOIN personas p ON r.fk_idPersona = p.id_persona
+                                JOIN categorias c ON r.fk_idCategoria = c.id_categoria
+                                JOIN municipios m ON r.fk_idMunicipio = m.id_municipio
+                                LEFT JOIN votos_reporte vr ON r.id_reporte = vr.fk_idReporte
+                                LEFT JOIN usuarios u ON u.fk_idPersona = p.id_persona
+                                WHERE
+                                    r.estado = 'Publicado'
+                                    AND u.usuario = ?
+                                    AND m.id_municipio = ?
+                            `;
+            
             if(obtenerReporteDTO?.fecha){
-                query += ' AND fecha = ?';
+                queryPart1 += ' AND r.fecha = ?';
             } else if (obtenerReporteDTO?.fk_idCategoria){
-                query += ' AND fk_idCategoria = ?';
+                queryPart1 += ' AND r.fk_idCategoria = ?';
             }
-            const result = await ConexionBD<Reporte[]>(query, [obtenerReporteDTO?.fecha || obtenerReporteDTO?.fk_idCategoria].filter(Boolean));
+
+            const query = queryPart1 + `GROUP BY
+            r.id_reporte,
+            r.titulo,
+            r.imagen,
+            r.fecha,
+            p.nombre,
+            p.apellido_paterno,
+            p.apellido_materno,
+            c.nombre_categoria,
+            c.color;`;
+
+            const result = await ConexionBD<ObtenerReportesDTO[]>(query, [obtenerReporteDTO.usuario, obtenerReporteDTO.usuario, obtenerReporteDTO.fk_idMunicipio, obtenerReporteDTO.fecha || obtenerReporteDTO.fk_idCategoria]);
             if(result.length === 0){
                 console.log("no hay nadaaa")
             }
@@ -30,8 +74,7 @@ export class ReporteStorageGateway implements ReporteRepository {
     async obtenerReportesEnEspera(): Promise<Reporte[]> {
         try {
             const resultado = await ConexionBD<Reporte[]>('SELECT r.fecha, r.descripcion, m.nombre_municipio as nombre_municipio, ef.nombre_entidad FROM reportes r JOIN municipios m ON r.fk_idMunicipio = m.id_municipio JOIN entidades_federativas ef ON m.fk_idEntidad = ef.id_entidad WHERE r.estado = "Espera"', []);
-            console.log(resultado)
-            console.log("entroCon")
+
             return resultado;
         } catch (error) {
             console.error(error)

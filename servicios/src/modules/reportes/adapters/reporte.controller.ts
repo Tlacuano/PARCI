@@ -16,6 +16,7 @@ import { ModificarEstadoReporteInteractor } from "../use-cases/modificar-estado-
 import { modificarEstadoReporteDTO } from "./dtos/modificar-estado-reporte.dto";
 import { ObtenerReporteDTO } from "./dtos/obtener-reporte.dto";
 import { ObtenerReportesEnEsperaInteractor } from "../use-cases/obtener-reportes-en-espera.interactor";
+import { ObtenerReportesDTO } from "./dtos/reponse-get-reporte";
 
 const reporteRouter = Router();
 
@@ -23,14 +24,16 @@ export class ReporteController {
 
     getReporte = async (_req: Request, res: Response) => {
         try {
-           const payload = _req.body as ObtenerReporteDTO;
-
+            const payload = _req.body as ObtenerReporteDTO;
+            
             const repositorio: ReporteRepository = new ReporteStorageGateway();
             const getReporteInteractor = new GetReporteInteractor(repositorio);
 
             const reportes = await getReporteInteractor.execute(payload);
+            
+            
 
-            const body: ResponseApi<Reporte[]> = {
+            const body: ResponseApi<ObtenerReportesDTO[]> = {
                 data: reportes,
                 message: 'Los reportes han sido encontradas esplendidamente',
                 error: false,
@@ -186,7 +189,7 @@ export class ReporteController {
 
 const reporteController = new ReporteController();
 
-reporteRouter.get('/consultar', reporteController.getReporte);
+reporteRouter.post('/consultar', reporteController.getReporte);
 reporteRouter.get('/consultar-en-espera', reporteController.obtenerReportesEnEspera);
 reporteRouter.put('/modificar', reporteController.modificarReporte);
 reporteRouter.post('/registrar', reporteController.registrarReporte);
