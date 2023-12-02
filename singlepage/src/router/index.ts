@@ -18,6 +18,11 @@ const routes: Array<RouteConfig> = [
         path:'a',
       },
       {
+        path:'a/entidades-federativas',
+        name:'EntidadesFederativas',
+        component:() => import('../modules/entidades/adapters/views/Entidades.vue')
+      },
+      {
         path:'m',
       },
       {
