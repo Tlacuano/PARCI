@@ -84,8 +84,7 @@ import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
                     
                     this.obtenerPersonalizacion();
                 });
-                console.log('hola');
-                
+                                
                 const personalizacionString = localStorage.getItem('personalizacion');
                 const personalizacion = personalizacionString ? JSON.parse(personalizacionString) : null;
 

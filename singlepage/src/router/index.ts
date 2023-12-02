@@ -16,6 +16,7 @@ const routes: Array<RouteConfig> = [
     children:[
       {
         path:'a',
+        component:() => import('../modules/autenticacion/adapters/view/SinHome.vue')
       },
       {
         path:'m',
