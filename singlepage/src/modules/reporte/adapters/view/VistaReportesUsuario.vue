@@ -58,13 +58,13 @@
                                                     <b-col cols="12">
                                                         <b-card class="mb-4">
                                                             <b-container>
-                                                                <b-row class=" px-5">
+                                                                <b-row class=" px-3">
                                                                     <b-col cols="10">
                                                                         <b-row>
                                                                             <b-col cols="1" class="text-center" style="padding: 0px;">
                                                                                 <b-avatar size="3rem"></b-avatar>
                                                                             </b-col>
-                                                                            <b-col cols="10" style="padding: 0px;">
+                                                                            <b-col cols="10" style="padding: 3px;">
                                                                                 <b-row>
                                                                                     <b-col cols="12">
                                                                                         {{ reporte.nombre }} {{ reporte.apellido_paterno}}
@@ -86,12 +86,12 @@
                                                                         </b-row>
                                                                     </b-col>
                                                                 </b-row>
-                                                                <b-row class="mt-4  px-5">
+                                                                <b-row class="mt-4  px-3">
                                                                     <b-col cols="12" class="text-center">
                                                                         <b-img fluid rounded :src="reporte.imagen[0]" :alt="reporte.titulo"  @click="verReporte(reporte.id_reporte)" class="seleccionable"/>                                                    
                                                                     </b-col>      
                                                                 </b-row>
-                                                                <b-row class="mt-4  px-5">
+                                                                <b-row class="mt-4  px-3">
                                                                     <b-col cols="12">
                                                                             <b-container fluid>
                                                                                 <b-row>
