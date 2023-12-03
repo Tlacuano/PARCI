@@ -143,8 +143,8 @@ export class ReporteStorageGateway implements ReporteRepository {
     async insertReporte(payload: insertReporteDTO): Promise<boolean> {
         try {
             const result = await ConexionBD<boolean>(
-                'INSERT INTO reportes (fecha, titulo, descripcion, imagen, votos_positivos, votos_negativos, fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) VALUES (?, ?, ?, ?, 0, 0, ?, ?, ?, "Espera")', 
-            [payload.fecha,payload.titulo,payload.descripcion,JSON.stringify(payload.imagen),payload.fk_idPersona,payload.fk_idMunicipio, payload.fk_idCategoria]);
+                'INSERT INTO reportes (fecha, titulo, descripcion, imagen, fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) VALUES (?, ?, ?, ?, (SELECT id_persona FROM personas join usuarios ON fk_idPersona = id_persona WHERE usuario = ?), ?, ?, "Espera")', 
+            [payload.fecha,payload.titulo,payload.descripcion,JSON.stringify(payload.imagen),payload.usuario,payload.fk_idMunicipio, payload.fk_idCategoria]);
             return true;
         } catch (error) {
             throw error;

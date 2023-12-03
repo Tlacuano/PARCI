@@ -9,6 +9,23 @@ import { RegistrarCategoriaInteractor } from "../use-cases/registrar-categoria.i
 //import { ModificarCategoriaInteractor } from "../use-cases/modificar-categoria.interactor";
 
 export class CategoriaController {
+
+  static getCategorias_local = async () => {
+    try {
+      const repository: CategoriaRepository = new CategoriaStorageGateway();
+      const interactor: GetCategoriasInteractor = new GetCategoriasInteractor(
+        repository
+      );
+      return interactor.execute();
+    } catch (error: any) {
+      return {
+        status: 500,
+        message: error.message,
+        error: true,
+      } as ResponseApi<categoria[]>;
+    }
+  }
+
   getCategorias() {
     try {
       const repository: CategoriaRepository = new CategoriaStorageGateway();
