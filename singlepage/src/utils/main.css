@@ -119,6 +119,10 @@ body{
     border: 1px solid var(--color-border-component) !important;
 }
 
+.modal-header .close{
+    color: var(--text-color) !important;
+}
+
 .modal-footer{
     background-color: var(--background-component) !important;
     color: var(--text-color) !important;
@@ -132,6 +136,10 @@ body{
 }
 
 .custom-datepicker .text-dark{
+    color: var(--text-color) !important;
+}
+
+.bi-calendar{
     color: var(--text-color) !important;
 }
 

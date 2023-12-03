@@ -14,7 +14,7 @@ export class OpinionStorageGateway implements OpinionesRepository{
         try {
             const resultado = await ConexionBD<Opinion[]>(`SELECT
             o.id_opinion,
-            o.fecha,
+            DATE_FORMAT(o.fecha, '%Y-%m-%d') as fecha,
             o.opinion,
             o.fk_idReporte,
             COUNT(CASE WHEN vo.voto = 'positivo' THEN 1 END) AS votos_positivos,
