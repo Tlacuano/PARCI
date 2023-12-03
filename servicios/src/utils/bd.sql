@@ -19,7 +19,7 @@ CREATE TABLE municipios (
   CONSTRAINT fk_idEntidad
     FOREIGN KEY (fk_idEntidad)
     REFERENCES entidades_federativas (id_entidad)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE categorias (
   id_categoria INT NOT NULL AUTO_INCREMENT,
   nombre_categoria VARCHAR(45) NULL,
   color VARCHAR(45) NULL,
-  estado TINYINT NULL, -- Agregado campo estado como TINYINT
+  estado TINYINT NULL,
   PRIMARY KEY (id_categoria)
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE personas (
   CONSTRAINT fk_idMunicipio
     FOREIGN KEY (fk_idMunicipio)
     REFERENCES municipios (id_municipio)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE 
     ON UPDATE NO ACTION
 );
 
@@ -62,7 +62,7 @@ CREATE TABLE usuarios (
   CONSTRAINT fk_idPersonaUsuario
     FOREIGN KEY (fk_idPersona)
     REFERENCES personas (id_persona)
-    ON DELETE NO ACTION
+	ON DELETE CASCADE 
     ON UPDATE NO ACTION
 );
 
@@ -76,7 +76,7 @@ CREATE TABLE personalizacion (
   CONSTRAINT fk_idUsuario
     FOREIGN KEY (fk_idUsuario)
     REFERENCES usuarios (id_usuario)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE 
     ON UPDATE NO ACTION
 );
 
@@ -86,8 +86,6 @@ CREATE TABLE reportes (
   titulo VARCHAR(45) NULL,
   descripcion TEXT NULL, -- Cambiado a tipo TEXT
   imagen JSON NULL,
-  votos_positivos INT NULL,
-  votos_negativos INT NULL,
   fk_idPersona INT NULL,
   fk_idMunicipio INT NULL,
   fk_idCategoria INT NULL,
@@ -106,7 +104,7 @@ CREATE TABLE reportes (
   CONSTRAINT fk_idMunicipioReporte
     FOREIGN KEY (fk_idMunicipio)
     REFERENCES municipios (id_municipio)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION
 );
 
@@ -115,8 +113,6 @@ CREATE TABLE opiniones (
   id_opinion INT NOT NULL AUTO_INCREMENT,
   fecha DATE NULL,
   opinion TEXT NULL,
-  votos_positivos INT NULL,
-  votos_negativos INT NULL,
   fk_idReporte INT NULL,
   fk_idPersona INT NULL,
   PRIMARY KEY (id_opinion),
@@ -130,12 +126,58 @@ CREATE TABLE opiniones (
   CONSTRAINT fk_idPersona
     FOREIGN KEY (fk_idPersona)
     REFERENCES personas (id_persona)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE 
     ON UPDATE NO ACTION
 );
-  
 
---Entidades Federativas
+CREATE TABLE visitas (
+numero_visitas BIGINT
+);
+
+CREATE TABLE votos_opinion (
+    id_votos_opinion INT NOT NULL AUTO_INCREMENT,
+    voto ENUM('positivo', 'negativo') NULL,
+    fk_idPersona INT NULL,
+    fk_idOpinion INT NULL,
+    PRIMARY KEY (id_votos_opinion),
+    INDEX fk_idPersonaOpinion_idx (fk_idPersona ASC) VISIBLE,
+    INDEX fk_idOpinion_votos_idx (fk_idOpinion ASC) VISIBLE,
+    CONSTRAINT fk_idPersona_votos
+        FOREIGN KEY (fk_idPersona)
+        REFERENCES personas (id_persona)
+        ON DELETE CASCADE 
+        ON UPDATE NO ACTION,
+    CONSTRAINT fk_idOpinion_votos
+        FOREIGN KEY (fk_idOpinion)
+        REFERENCES opiniones (id_opinion)
+        ON DELETE CASCADE 
+        ON UPDATE NO ACTION
+);
+
+
+CREATE TABLE votos_reporte (
+    id_votos_reporte INT NOT NULL AUTO_INCREMENT,
+    voto ENUM('positivo', 'negativo') NULL,
+    fk_idPersona INT NULL,
+    fk_idReporte INT NULL,
+    PRIMARY KEY (id_votos_reporte),
+    INDEX fk_idPersona_voto_reporte_idx (fk_idPersona ASC) VISIBLE,
+    CONSTRAINT fk_idPersona_voto_reporte
+        FOREIGN KEY (fk_idPersona)
+        REFERENCES personas (id_persona)
+        ON DELETE CASCADE 
+        ON UPDATE NO ACTION,
+    INDEX fk_idReporte_voto_reporte_idx (fk_idReporte ASC) VISIBLE,
+    CONSTRAINT fk_idReporte_voto_reporte
+        FOREIGN KEY (fk_idReporte)
+        REFERENCES reportes (id_reporte)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+);
+
+
+
+
 insert into entidades_federativas (nombre_entidad, estado) values ('Aguascalientes', 1);
 insert into entidades_federativas (nombre_entidad, estado) values ('Baja California', 1);
 insert into entidades_federativas (nombre_entidad, estado) values ('Baja California Sur', 1);
@@ -170,7 +212,7 @@ insert into entidades_federativas (nombre_entidad, estado) values ('Yucatán', 1
 insert into entidades_federativas (nombre_entidad, estado) values ('Zacatecas', 1);
 
 
-/*Municipios de Aguascalientes*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Aguascalientes', 1, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Asientos', 1, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Calvillo', 1, 1);
@@ -183,21 +225,21 @@ insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('El Llan
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('San José de Gracia', 1, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Tepezalá', 1, 1);
 
-/*Municipios de Baja California*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Ensenada', 2, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Mexicali', 2, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Tecate', 2, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Tijuana', 2, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Playas de Rosarito', 2, 1);
 
-/*Municipios de Baja California Sur*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Comondú', 3, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Mulegé', 3, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('La Paz', 3, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Los Cabos', 3, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Loreto', 3, 1);
 
-/*Municipios de Campeche*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Calkiní', 4, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Campeche', 4, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Carmen', 4, 1);
@@ -210,7 +252,7 @@ insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Escárc
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Calakmul', 4, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Candelaria', 4, 1);
 
-/*Municipios de Chiapas*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acacoyagua', 5, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acala', 5, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acapetahua', 5, 1);
@@ -228,7 +270,7 @@ insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('El Bosq
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Cacahoatán', 5, 1);
 
 
-/*Municipios de Chihuahua*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Ahumada', 6, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Aldama', 6, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Allende', 6, 1);
@@ -245,7 +287,7 @@ insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Casas G
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Coronado', 6, 1);
 
 
-/*Municipios de Ciudad de México*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Azcapotzalco', 7, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Coyoacán', 7, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Cuajimalpa de Morelos', 7, 1);
@@ -263,7 +305,7 @@ insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Cuauht�
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Miguel Hidalgo', 7, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Venustiano Carranza', 7, 1);
 
-/*Municipios de Coahuila*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Abasolo', 8, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acuña', 8, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Allende', 8, 1);
@@ -277,12 +319,11 @@ insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Fronter
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('General Cepeda', 8, 1);
 
 
-/*Municipios de Colima*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Armería', 9, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Colima', 9, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Comala', 9, 1);
 
-/*Municipios de Durango*/
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Canatlán', 10, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Canelas', 10, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Coneto de Comonfort', 10, 1);
@@ -297,7 +338,7 @@ insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Indé',
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Lerdo', 10, 1);
 
 
-/*Municipios de Estado de México*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acambay de Ruíz Castañeda', 11, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acolman', 11, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Aculco', 11, 1);
@@ -308,7 +349,7 @@ insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Amanalc
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Amatepec', 11, 1);
 
 
-/*Municipios de Guanajuato*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Abasolo', 12, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acámbaro', 12, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('San Miguel de Allende', 12, 1);
@@ -316,7 +357,7 @@ insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Apaseo 
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Apaseo el Grande', 12, 1);
 
 
-/*Municipios de Guerrero*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acapulco de Juárez', 13, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Ahuacuotzingo', 13, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Ajuchitlán del Progreso', 13, 1);
@@ -329,14 +370,14 @@ insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Atlamaj
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Atlixtac', 13, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Atoyac de Álvarez', 13, 1);
 
-/*Municipios de Hidalgo*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acatlán', 14, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acaxochitlán', 14, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Actopan', 14, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Agua Blanca de Iturbide', 14, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Ajacuba', 14, 1);
 
-/*Municipios de Jalisco*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acatic', 15, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acatlán de Juárez', 15, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Ahualulco de Mercado', 15, 1);
@@ -346,14 +387,14 @@ insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Ameca',
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('San Juanito de Escobedo', 15, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Arandas', 15, 1);
 
-/*Municipios de Michoacán*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Acuitzio', 16, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Aguililla', 16, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Álvaro Obregón', 16, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Angamacutiro', 16, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Angangueo', 16, 1);
 
-/*Municipios de Morelos*/
+
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Amacuzac', 17, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Atlatlahucan', 17, 1);
 insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Axochiapan', 17, 1);
@@ -390,7 +431,7 @@ insert into municipios (nombre_municipio, fk_idEntidad, estado) values ('Temoac'
 
 
 
-/*Categorias*/
+
 insert into categorias (nombre_categoria, color) values ('Seguridad', '#FF0000');
 insert into categorias (nombre_categoria, color) values ('Servicios', '#FF8000');
 insert into categorias (nombre_categoria, color) values ('Infraestructura', '#FFFF00');
@@ -403,7 +444,7 @@ insert into categorias (nombre_categoria, color) values ('Economía', '#FF0080')
 insert into categorias (nombre_categoria, color) values ('Turismo', '#FF8080');
 insert into categorias (nombre_categoria, color) values ('Gobierno', '#FF8000');
 
-/*Personas*/
+
 insert into personas (nombre, apellido_paterno, apellido_materno, correo_electronico, fecha_nacimiento, fk_idMunicipio) values ('Jose Emilio', 'Enriquez', 'Torres', '20213tn105@utez.edu.mx', '1999-10-05', 152);
 insert into personas (nombre, apellido_paterno, apellido_materno, correo_electronico, fecha_nacimiento, fk_idMunicipio) values ('David', 'Martinez', 'Jaramillo', '20213tn119@utez.edu.mx', '1999-10-05', 152);
 insert into personas (nombre, apellido_paterno, apellido_materno, correo_electronico, fecha_nacimiento, fk_idMunicipio) values ('Emilio', 'Vejar', 'Diaz', '20213tn091@utez.edu.mx', '1999-10-05', 152);
@@ -411,7 +452,7 @@ insert into personas (nombre, apellido_paterno, apellido_materno, correo_electro
 insert into personas (nombre, apellido_paterno, apellido_materno, correo_electronico, fecha_nacimiento, fk_idMunicipio) values ('Ana Belen', 'Velasquez', 'Diaz', '20213tn149@utez.edu.mx', '1999-10-05', 152);
 insert into personas (nombre, apellido_paterno, apellido_materno, correo_electronico, fecha_nacimiento, fk_idMunicipio) values ('Mitzi Dayann', 'Aquino', 'Gutierrez', '20203tn069@utez.edu.mx', '1999-10-05', 152);
 
-/*Usuarios*/
+
 insert into usuarios (usuario, contraseña, rol, codigo, fk_idPersona) values ('Birria', '$2a$12$WgNjTNFiByI8NUYaDQEPNeqeyMOVShO.MdtBPa2W2rKJEJt8dlKje', 'Administrador', '123456', 1);
 insert into usuarios (usuario, contraseña, rol, codigo, fk_idPersona) values ('Surtida', '$2a$12$WgNjTNFiByI8NUYaDQEPNeqeyMOVShO.MdtBPa2W2rKJEJt8dlKje', 'Moderador', '123456', 2);
 insert into usuarios (usuario, contraseña, rol, codigo, contador_opinion, fk_idPersona) values ('Mazisa', '$2a$12$WgNjTNFiByI8NUYaDQEPNeqeyMOVShO.MdtBPa2W2rKJEJt8dlKje', 'Usuario', '123456', 0, 3);
@@ -420,7 +461,7 @@ insert into usuarios (usuario, contraseña, rol, codigo, contador_opinion, fk_id
 insert into usuarios (usuario, contraseña, rol, codigo, contador_opinion, fk_idPersona) values ('Belen', '$2a$12$WgNjTNFiByI8NUYaDQEPNeqeyMOVShO.MdtBPa2W2rKJEJt8dlKje', 'Usuario', '123456', 0, 6);
 
 
-/*Personalizacion*/
+
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Oscuro', 'Chica', 1);
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Claro', 'Chica', 2);
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Oscuro', 'Grande', 3);
@@ -428,12 +469,13 @@ insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Claro',
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Oscuro', 'Mediana', 5);
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Claro', 'Grande', 6);
 
-/*Reportes*/
+
+select * from usuarios;
+
+
 insert into reportes (fecha, titulo, descripcion, imagen, fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) 
 values ('2021-05-05', 'Robo a mano armada', 'Me asaltaron en la calle', '["https://www.elsoldemexico.com.mx/mexico/justicia/5gqj2t-robos-a-mano-armada-en-la-cdmx-crecen-20-en-enero.jpg"]', 3, 152, 1, 'Espera');
 
-insert into reportes (fecha, titulo, descripcion, imagen, votos_positivos, votos_negativos, 
+insert into reportes (fecha, titulo, descripcion, imagen,
 fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) 
 values ('2021-05-05', 'Robo a mano armada', 'Me asaltaron en la calle', '["https://www.elsoldemexico.com.mx/mexico/justicia/5gqj2t-robos-a-mano-armada-en-la-cdmx-crecen-20-en-enero.jpg"]', 3, 152, 1, 'Publicado');
-
-

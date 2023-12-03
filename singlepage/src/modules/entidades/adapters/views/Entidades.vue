@@ -4,66 +4,97 @@
       <b-col cols="12">
         <h4 class="mb-4">Gestión de Entidades Federativas</h4>
       </b-col>
-      <b-col cols="6">
-        <b-button v-b-modal.modal-registro variant="primary" class="mb-2">
-          <b-icon class="mx-2" icon="plus-square-fill" />
+      <b-col cols="12" lg="3">
+        <b-pagination
+          align="fill"
+          v-model="currentPage"
+          :total-rows="entidades.length"
+          :per-page="perPage"
+          aria-controls="entity-table"
+        ></b-pagination>
+      </b-col>
+      <b-col cols="12" lg="2">
+        <b-button
+          class="w-100 mb-2"
+          v-b-modal.modal-registro
+          style="background-color: var(--color-primary)"
+        >
+          <b-icon icon="plus-square-fill" />
           Agregar
         </b-button>
         <ModalRegistro @registrado="getEntidades" />
         <ModalEditar :entidad="entidadSeleccionada" @editado="getEntidades" />
       </b-col>
-      <b-col cols="6">
+      <b-col cols="12" lg="7">
         <b-input-group class="mb-2">
-          <b-form-input placeholder="Buscar" />
+          <b-form-input v-model="filter" placeholder="Buscar" />
           <b-input-group-append>
-            <b-button variant="secondary">
+            <b-button disabled>
               <b-icon icon="search" />
             </b-button>
           </b-input-group-append>
         </b-input-group>
       </b-col>
       <b-col cols="12" v-if="entidades.length > 0">
-        <b-card
-          v-for="entidad in entidades"
-          :key="entidad.id_entidad"
-          class="my-1"
+        <b-table
+          id="entity-table"
+          hover
+          :items="entidades"
+          :fields="[
+            {
+              key: 'id_entidad',
+              label: 'Número',
+              thStyle: { width: '5%' },
+              sortable: true,
+              class: 'text-center',
+            },
+            {
+              key: 'nombre_entidad',
+              label: 'Nombre',
+              thStyle: { width: '85%' },
+              sortable: true,
+            },
+            {
+              key: 'acciones',
+              label: 'Acciones',
+              thStyle: { width: '10%' },
+              class: 'text-center',
+            },
+          ]"
+          :per-page="perPage"
+          :current-page="currentPage"
+          :filter="filter"
         >
-          <b-row>
-            <b-col cols="1">
-              <div class="id-box rounded">
-                {{ entidad.id_entidad }}
-              </div>
-            </b-col>
-            <b-col cols="10">
-              <b-card-text class="gray-box rounded">
-                {{ entidad.nombre_entidad }}
-              </b-card-text>
-            </b-col>
-            <b-col class="text-center" cols="1">
-              <b-row>
-                <b-col cols="6">
-                  <b-button
-                    @click="seleccionarEntidad(entidad)"
-                    v-b-modal.modal-editar
-                    variant="primary"
-                  >
-                    <b-icon icon="pencil-square" />
-                  </b-button>
-                </b-col>
-                <b-col cols="6">
-                  <b-button
-                    @click="cambiarEstadoEntidad(entidad)"
-                    :variant="entidad.estado === 1 ? 'success' : 'warning'"
-                  >
-                    <b-icon
-                      :icon="entidad.estado === 1 ? 'check-circle' : 'x-circle'"
-                    />
-                  </b-button>
-                </b-col>
-              </b-row>
-            </b-col>
-          </b-row>
-        </b-card>
+          <template #cell(acciones)="row">
+            <b-row>
+              <b-col cols="6" class="text-center">
+                <b-button
+                  size="sm"
+                  @click="seleccionarEntidad(row.item)"
+                  v-b-modal.modal-editar
+                  variant="primary"
+                >
+                  <b-icon icon="pencil-square" />
+                </b-button>
+              </b-col>
+              <b-col cols="6" class="text-center">
+                <b-button
+                  size="sm"
+                  @click="cambiarEstadoEntidad(row.item)"
+                  :style="
+                    row.item.estado === 1
+                      ? 'background-color: var(--color-primary)'
+                      : 'background-color: var(--color-secondary)'
+                  "
+                >
+                  <b-icon
+                    :icon="row.item.estado === 1 ? 'check-circle' : 'x-circle'"
+                  />
+                </b-button>
+              </b-col>
+            </b-row>
+          </template>
+        </b-table>
       </b-col>
       <b-col cols="12" v-else>
         <b-card>
@@ -96,6 +127,13 @@ export default Vue.extend({
       // Entidades
       entidades: [] as EntidadFederativa[],
       entidadSeleccionada: {} as EntidadFederativa,
+
+      // Filtros
+      filter: "" as string,
+
+      // Paginación
+      currentPage: 1,
+      perPage: 10,
     };
   },
   methods: {
@@ -122,22 +160,42 @@ export default Vue.extend({
     // Cambiar estado de entidad federativa
     async cambiarEstadoEntidad(entidad: EntidadFederativa) {
       try {
-        entidad.estado = entidad.estado === 1 ? 0 : 1;
+        Vue.swal({
+          title: "¿Estas seguro?",
+          text: `¿Deseas ${
+            entidad.estado === 1 ? "desactivar" : "activar"
+          } la entidad federativa ${entidad.nombre_entidad}?`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "var(--color-primary)",
+          cancelButtonColor: "var(--color-secondary)",
+          cancelButtonText: "Cancelar",
+          confirmButtonText: `Si, ${
+            entidad.estado === 1 ? "desactivar" : "activar"
+          }`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            entidad.estado = entidad.estado === 1 ? 0 : 1;
 
-        const controlador = new EntidadFederativaController();
-        const respuesta = await controlador.cambiarEstadoEntidadFederativa(
-          entidad
-        );
+            const controlador = new EntidadFederativaController();
+            const respuesta = await controlador.cambiarEstadoEntidadFederativa(
+              entidad
+            );
 
-        if (!respuesta.error) {
-          console.log(respuesta);
-          this.$bvToast.toast("Estado de entidad federativa actualizado", {
-            title: "Éxito",
-            variant: "success",
-            solid: true,
-          });
-          this.getEntidades();
-        }
+            if (!respuesta.error) {
+              Vue.swal({
+                title: "¡Éxito!",
+                text: `Se ha ${
+                  entidad.estado === 1 ? "activado" : "desactivado"
+                } la entidad federativa ${entidad.nombre_entidad}`,
+                icon: "success",
+                confirmButtonColor: "var(--color-primary)",
+                confirmButtonText: "Aceptar",
+              });
+              this.getEntidades();
+            }
+          }
+        });
       } catch (error) {
         console.log(error);
       }
@@ -150,24 +208,4 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.card-body {
-  padding: 0.5rem 1rem;
-}
-
-.gray-box {
-  background-color: #cecece;
-  color: black;
-  padding: 0.5rem 1rem;
-}
-
-.id-box {
-  align-items: center;
-  background-color: #cecece;
-  color: black;
-  font-weight: bold;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  width: 100%;
-}
 </style>

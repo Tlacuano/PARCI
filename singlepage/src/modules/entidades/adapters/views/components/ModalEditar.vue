@@ -7,7 +7,9 @@
     no-close-on-backdrop
     no-close-on-esc
     ok-title="Guardar"
+    ok-variant="success"
     cancel-title="Cancelar"
+    cancel-variant="danger"
     @ok="onEditar"
     :ok-disabled="
       (entidadEdit.nombre_entidad
@@ -19,7 +21,7 @@
     <b-form @submit.prevent="onEditar">
       <b-form-group label="Nombre de la entidad federativa">
         <b-form-input
-          v-model="entidad.nombre_entidad"
+          v-model="entidadEdit.nombre_entidad"
           placeholder="Nombre"
           required
         />
@@ -50,23 +52,38 @@ export default Vue.extend({
     // Editar entidad federativa
     async onEditar() {
       try {
-        this.entidadEdit.nombre_entidad =
-          this.entidadEdit.nombre_entidad.trim();
-        const controlador = new EntidadFederativaController();
-        const respuesta = await controlador.modificarEntidadFederativa(
-          this.entidadEdit
-        );
+        Vue.swal({
+          title: "¿Estas seguro?",
+          text: `¿Deseas editar la entidad federativa ${this.entidad.nombre_entidad}?`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "var(--color-primary)",
+          cancelButtonColor: "var(--color-secondary)",
+          cancelButtonText: "Cancelar",
+          confirmButtonText: "Si, editar",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            this.entidadEdit.nombre_entidad =
+              this.entidadEdit.nombre_entidad.trim();
+            const controlador = new EntidadFederativaController();
+            const respuesta = await controlador.modificarEntidadFederativa(
+              this.entidadEdit
+            );
 
-        if (!respuesta.error) {
-          this.$bvToast.toast("Entidad federativa editada", {
-            title: "Éxito",
-            variant: "success",
-            solid: true,
-          });
-          this.limpiar();
-          this.$emit("editado");
-          this.$bvModal.hide("modal-editar");
-        }
+            if (!respuesta.error) {
+              Vue.swal({
+                title: "¡Entidad federativa editada!",
+                text: `La entidad federativa ${this.entidadEdit.nombre_entidad} ha sido editada correctamente.`,
+                icon: "success",
+                confirmButtonColor: "var(--color-primary)",
+                confirmButtonText: "Aceptar",
+              });
+              this.limpiar();
+              this.$emit("editado");
+              this.$bvModal.hide("modal-editar");
+            }
+          }
+        });
       } catch (error) {
         console.log(error);
       }
@@ -85,11 +102,6 @@ export default Vue.extend({
         nombre_entidad: "",
       };
     },
-  },
-
-  mounted() {
-    console.log(this.entidad);
-    console.log(this.entidadEdit);
   },
 
   watch: {
