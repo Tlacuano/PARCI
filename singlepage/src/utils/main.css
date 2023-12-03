@@ -39,19 +39,22 @@
     --background-select: #fff;
     --color-primary: #236b47;
     --color-secondary: #9e030a;
+    --color-border-component: #ced4da;
 }
 
 html[data-theme="Oscuro"]{
-    --background-color: #060e02;
-    --text-color: #fff;
-    --background-component:#343a40;
+    --background-color: #090f05;
+    --text-color: #d8d8d8;
+    --background-component:#242526;
     --background-select: #52585e;
+    --color-border-component: #333333;
 }
 
 html[data-theme="Claro"]{
     --background-color: #f7f7f7;
     --text-color: #000;
     --background-component: #fff;
+    --background-select: #dadada;
 }
 
 html[font="Chica"]{
@@ -78,6 +81,7 @@ body{
 .card{
     background-color: var(--background-component) !important;
     color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
 }
 
 .custom-select{
@@ -95,6 +99,20 @@ body{
 }
 .b-sidebar-body{
     background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
+.custom-select {
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.form-control{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.custom-datepicker .text-dark{
     color: var(--text-color) !important;
 }
 

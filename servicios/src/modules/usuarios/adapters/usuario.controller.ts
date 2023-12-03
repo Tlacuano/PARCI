@@ -17,38 +17,21 @@ import { Persona } from "../../../modules/persona/entities/persona";
 import { ModificarInformacionOpinionesInteractor } from "../use-cases/modificar-informacion-opiniones.interactor";
 import { ReiniciarContadorOpinionesInteractor } from '../use-cases/reiniciar-contador-opiniones.interactor';
 import { ModificarInformacionOpinionesDTO } from './dtos/modificar-informacion-opiniones.dto';
-import { RegistrarPersonaDTO } from '../../../modules/persona/adapters/dtos/registrar-persona.dto';
-import { PersonaRepository } from '../../../modules/persona/use-cases/ports/persona.repository';
-import { PersonaStorageGateway } from '../../../modules/persona/adapters/persona.storage.gateway';
-import { RegistrarPersonaInteractor } from '../../../modules/persona/use-cases/registrar-persona.interactor';
-import { EliminarPersonaInteractor } from '../../../modules/persona/use-cases/eliminar-persona.interactor';
-import { EliminarPersonaDTO } from 'src/modules/persona/adapters/dtos/eliminar-persona.dto';
 
 const usuarioRouter = Router();
 
 export class UsuarioController {
 
     // REGISTRAR LOCAL
-    static registrarUsuario_Local = async (payload: Persona) => {
+    static registrarUsuario_Local = async (persona: Persona) => {
         try {
-            const repositorioPersona: PersonaRepository = new PersonaStorageGateway();
-            const registrarPersonaInteractor = new RegistrarPersonaInteractor(repositorioPersona);
-    
-            const persona: Persona = {
-                nombre: payload.nombre,
-                apellido_paterno: payload.apellido_paterno,
-                apellido_materno: payload.apellido_materno,
-                correo_electronico: payload.correo_electronico,
-                fecha_nacimiento: payload.fecha_nacimiento,
-                fk_idMunicipio: payload.fk_idMunicipio,
-            };
-    
-            await registrarPersonaInteractor.execute(persona);
-    
-            const repositorioUsuario: UsuarioRepository = new UsuarioStorageGateway();
-            const registrarUsuarioInteractor = new RegistrarUsuarioInteractor(repositorioUsuario);
-    
-            const usuarioPayload = {
+            const repositorio: UsuarioRepository =
+                new UsuarioStorageGateway();
+            const registrarUsuarioInteractor = new RegistrarUsuarioInteractor(
+                repositorio
+            );
+
+            const payload = {
                 usuario: new String,
                 contrasena: new String,
                 rol: new Number,
@@ -57,52 +40,14 @@ export class UsuarioController {
                 contador_opinion: new Number,
                 fk_idPersona: persona
             } as RegistrarUsuarioDTO;
-    
-            await registrarUsuarioInteractor.execute(usuarioPayload);
-    
+
+            await registrarUsuarioInteractor.execute(payload);
+
             return true;
         } catch (error) {
             return error;
         }
     }
-
-
-    static eliminarUsuarioLocal = async (id_usuario: number) => {
-        try {
-            const repositorioUsuario: UsuarioRepository = new UsuarioStorageGateway();
-            const eliminarUsuarioInteractor = new EliminarUsuarioInteractor(repositorioUsuario);
-    
-            const usuario = await repositorioUsuario.getUsuarioById(id_usuario);
-    
-            if (!usuario) {
-                throw new Error("Usuario no encontrado");
-            }
-
-            const eliminarUsuarioPayload = {
-                id_usuario: id_usuario
-            } as EliminarUsuarioDTO;
-
-            await eliminarUsuarioInteractor.execute(eliminarUsuarioPayload);
-
-            if (usuario.fk_idPersona !== undefined) {
-                const repositorioPersona: PersonaRepository = new PersonaStorageGateway();
-                const eliminarPersonaInteractor = new EliminarPersonaInteractor(repositorioPersona);
-
-                const idPersona = usuario.fk_idPersona?.id_persona;
-
-                const eliminarPersonaDTO: EliminarPersonaDTO = {
-                    id_persona: idPersona!,
-                };
-
-                await eliminarPersonaInteractor.execute(eliminarPersonaDTO);
-            }
-    
-            return true;
-        } catch (error) {
-            return error;
-        }
-    }
-    
 
 
     static getInfoOpiniones_Local = async (payload: string) => {
@@ -187,7 +132,6 @@ export class UsuarioController {
         try {
             const payload = req.body as ModificarCuentaDTO;
 
-           
 
             payload.contrasena = await encriptar(payload.contrasena);
 
@@ -287,6 +231,7 @@ export class UsuarioController {
         }
     };
 }
+
 const usuarioController = new UsuarioController();
 
 usuarioRouter.post("/registrar", usuarioController.registrarUsuario);

@@ -16,6 +16,7 @@ const routes: Array<RouteConfig> = [
     children:[
       {
         path:'a',
+        component:() => import('../modules/autenticacion/adapters/view/SinHome.vue')
       },
       {
         path:'a/entidades-federativas',
@@ -27,6 +28,15 @@ const routes: Array<RouteConfig> = [
       },
       {
         path:'u',
+        component:() => import('../modules/reporte/adapters/view/VistaReportesUsuario.vue'),
+        children:[
+          {
+            path:'reporte',
+            name:'VerReporteUsuario',
+            props:true,
+            component:() => import('../modules/reporte/adapters/view/VerReporteUsuario.vue')
+          }
+        ]
       },
       {
         path:'configuracion',

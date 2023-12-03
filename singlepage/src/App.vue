@@ -50,18 +50,18 @@
           }
 
           if(usuario.rol === 'Administrador'){
-            if (!this.$route.path.includes('/a') && this.$route.path !== '/' && this.$route.path !== '/configuracion' ) {
-              this.$router.push('/');
+            if (!this.$route.path.includes('/a')  && this.$route.path !== '/configuracion' ) {
+              this.$router.push('/a');
             }
           }
           if(usuario.rol === 'Usuario'){
-            if (!this.$route.path.includes('/u') && this.$route.path !== '/' && this.$route.path !== '/configuracion' ) {
-              this.$router.push('/');
+            if (!this.$route.path.includes('/u')  && this.$route.path !== '/configuracion' ) {
+              this.$router.push('/u');
             }
           }
           if(usuario.rol === 'Moderador'){
-            if (!this.$route.path.includes('/m')  && this.$route.path !== '/' && this.$route.path !== '/configuracion' ) {
-              this.$router.push('/');
+            if (!this.$route.path.includes('/m') && this.$route.path !== '/configuracion' ) {
+              this.$router.push('/m');
             }
           }
         }else{

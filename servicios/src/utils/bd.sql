@@ -1,6 +1,7 @@
 create database PARCI;
 use PARCI;
 
+
 CREATE TABLE entidades_federativas (
   id_entidad INT NOT NULL AUTO_INCREMENT,
   nombre_entidad VARCHAR(45) NULL,
@@ -18,7 +19,7 @@ CREATE TABLE municipios (
   CONSTRAINT fk_idEntidad
     FOREIGN KEY (fk_idEntidad)
     REFERENCES entidades_federativas (id_entidad)
-    ON DELETE CASCADE
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
 
@@ -26,7 +27,7 @@ CREATE TABLE categorias (
   id_categoria INT NOT NULL AUTO_INCREMENT,
   nombre_categoria VARCHAR(45) NULL,
   color VARCHAR(45) NULL,
-  estado TINYINT NULL,
+  estado TINYINT NULL, -- Agregado campo estado como TINYINT
   PRIMARY KEY (id_categoria)
 );
 
@@ -43,7 +44,7 @@ CREATE TABLE personas (
   CONSTRAINT fk_idMunicipio
     FOREIGN KEY (fk_idMunicipio)
     REFERENCES municipios (id_municipio)
-    ON DELETE CASCADE 
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
 
@@ -61,7 +62,7 @@ CREATE TABLE usuarios (
   CONSTRAINT fk_idPersonaUsuario
     FOREIGN KEY (fk_idPersona)
     REFERENCES personas (id_persona)
-	ON DELETE CASCADE 
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
 
@@ -75,7 +76,7 @@ CREATE TABLE personalizacion (
   CONSTRAINT fk_idUsuario
     FOREIGN KEY (fk_idUsuario)
     REFERENCES usuarios (id_usuario)
-    ON DELETE CASCADE 
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
 
@@ -85,6 +86,8 @@ CREATE TABLE reportes (
   titulo VARCHAR(45) NULL,
   descripcion TEXT NULL, -- Cambiado a tipo TEXT
   imagen JSON NULL,
+  votos_positivos INT NULL,
+  votos_negativos INT NULL,
   fk_idPersona INT NULL,
   fk_idMunicipio INT NULL,
   fk_idCategoria INT NULL,
@@ -103,7 +106,7 @@ CREATE TABLE reportes (
   CONSTRAINT fk_idMunicipioReporte
     FOREIGN KEY (fk_idMunicipio)
     REFERENCES municipios (id_municipio)
-    ON DELETE CASCADE
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
 
@@ -112,6 +115,8 @@ CREATE TABLE opiniones (
   id_opinion INT NOT NULL AUTO_INCREMENT,
   fecha DATE NULL,
   opinion TEXT NULL,
+  votos_positivos INT NULL,
+  votos_negativos INT NULL,
   fk_idReporte INT NULL,
   fk_idPersona INT NULL,
   PRIMARY KEY (id_opinion),
@@ -125,59 +130,12 @@ CREATE TABLE opiniones (
   CONSTRAINT fk_idPersona
     FOREIGN KEY (fk_idPersona)
     REFERENCES personas (id_persona)
-    ON DELETE CASCADE 
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
+  
 
-CREATE TABLE visitas (
-numero_visitas BIGINT,
-  fecha DATE NULL
-);
-
-CREATE TABLE votos_opinion (
-    id_votos_opinion INT NOT NULL AUTO_INCREMENT,
-    voto ENUM('positivo', 'negativo') NULL,
-    fk_idPersona INT NULL,
-    fk_idOpinion INT NULL,
-    PRIMARY KEY (id_votos_opinion),
-    INDEX fk_idPersonaOpinion_idx (fk_idPersona ASC) VISIBLE,
-    INDEX fk_idOpinion_votos_idx (fk_idOpinion ASC) VISIBLE,
-    CONSTRAINT fk_idPersona_votos
-        FOREIGN KEY (fk_idPersona)
-        REFERENCES personas (id_persona)
-        ON DELETE CASCADE 
-        ON UPDATE NO ACTION,
-    CONSTRAINT fk_idOpinion_votos
-        FOREIGN KEY (fk_idOpinion)
-        REFERENCES opiniones (id_opinion)
-        ON DELETE CASCADE 
-        ON UPDATE NO ACTION
-);
-
-
-CREATE TABLE votos_reporte (
-    id_votos_reporte INT NOT NULL AUTO_INCREMENT,
-    voto ENUM('positivo', 'negativo') NULL,
-    fk_idPersona INT NULL,
-    fk_idReporte INT NULL,
-    PRIMARY KEY (id_votos_reporte),
-    INDEX fk_idPersona_voto_reporte_idx (fk_idPersona ASC) VISIBLE,
-    CONSTRAINT fk_idPersona_voto_reporte
-        FOREIGN KEY (fk_idPersona)
-        REFERENCES personas (id_persona)
-        ON DELETE CASCADE 
-        ON UPDATE NO ACTION,
-    INDEX fk_idReporte_voto_reporte_idx (fk_idReporte ASC) VISIBLE,
-    CONSTRAINT fk_idReporte_voto_reporte
-        FOREIGN KEY (fk_idReporte)
-        REFERENCES reportes (id_reporte)
-        ON DELETE CASCADE
-        ON UPDATE NO ACTION
-);
-
-
-
-/*Entidades Federativas*/
+--Entidades Federativas
 insert into entidades_federativas (nombre_entidad, estado) values ('Aguascalientes', 1);
 insert into entidades_federativas (nombre_entidad, estado) values ('Baja California', 1);
 insert into entidades_federativas (nombre_entidad, estado) values ('Baja California Sur', 1);
@@ -474,6 +432,8 @@ insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Claro',
 insert into reportes (fecha, titulo, descripcion, imagen, fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) 
 values ('2021-05-05', 'Robo a mano armada', 'Me asaltaron en la calle', '["https://www.elsoldemexico.com.mx/mexico/justicia/5gqj2t-robos-a-mano-armada-en-la-cdmx-crecen-20-en-enero.jpg"]', 3, 152, 1, 'Espera');
 
-insert into reportes (fecha, titulo, descripcion, imagen,
+insert into reportes (fecha, titulo, descripcion, imagen, votos_positivos, votos_negativos, 
 fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) 
 values ('2021-05-05', 'Robo a mano armada', 'Me asaltaron en la calle', '["https://www.elsoldemexico.com.mx/mexico/justicia/5gqj2t-robos-a-mano-armada-en-la-cdmx-crecen-20-en-enero.jpg"]', 3, 152, 1, 'Publicado');
+
+

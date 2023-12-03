@@ -11,7 +11,7 @@ import { recuperarContraseñaDto } from "./dtos/recuperar-contraseña.dto";
 export class AutenticacionStorageGateway implements AutenticacionRepository {
     async inicioSesion(parametros: inicioSesionDto): Promise<autenticado> {
         try {
-            const resultado = await ConexionBD<autenticado[]>('select usuario, contraseña as salt, rol, nombre_municipio as municipio from usuarios join personas on fk_idPersona = id_persona join municipios on fk_idMunicipio = id_municipio where usuario = ?',[parametros.usuario]);
+            const resultado = await ConexionBD<autenticado[]>('select usuario, contraseña as salt, rol, id_municipio as municipio from usuarios join personas on fk_idPersona = id_persona join municipios on fk_idMunicipio = id_municipio where usuario = ?',[parametros.usuario]);
 
             if (resultado.length === 0) {
                 throw new Error('Usuario o contraseña incorrectos');

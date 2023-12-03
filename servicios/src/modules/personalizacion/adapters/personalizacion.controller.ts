@@ -73,8 +73,6 @@ export class PersonalizacionController {
             if(!resultado) {
                 throw new Error('No se pudo modificar la personalizacion');
             }
-            console.log('resultado', resultado);
-            
             
             //consultar lanueva personalizacion para devolverla
             const consultarPersonalizacionInteractor = new ConsultarPersonalizacionInteractor(personalizacionRepository);
