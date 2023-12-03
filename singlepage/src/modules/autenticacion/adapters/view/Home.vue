@@ -4,7 +4,9 @@
 
         <b-row :class="configuracion.tema" class="main">
             <b-container fluid>
-                <RouterView/>
+                <Transition name="fade" mode="out-in">
+                    <router-view />
+                </Transition>
             </b-container>     
         </b-row>
     </div>
@@ -42,9 +44,13 @@ import { Personalizacion } from '../../../../modules/personalizacion/entities/pe
     });
 </script>
 
-<style lang="scss" scoped>
-    .main{
-        padding: 0;
-        margin: 0;
-        height: 100%;
-    }
+<style scoped>
+    
+  .fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+</style>
