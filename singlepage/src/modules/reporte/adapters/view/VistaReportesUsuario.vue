@@ -140,6 +140,7 @@
     import { ObtenerReporteDTO } from '../dtos/obtener-reporte.dto';
     import { ObtenerReportesDTO } from '../dtos/reponse-get-reporte';
     import { ReporteController } from '../reporte.controller';
+    import { encriptar } from '../../../../kernel/crypto-js';
 
     export default Vue.extend({
         name: 'VistaReportesUsuario',
@@ -181,8 +182,9 @@
                 }
             },
 
-            verReporte(id_reporte: number){
-                
+            verReporte(id_reporte: number){                
+                const parametroSeguro = encriptar(id_reporte.toString());
+                this.$router.push(`u/reporte/${parametroSeguro}`);
             }
         },
         mounted() {

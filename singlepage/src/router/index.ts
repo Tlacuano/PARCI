@@ -12,28 +12,34 @@ const routes: Array<RouteConfig> = [
   {
     path:'/',
     name:'Home',
-    component:() => import('../modules/autenticacion/adapters/view/Home.vue'),
+    component:() => import('../modules/autenticacion/adapters/view/Router.vue'),
     children:[
       {
         path:'a',
-        component:() => import('../modules/autenticacion/adapters/view/SinHome.vue')
+        component:() => import('../modules/autenticacion/adapters/view/Home.vue')
       },
       {
-        path:'a/entidades-federativas',
+        path:'entidades-federativas',
         name:'EntidadesFederativas',
         component:() => import('../modules/entidades/adapters/views/Entidades.vue')
       },
       {
         path:'m',
       },
+
+      //Rutas de usuario
       {
         path:'u',
-        component:() => import('../modules/reporte/adapters/view/VistaReportesUsuario.vue'),
+        component:() => import('../modules/autenticacion/adapters/view/Home.vue'),
         children:[
           {
-            path:'reporte',
-            name:'VerReporteUsuario',
+            path:'/',
+            component:() => import('../modules/reporte/adapters/view/VistaReportesUsuario.vue')
+          },
+          {
+            path:'reporte/:id?',
             props:true,
+            name:'VerReporteUsuario',
             component:() => import('../modules/reporte/adapters/view/VerReporteUsuario.vue')
           }
         ]
