@@ -1,11 +1,11 @@
 import {Request, Response, Router} from "express";
 import { MunicipioRepository } from "../use-cases/ports/municipio.repository"
-import { MunicipiosStorageGateway } from "./municipios.gateway";
+import { MunicipioStorageGateway } from "./municipio.gateway";
 import { GetMunicipiosInteractor } from "../use-cases/get-municipios.interactor";
-import { BuscaMunicipioPorNombreInteractor } from "../use-cases/buscar-municipo-por-nombre.interactor";
+import { BuscaMunicipioPorNombreInteractor } from "../use-cases/buscar-municipio-por-nombre.interactor";
 import { GetMunicipiosPorEntidadInteractor } from "../use-cases/get-municipios-por-entidad.interactor";
 import { ResponseApi } from "../../../kernel/types";
-import { Municipio } from "../entities/municipios";
+import { Municipio } from "../entities/municipio";
 import { validarError } from "../../../kernel/error-handler";
 import { RegistrarMunicipioInteractor } from "../use-cases/registrar-municipio.interactor";
 import { RegistrarMunicipioDTO } from "./dtos/registrar-municipio.dto";
@@ -19,7 +19,7 @@ const municipiosRouter = Router();
 export class MunicipiosController {
     getMunicipios = async (_req: Request, res: Response) => {
         try {
-            const repositorio: MunicipioRepository = new MunicipiosStorageGateway();
+            const repositorio: MunicipioRepository = new MunicipioStorageGateway();
             const getMunicipiosInteractor = new GetMunicipiosInteractor(repositorio);
 
             const municipios = await getMunicipiosInteractor.execute();
@@ -42,7 +42,7 @@ export class MunicipiosController {
         try {
             const { fk_idEntidad } = req.body
 
-            const repositorio: MunicipioRepository = new MunicipiosStorageGateway();
+            const repositorio: MunicipioRepository = new MunicipioStorageGateway();
             const getMunicipiosPorEntidadInteractor = new GetMunicipiosPorEntidadInteractor(repositorio);
 
             const municipios = await getMunicipiosPorEntidadInteractor.execute(fk_idEntidad);
@@ -65,7 +65,7 @@ export class MunicipiosController {
         try {
             const payload = req.body as RegistrarMunicipioDTO;
 
-            const repositorio: MunicipioRepository = new MunicipiosStorageGateway();
+            const repositorio: MunicipioRepository = new MunicipioStorageGateway();
             const registrarMunicipioInteractor = new RegistrarMunicipioInteractor(repositorio);
 
             await registrarMunicipioInteractor.execute(payload)
@@ -88,7 +88,7 @@ export class MunicipiosController {
         try {
             const payload = req.body as ModificarMunicipioDTO;
 
-            const repositorio: MunicipioRepository = new MunicipiosStorageGateway();
+            const repositorio: MunicipioRepository = new MunicipioStorageGateway();
             const modificarMunicipioInteractor = new ModificarMunicipioInteractor(repositorio);
 
             await modificarMunicipioInteractor.execute(payload)
@@ -111,7 +111,7 @@ export class MunicipiosController {
         try {
             const payload = req.body as CambiarEstadoMunicipioDTO;
 
-            const repositorio: MunicipioRepository = new MunicipiosStorageGateway();
+            const repositorio: MunicipioRepository = new MunicipioStorageGateway();
             const cambiarEstaadoMunicipioInteractor = new CambiarEstadoMunicipioInteractor(repositorio);
 
             await cambiarEstaadoMunicipioInteractor.execute(payload);
@@ -132,9 +132,9 @@ export class MunicipiosController {
 
     buscarMunicipioPorNombre =async (req: Request, res: Response) => {
         try {
-            const payload = req.body as RegistrarMunicipioDTO;
+            const payload = req.body;
             
-            const repositorio: MunicipioRepository = new MunicipiosStorageGateway();
+            const repositorio: MunicipioRepository = new MunicipioStorageGateway();
             const buscarMunicipioPorNombreInteractor = new BuscaMunicipioPorNombreInteractor(repositorio);
 
             const municipios = await buscarMunicipioPorNombreInteractor.execute(payload);
