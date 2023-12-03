@@ -13,6 +13,9 @@ import { RecuperarContrase√±aInteractor } from '../use-cases/recuperar-contrase√
 
 export class AutenticacionController {
     private obtenerError(error: any) {
+        console.log(error);
+        console.log(error.status)
+        console.log(error.message)
         return {
             status: error.status,
             error: true,

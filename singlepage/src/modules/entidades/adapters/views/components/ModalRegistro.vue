@@ -7,13 +7,12 @@
     no-close-on-backdrop
     no-close-on-esc
     ok-title="Registrar"
+    ok-variant="success"
     cancel-title="Cancelar"
+    cancel-variant="danger"
     @ok="onRegistrar"
     :ok-disabled="entidad.nombre_entidad.trim() === ''"
     @cancel="onCancelar"
-    header-class="bg-dark"
-    body-class="bg-dark"
-    footer-class="bg-dark"
   >
     <b-form @submit.prevent="onRegistrar">
       <b-form-group label="Nombre de la entidad federativa">
@@ -51,10 +50,12 @@ export default Vue.extend({
         );
 
         if (!respuesta.error) {
-          this.$bvToast.toast("Entidad federativa registrada", {
-            title: "Éxito",
-            variant: "success",
-            solid: true,
+          Vue.swal({
+            title: "¡Entidad federativa registrada!",
+            text: `La entidad federativa ${this.entidad.nombre_entidad} ha sido registrada correctamente.`,
+            icon: "success",
+            confirmButtonColor: "var(--color-primary)",
+            confirmButtonText: "Aceptar",
           });
           this.limpiar();
           this.$emit("registrado");

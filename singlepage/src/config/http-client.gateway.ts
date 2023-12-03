@@ -70,7 +70,23 @@ AxiosClient.interceptors.response.use(
                                 titleAlert = "Formato de contraseña incorrecto";
                                 messageAlert = "El formato de la contraseña es incorrecto";
                                 break;
-                                
+                            case "El nombre es requerido":
+                                titleAlert = "El nombre es requerido";
+                                messageAlert = "No se ha ingresado el nombre";
+                                break;
+                            case "El nombre ya existe":
+                                titleAlert = "El nombre ya existe";
+                                messageAlert = "Ya existe un registro con ese nombre";
+                                break;
+                            case "El nombre no debe contener caracteres especiales":
+                                titleAlert = "El nombre no debe contener caracteres especiales";
+                                messageAlert = "El nombre no debe contener caracteres especiales";
+                                break;
+                            case "No se pudo modificar la entidad federativa":
+                                titleAlert = "No se pudo modificar la entidad federativa";
+                                messageAlert = "No se pudo modificar la entidad federativa";
+                                break;
+                            
                         }                        
                         Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning", confirmButtonColor: "var(--color-primary)" });
                         break;
