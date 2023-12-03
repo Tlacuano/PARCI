@@ -1,3 +1,4 @@
+import { OpinionBoundary } from './../../opiniones/adapters/opinion.boundary';
 import { Request, Response, Router } from "express";
 import { ReporteRepository } from "../use-cases/ports/reporte.repository";
 import { ReporteStorageGateway } from "./reporte.storage.gateway";
@@ -17,10 +18,43 @@ import { modificarEstadoReporteDTO } from "./dtos/modificar-estado-reporte.dto";
 import { ObtenerReporteDTO } from "./dtos/obtener-reporte.dto";
 import { ObtenerReportesEnEsperaInteractor } from "../use-cases/obtener-reportes-en-espera.interactor";
 import { ObtenerReportesDTO } from "./dtos/reponse-get-reporte";
+import { RequestConsultarReporteUsuarioDTO } from "./dtos/request-consultar-reporte-usuario.dto";
+import { ConsultarReporteUsuarioInteractor } from "../use-cases/consultarReporteUsuario.interactor";
+import { RequestConsultarReportesDto } from '../../../modules/opiniones/adapters/dto/request-consultar-reportes.dto';
+import { ResponseConsultarReporteUsuarioDTO } from './dtos/response-consultar-reporte-usuario.dto';
 
 const reporteRouter = Router();
 
 export class ReporteController {
+
+    consultarReporteUsuario = async (req: Request, res: Response) => {
+        try {
+            const payload = req.body as RequestConsultarReporteUsuarioDTO;
+
+            const repository: ReporteRepository = new ReporteStorageGateway();
+            const consultarReporteUsuarioInteractor = new ConsultarReporteUsuarioInteractor(repository);
+
+            const resultado = await consultarReporteUsuarioInteractor.execute(payload);
+
+            //ahora consultamos las opiniones con el id del reporte
+            const opinionesDelReporte = await OpinionBoundary.consultarReporteUsuario({ usuario:payload.usuario, fk_idReporte: payload.id_reporte } as RequestConsultarReportesDto);
+            
+            resultado.opiniones = opinionesDelReporte;
+
+            const body: ResponseApi<ResponseConsultarReporteUsuarioDTO> = {
+                data: resultado,
+                message: 'El reporte ha sido encontrado satisfactoriamente',
+                error: false,
+                status: 200,
+            };            
+
+            res.status(body.status).json(body);
+        } catch (error) {
+            const errorBody = validarError(error as Error);
+            res.status(errorBody.status).json(errorBody);
+        }
+    }
+
 
     getReporte = async (_req: Request, res: Response) => {
         try {
@@ -189,6 +223,7 @@ export class ReporteController {
 
 const reporteController = new ReporteController();
 
+reporteRouter.post('/consultar-usuario', reporteController.consultarReporteUsuario);
 reporteRouter.post('/consultar', reporteController.getReporte);
 reporteRouter.get('/consultar-en-espera', reporteController.obtenerReportesEnEspera);
 reporteRouter.put('/modificar', reporteController.modificarReporte);

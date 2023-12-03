@@ -10,7 +10,7 @@ export class CategoriaStorageGateway implements CategoriaRepository {
 
     async getCategoria(): Promise<categoria[]> {
         try{
-            const result = await ConexionBD <categoria[]>('SELECT nombre_categoria, color FROM categorias', [])
+            const result = await ConexionBD <categoria[]>('SELECT id_categoria, nombre_categoria, color FROM categorias', [])
             return result;
         } catch(error){
             throw error;

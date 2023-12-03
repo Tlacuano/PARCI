@@ -8,7 +8,7 @@ import { ReporteRepository } from "./ports/reporte.repository";
 
 
 export class ObtenerReportesInteractor implements UseCase<ObtenerReporteDTO,ResponseApi<ObtenerReportesDTO[]>>{
-    constructor(private readonly reporteRepository: ReporteRepository){}
+    constructor(private reporteRepository: ReporteRepository){}
 
     execute(payload: ObtenerReporteDTO): Promise<ResponseApi<ObtenerReportesDTO[]>> {
         return this.reporteRepository.getReporte(payload);
