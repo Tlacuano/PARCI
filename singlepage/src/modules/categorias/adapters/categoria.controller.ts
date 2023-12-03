@@ -5,8 +5,8 @@ import { CategoriaStorageGateway } from "./categoria-storage-gateway";
 import { categoria } from "../entities/categoria";
 import { insertCategoriaDto } from "./dtos/insert-categoria.dto";
 import { RegistrarCategoriaInteractor } from "../use-cases/registrar-categoria.interactor";
-import { modifyCategoriaDTO } from "./dtos/modify-categoria.dto";
-import { ModificarCategoriaInteractor } from "../use-cases/modificar-categoria.interactor";
+//import { modifyCategoriaDTO } from "./dtos/modify-categoria.dto";
+//import { ModificarCategoriaInteractor } from "../use-cases/modificar-categoria.interactor";
 
 export class CategoriaController {
   getCategorias() {
@@ -43,6 +43,7 @@ export class CategoriaController {
     }
   }
 
+  /*
   modificarCategoria = async (payload: modifyCategoriaDTO) => {
     try {
         const repository: CategoriaRepository = new CategoriaStorageGateway();
@@ -57,6 +58,6 @@ export class CategoriaController {
           } as ResponseApi<boolean>;
     }
   }
-
+*/
 
 }
