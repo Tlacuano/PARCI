@@ -35,6 +35,7 @@ export class PersonaController {
                 correo_electronico: payload.correo_electronico,
                 fecha_nacimiento: payload.fecha_nacimiento,
                 fk_idMunicipio: payload.fk_idMunicipio,
+                id_persona: 0
             };
 
             await usuariosBoundary.registrarUsuario_Local(persona);
