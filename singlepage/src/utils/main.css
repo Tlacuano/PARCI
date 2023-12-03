@@ -97,6 +97,7 @@ body{
 .b-sidebar-header .close{
     color: var(--text-color) !important;
 }
+
 .b-sidebar-body{
     background-color: var(--background-component) !important;
     color: var(--text-color) !important;
@@ -107,6 +108,24 @@ body{
 }
 
 .form-control{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.modal-header{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.modal-footer{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.modal-body{
     background-color: var(--background-component) !important;
     color: var(--text-color) !important;
     border: 1px solid var(--color-border-component) !important;

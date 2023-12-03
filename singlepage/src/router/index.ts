@@ -16,13 +16,16 @@ const routes: Array<RouteConfig> = [
     children:[
       {
         path:'a',
-        component:() => import('../modules/autenticacion/adapters/view/Home.vue')
+        component:() => import('../modules/autenticacion/adapters/view/Home.vue'),
+        children:[
+          {
+            path:'entidades-federativas',
+            name:'EntidadesFederativas',
+            component:() => import('../modules/entidades/adapters/views/Entidades.vue')
+          },
+        ]
       },
-      {
-        path:'entidades-federativas',
-        name:'EntidadesFederativas',
-        component:() => import('../modules/entidades/adapters/views/Entidades.vue')
-      },
+      
       {
         path:'m',
       },
