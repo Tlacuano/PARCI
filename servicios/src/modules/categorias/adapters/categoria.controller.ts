@@ -12,7 +12,6 @@ import { insertCategoriaDto } from "./dtos/insert-categoria.dto";
 import { modificarEstadoCategoriaDTO } from "./dtos/modificar-estado-categoria";
 import { ModificarEstadoCategoriaInteractor } from "../use-cases/modificar-estado-categoria.interactor";
 import { RegistrarCategoriaDTO } from "./dtos/registrar-categoria.dto";
-import { BuscarEntidadPorNombreInteractor } from "src/modules/entidades/use-cases/buscar-entidad-por-nombre.interactor";
 import { BuscarCategoriaPorNombreInteractor } from "../use-cases/buscar-categoria-por-nombre.interactor";
 
 const categoriaRouter = Router();

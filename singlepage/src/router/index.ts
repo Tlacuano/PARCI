@@ -39,6 +39,11 @@ const routes: Array<RouteConfig> = [
         ]
       },
       {
+        path: 'categoria',
+        name: 'Categorias',
+        component:() => import('@/modules/categorias/adapters/views/CategoriasPage.vue')
+      },
+      {
         path:'configuracion',
         name:'Configuracion',
         component:() => import('../modules/personalizacion/adapters/view/Personalizacion.vue')
