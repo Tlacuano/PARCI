@@ -4,7 +4,7 @@
 
         <b-row :class="configuracion.tema" class="main">
             <b-container fluid>
-                <router-view/>
+                <RouterView/>
             </b-container>     
         </b-row>
     </div>
