@@ -15,9 +15,6 @@
         : true) || entidadEdit.nombre_entidad === entidad.nombre_entidad
     "
     @cancel="onCancelar"
-    header-class="bg-dark"
-    body-class="bg-dark"
-    footer-class="bg-dark"
   >
     <b-form @submit.prevent="onEditar">
       <b-form-group label="Nombre de la entidad federativa">
