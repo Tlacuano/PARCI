@@ -8,40 +8,40 @@
                     </b-col>
                     
 
-                    <b-col cols="12" class="text-start mt-4" >
+                    <b-col cols="12" class="text-start mt-4 opcion" >
                         <span><b-icon icon="person" /> Perifl</span>
                     </b-col>
 
 
-                    <b-col cols="12" v-if="rol==='Administrador'">
+                    <b-col cols="12" v-if="rol==='Administrador'"  class="opcion">
                         <div class="text-start mt-2">
                             <span  ><b-icon icon="person"/>&nbsp;&nbsp;Gestión de Usuarios</span>
                         </div>
                     </b-col>
-                    <b-col cols="12"   v-if="rol==='Administrador'">
+                    <b-col cols="12"   v-if="rol==='Administrador'" class="opcion">
                         <div class="text-start mt-2">
                             <span ><b-icon icon="person" />&nbsp;&nbsp;Categorías de reportes</span>
                         </div>
                     </b-col>
-                    <b-col cols="12" v-if="rol==='Administrador'" >
+                    <b-col cols="12" v-if="rol==='Administrador'" class="opcion" @click="dirigir('/a/entidades-federativas')" >
                         <div  class="text-start mt-2">
                             <span><b-icon icon="person" />&nbsp;&nbsp;Entidades federativas</span>
                         </div>
                     </b-col>
-                    <b-col cols="12"  v-if="rol==='Administrador'">
+                    <b-col cols="12"  v-if="rol==='Administrador'" class="opcion">
                         <div class="text-start mt-2">
                             <span  ><b-icon icon="person" />&nbsp;&nbsp;Municipios</span>
                         </div>
                     </b-col>
 
 
-                    <b-col cols="12"  v-if="rol==='Moderador'">
+                    <b-col cols="12"  v-if="rol==='Moderador'" class="opcion">
                         <div class="text-start mt-2">
                             <span  ><b-icon icon="person" />&nbsp;&nbsp;Reportes</span>
                         </div>
                     </b-col>
 
-                    <b-col cols="12"  v-if="rol ==='Usuario'">
+                    <b-col cols="12"  v-if="rol ==='Usuario'" class="opcion">
                         <div class="text-start mt-2">
                             <span><b-icon icon="person" />&nbsp;&nbsp;Reportes</span>
                         </div>
@@ -83,7 +83,7 @@ import Vue from 'vue';
                 this.configuracion = personalizacion;
                 
             },
-            dirigir(ruta: string){
+            dirigir(ruta: string){               
                 if(this.$route.path !== ruta){  
                     this.$router.push(ruta);
                 }
@@ -105,17 +105,9 @@ import Vue from 'vue';
         border: none;
     }
 
-    .optionOscuro, .optionClaro{
+    .opcion{
         cursor: pointer;
         transition: background-color 0.25s ease;
-    }
-
-    .optionOscuro:hover{
-        background-color: #1e1e1e;
-    }
-
-    .optionClaro:hover{
-        background-color: #e6e6e6;
     }
 
 
