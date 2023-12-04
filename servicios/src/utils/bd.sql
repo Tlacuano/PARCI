@@ -177,18 +177,6 @@ CREATE TABLE votos_reporte (
         ON UPDATE NO ACTION
 );
 
-ALTER TABLE `parci`.`personas` 
-ADD COLUMN `fk_idEntidad_federativa` INT NULL AFTER `fk_idMunicipio`,
-ADD INDEX `fk_idEntidad_Federativa_Personas_idx` (`fk_idEntidad_federativa` ASC) VISIBLE;
-;
-ALTER TABLE `parci`.`personas` 
-ADD CONSTRAINT `fk_idEntidad_Federativa_Personas`
-  FOREIGN KEY (`fk_idEntidad_federativa`)
-  REFERENCES `parci`.`entidades_federativas` (`id_entidad`)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-
-
 
 insert into entidades_federativas (nombre_entidad, estado) values ('Aguascalientes', 1);
 insert into entidades_federativas (nombre_entidad, estado) values ('Baja California', 1);
