@@ -1,11 +1,11 @@
 import { ConexionBD } from "../../../utils/dbconfig";
-import { Municipio } from "../entities/municipios";
+import { Municipio } from "../entities/municipio";
 import { MunicipioRepository } from "../use-cases/ports/municipio.repository";
 import { CambiarEstadoMunicipioDTO } from "./dtos/cambiar-estado-municipio.dto";
 import { ModificarMunicipioDTO } from "./dtos/modificar-municipio.dto";
 import { RegistrarMunicipioDTO } from "./dtos/registrar-municipio.dto";
 
-export class MunicipiosStorageGateway implements MunicipioRepository {
+export class MunicipioStorageGateway implements MunicipioRepository {
     async getMunicipios(): Promise<Municipio[]> {
         try {
             const resultado  = await ConexionBD<Municipio[]>("SELECT id_municipio, nombre_municipio, fk_idEntidad FROM municipios WHERE estado = 1", []);
@@ -56,10 +56,10 @@ export class MunicipiosStorageGateway implements MunicipioRepository {
         }
     }
 
-    async buscarMunicipioPorNombre(payload: RegistrarMunicipioDTO): Promise<Municipio[] | null> {
+    async buscarMunicipioPorNombre(payload: string): Promise<Municipio[] | null> {
         try {
             const resultado = await ConexionBD<Municipio[]>("SELECT id_municipio, nombre_municipio FROM municipios WHERE nombre_municipio LIKE ?", 
-            [`%${payload.nombre_municipio}`]);
+            [payload]);
             return resultado;
         } catch (error) {
             throw error;
