@@ -1,11 +1,11 @@
 import { CambiarEstadoMunicipioDTO } from "../../adapters/dtos/cambiar-estado-municipio.dto";
 import { ModificarMunicipioDTO } from "../../adapters/dtos/modificar-municipio.dto";
 import { RegistrarMunicipioDTO } from "../../adapters/dtos/registrar-municipio.dto";
-import { Municipio } from "../../entities/municipios"
+import { Municipio } from "../../entities/municipio"
 
 export interface MunicipioRepository {
     getMunicipios(): Promise<Municipio[]>;
-    buscarMunicipioPorNombre(payload: RegistrarMunicipioDTO): Promise<Municipio[] | null>;
+    buscarMunicipioPorNombre(nombre: string): Promise<Municipio[] | null>;
     getMunicipiosPorEntidad(fk_idEntidad: number): Promise<Municipio[]>;
     registrarMunicipio(payload: RegistrarMunicipioDTO): Promise<boolean>;
     modificarMunicipio(payload: ModificarMunicipioDTO): Promise<boolean>;

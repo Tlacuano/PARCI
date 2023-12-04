@@ -28,7 +28,7 @@
                             <span><b-icon icon="person" />&nbsp;&nbsp;Entidades federativas</span>
                         </div>
                     </b-col>
-                    <b-col cols="12"  v-if="rol==='Administrador'" class="opcion">
+                    <b-col cols="12"  v-if="rol==='Administrador'" class="opcion" @click="dirigir('/a/municipios')">
                         <div class="text-start mt-2">
                             <span  ><b-icon icon="person" />&nbsp;&nbsp;Municipios</span>
                         </div>

@@ -12,6 +12,8 @@ import { ModificarEntidadFederativaInteractor } from "../use-cases/modificar-ent
 import { CambiarEstadoEntidadFederativaDTO } from "./dtos/cambiar-estado-entidad-federativa.dto";
 import { CambiarEstadoEntidadFederativaInteractor } from "./../use-cases/cambiar-estado-entidad-federativa";
 import { BuscarEntidadPorNombreInteractor } from "./../use-cases/buscar-entidad-por-nombre.interactor";
+import { GetEntidadesFederativasActivasInteractor } from "../use-cases/get-entidades-federativas-activas.interactor";
+import { EntidadFederativaActiva } from "./dtos/entidad-federativa-activa";
 
 const entidadesFederativasRouter = Router();
 
@@ -27,6 +29,28 @@ export class EntidadesFederativasController {
       const body: ResponseApi<EntidadFederativa[]> = {
         data: entidadesFederativas,
         message: "Entidades federativas obtenidas correctamente",
+        status: 200,
+        error: false,
+      };
+
+      res.status(body.status).json(body);
+    } catch (error) {
+      const errorBody = validarError(error as Error);
+      res.status(errorBody.status).json(errorBody);
+    }
+  };
+
+  // CONSULTAR ACTIVAS
+  getEntidadesFederativasActivas = async (_req: Request, res: Response) => {
+    try {
+      const repositorio: EntidadFederativaRepository = new EntidadFederativaStorageGateway();
+      const getEntidadesFederativasActivasInteractor = new GetEntidadesFederativasActivasInteractor(repositorio);
+
+      const entidadesFederativas = await getEntidadesFederativasActivasInteractor.execute();
+
+      const body: ResponseApi<EntidadFederativaActiva[]> = {
+        data: entidadesFederativas,
+        message: "Entidades federativas activas obtenidas correctamente",
         status: 200,
         error: false,
       };
@@ -138,6 +162,7 @@ export class EntidadesFederativasController {
 const entidadesFederativasController = new EntidadesFederativasController();
 
 entidadesFederativasRouter.get("/consultar", entidadesFederativasController.getEntidadesFederativas);
+entidadesFederativasRouter.get("/consultar-activas", entidadesFederativasController.getEntidadesFederativasActivas);
 entidadesFederativasRouter.post("/registrar", entidadesFederativasController.registrarEntidadFederativa);
 entidadesFederativasRouter.put("/modificar", entidadesFederativasController.modificarEntidadFederativa);
 entidadesFederativasRouter.put("/cambiar-estado", entidadesFederativasController.cambiarEstadoEntidadFederativa);

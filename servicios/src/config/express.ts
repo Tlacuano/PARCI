@@ -4,7 +4,7 @@ import cors from "cors";
 import autenticacionRouter from "../modules/autenticacion/adapters/autenticacion.controller";
 import entidadesFederativasRouter from "../modules/entidades/adapters/entidad-federativa.controller";
 import reporteRouter from "../modules/reportes/adapters/reporte.controller";
-import municipiosRouter from "../modules/municipios/adapters/municipios-controller";
+import municipiosRouter from "../modules/municipios/adapters/municipio-controller";
 import personalizacionRouter from "../modules/personalizacion/adapters/personalizacion.controller";
 import categoriaRouter from "../modules/categorias/adapters/categoria.controller";
 import opinionRouter from "../modules/opiniones/adapters/opinion.controller";
