@@ -2,10 +2,20 @@ import { ConexionBD } from "../../../utils/dbconfig";
 import { EntidadFederativa } from "../entities/entidad-federativa";
 import { EntidadFederativaRepository } from "../use-cases/ports/entidad-federativa.repository";
 import { CambiarEstadoEntidadFederativaDTO } from "./dtos/cambiar-estado-entidad-federativa.dto";
+import { EntidadFederativaActiva } from "./dtos/entidad-federativa-activa";
 import { ModificarEntidadFederativaDTO } from "./dtos/modificar-entidad-federativa.dto";
 import { RegistrarEntidadFederativaDTO } from "./dtos/registrar-entidad-federativa.dto";
 
 export class EntidadFederativaStorageGateway implements EntidadFederativaRepository {
+  async getEntidadesFederativasActivas(): Promise<EntidadFederativaActiva[]> {
+    try {
+      const resultado = await ConexionBD<EntidadFederativa[]>("SELECT id_entidad, nombre_entidad FROM entidades_federativas WHERE estado = 1", []);
+      return resultado;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getEntidadesFederativas(): Promise<EntidadFederativa[]> {
     try {
       const resultado = await ConexionBD<EntidadFederativa[]>("SELECT id_entidad, nombre_entidad, estado FROM entidades_federativas", []);
