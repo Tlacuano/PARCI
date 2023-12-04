@@ -41,7 +41,7 @@
                                                 <b-button variant="link" v-b-modal.recuperarContra>Olvide mi contraseña</b-button>
                                             </b-col>
                                             <b-col cols="12" md="6">
-                                                <b-button variant="link">Registrate</b-button>
+                                                <b-button variant="link" v-b-modal.registrarUser>Registrate</b-button>
                                             </b-col>
                                         </b-row>
                                     </b-col>
@@ -53,6 +53,7 @@
             </b-col>
         </b-row>
         <RecuperarContraseña/>
+        <RegistrarUsuario/>
     </b-container>
 </template>
 
@@ -62,11 +63,13 @@
     import { AutenticacionController } from '../autenticacion.controller';
     import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
     import RecuperarContraseña from './components/RecuperarContraseña.modal.vue';
+    import RegistrarUsuario  from './components/RegistrarUsuario.vue';
 
     export default Vue.extend({
         name: 'Login',
         components: {
-            RecuperarContraseña
+            RecuperarContraseña,
+            RegistrarUsuario
         },
         data() {
             return {
