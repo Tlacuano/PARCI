@@ -26,6 +26,11 @@ const routes: Array<RouteConfig> = [
         ]
       },
       {
+        path:'municipios',
+        name:'Municipios',
+        component:() => import('../modules/municipios/adapters/views/Municipios.vue')
+      },
+      {
         path:'m',
       },
 

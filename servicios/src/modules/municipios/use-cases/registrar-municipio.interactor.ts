@@ -1,7 +1,6 @@
 import { UseCase } from "../../../kernel/contracts";
 import { RegistrarMunicipioDTO } from "../adapters/dtos/registrar-municipio.dto";
 import { MunicipioRepository } from "./ports/municipio.repository";
-import { nombreRepetidoMunicipio } from "../utils/nombre-repetido-municipio";
 import { regexValidationNoCaracteresEspeciales, validateRegex, regexValidationNoEspaciosInicioFin} from "../../../kernel/validation";
 
 export class RegistrarMunicipioInteractor implements UseCase<RegistrarMunicipioDTO, boolean> {
