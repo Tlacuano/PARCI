@@ -8,6 +8,7 @@ import { CambiarEstadoEntidadDTO } from "./dtos/cambiar-estado-entidad.dto";
 import { CambiarEstadoEntidadFederativaInteractor } from "../use-cases/cambiar-estado-entidad.interactor";
 import { ModificarEntidadFederativaInteractor } from "../use-cases/modificar-entidad.interactor";
 import { ModificarEntidadDTO } from "./dtos/modificar-entidad.dto";
+import { ObtenerEntidadesFederativasActivasInteractor } from "../use-cases/obtener-entidades-activas.interactor";
 
 export class EntidadFederativaController {
   private obtenerError(error: any) {
@@ -25,6 +26,22 @@ export class EntidadFederativaController {
       const obtenerEntidadesFederativasInteractor = new ObtenerEntidadesFederativasInteractor(repositorio);
 
       const respuesta = await obtenerEntidadesFederativasInteractor.execute();
+
+      return respuesta;
+    } catch (error) {
+      return this.obtenerError(error);
+    }
+  };
+
+  // CONSULTAR ENTIDADES FEDERATIVAS ACTIVAS
+  obtenerEntidadesFederativasActivas = async () => {
+    try {
+      const repositorio: EntidadFederativaRepository = new EntidadFederativaStorageGateway();
+      const obtenerEntidadesFederativasActivasInteractor = new ObtenerEntidadesFederativasActivasInteractor(
+        repositorio
+      );
+
+      const respuesta = await obtenerEntidadesFederativasActivasInteractor.execute();
 
       return respuesta;
     } catch (error) {

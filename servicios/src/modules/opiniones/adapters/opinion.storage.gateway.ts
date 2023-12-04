@@ -4,27 +4,48 @@ import { RequestRegistrarOpinionDto } from './dto/request-registrar-opinion.dto'
 import { OpinionesRepository } from '../use-cases/ports/opiniones.Repository';
 import { RequestEliminarOpinionDto } from './dto/request-eliminar-opinion.dto';
 import { RequestModificarOpinionDto } from './dto/request-modificar-opinion.dto';
+import { RequestConsultarReportesDto } from './dto/request-consultar-reportes.dto';
 
 
 
 
 export class OpinionStorageGateway implements OpinionesRepository{
-    async consultarOpinionesByReporteId(payload: number): Promise<Opinion[]> {
+    async consultarOpinionesByReporteId(payload: RequestConsultarReportesDto): Promise<Opinion[]> {
         try {
             const resultado = await ConexionBD<Opinion[]>(`SELECT
-                                                                o.id_opinion,
-                                                                o.fecha,
-                                                                o.opinion,
-                                                                o.votos_positivos,
-                                                                o.votos_negativos,
-                                                                o.fk_idReporte,
-                                                                CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre_completo_persona,
-                                                                o.fk_idPersona
-                                                            FROM
-                                                                opiniones o
-                                                            JOIN
-                                                                personas p ON o.fk_idPersona = p.id_persona
-                                                            WHERE fk_idReporte = ?`, [payload]);
+            o.id_opinion,
+            DATE_FORMAT(o.fecha, '%Y-%m-%d') as fecha,
+            o.opinion,
+            o.fk_idReporte,
+            COUNT(CASE WHEN vo.voto = 'positivo' THEN 1 END) AS votos_positivos,
+            COUNT(CASE WHEN vo.voto = 'negativo' THEN 1 END) AS votos_negativos,
+            CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre_completo_persona,
+            MAX((SELECT vo_inner.voto
+                FROM votos_opinion vo_inner 
+                JOIN personas p_inner ON vo_inner.fk_idPersona = p_inner.id_persona
+                JOIN usuarios u_inner ON p_inner.id_persona = u_inner.fk_idPersona
+                WHERE vo_inner.fk_idOpinion = o.id_opinion
+                AND u_inner.usuario = ?
+                LIMIT 1)) AS voto_usuario
+        FROM
+            opiniones o
+        JOIN
+            personas p ON o.fk_idPersona = p.id_persona
+        LEFT JOIN
+            votos_opinion vo ON vo.fk_idOpinion = o.id_opinion
+        WHERE 
+            fk_idReporte = ?
+        group by
+            o.id_opinion,
+            o.fecha,
+            o.opinion,
+            o.fk_idReporte;
+        `, [payload.usuario, payload.fk_idReporte]);
+
+            if (resultado.length === 0) {
+                throw new Error('Server Error');
+            }
+
             return resultado;
         } catch (error) {
             throw error;

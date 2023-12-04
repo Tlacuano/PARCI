@@ -7,8 +7,66 @@ import { votarReporteDTO } from "./dtos/votar-reporte.dto";
 import { modificarEstadoReporteDTO } from "./dtos/modificar-estado-reporte.dto";
 import { ObtenerReporteDTO } from "./dtos/obtener-reporte.dto";
 import { ObtenerReportesDTO } from "./dtos/reponse-get-reporte";
+import { RequestConsultarReporteUsuarioDTO } from "./dtos/request-consultar-reporte-usuario.dto";
+import { ResponseConsultarReporteUsuarioDTO } from "./dtos/response-consultar-reporte-usuario.dto";
 
 export class ReporteStorageGateway implements ReporteRepository {
+
+
+    async consultarReporteUsuario(payload: RequestConsultarReporteUsuarioDTO): Promise<ResponseConsultarReporteUsuarioDTO> {        
+        try {
+            const resultado = await ConexionBD<ResponseConsultarReporteUsuarioDTO[]>(`SELECT
+                                                                                        r.id_reporte,
+                                                                                        r.titulo,
+                                                                                        r.imagen,
+                                                                                        r.descripcion,
+                                                                                        DATE_FORMAT(r.fecha, '%Y-%m-%d') as fecha,
+                                                                                        p.nombre,
+                                                                                        p.apellido_paterno,
+                                                                                        p.apellido_materno,
+                                                                                        c.nombre_categoria,
+                                                                                        c.color,
+                                                                                        m.nombre_municipio,
+                                                                                        COUNT(CASE WHEN vr.voto = 'positivo' THEN 1 END) AS votos_positivos,
+                                                                                        COUNT(CASE WHEN vr.voto = 'negativo' THEN 1 END) AS votos_negativos,
+                                                                                        MAX((SELECT vr_inner.voto
+                                                                                            FROM votos_reporte vr_inner 
+                                                                                            JOIN personas p_inner ON vr_inner.fk_idPersona = p_inner.id_persona
+                                                                                            JOIN usuarios u_inner ON p_inner.id_persona = u_inner.fk_idPersona
+                                                                                            WHERE vr_inner.fk_idReporte = r.id_reporte
+                                                                                            AND u_inner.usuario = ?
+                                                                                            LIMIT 1)) AS voto_usuario
+                                                                                    FROM
+                                                                                        reportes r
+                                                                                    JOIN personas p ON r.fk_idPersona = p.id_persona
+                                                                                    JOIN categorias c ON r.fk_idCategoria = c.id_categoria
+                                                                                    JOIN municipios m ON r.fk_idMunicipio = m.id_municipio
+                                                                                    LEFT JOIN votos_reporte vr ON r.id_reporte = vr.fk_idReporte
+                                                                                    LEFT JOIN usuarios u ON u.fk_idPersona = p.id_persona
+                                                                                    WHERE
+                                                                                        r.estado = 'Publicado'
+                                                                                        AND r.id_reporte = ?
+                                                                                    GROUP BY
+                                                                                        r.id_reporte,
+                                                                                        r.titulo,
+                                                                                        r.imagen,
+                                                                                        r.fecha,
+                                                                                        p.nombre,
+                                                                                        p.apellido_paterno,
+                                                                                        p.apellido_materno,
+                                                                                        c.nombre_categoria,
+                                                                                        c.color,
+                                                                                        m.nombre_municipio`, [payload.usuario,payload.id_reporte]);
+            if(resultado.length === 0){
+                throw new Error('No se encontró el reporte solicitado');
+            }
+
+            return resultado[0];
+
+        } catch (error) {
+            throw error;
+        }
+    }
 
     async getReporte(obtenerReporteDTO: ObtenerReporteDTO): Promise<ObtenerReportesDTO[]>{
         try{
@@ -85,8 +143,8 @@ export class ReporteStorageGateway implements ReporteRepository {
     async insertReporte(payload: insertReporteDTO): Promise<boolean> {
         try {
             const result = await ConexionBD<boolean>(
-                'INSERT INTO reportes (fecha, titulo, descripcion, imagen, votos_positivos, votos_negativos, fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) VALUES (?, ?, ?, ?, 0, 0, ?, ?, ?, "Espera")', 
-            [payload.fecha,payload.titulo,payload.descripcion,JSON.stringify(payload.imagen),payload.fk_idPersona,payload.fk_idMunicipio, payload.fk_idCategoria]);
+                'INSERT INTO reportes (fecha, titulo, descripcion, imagen, fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) VALUES (?, ?, ?, ?, (SELECT id_persona FROM personas join usuarios ON fk_idPersona = id_persona WHERE usuario = ?), ?, ?, "Espera")', 
+            [payload.fecha,payload.titulo,payload.descripcion,JSON.stringify(payload.imagen),payload.usuario,payload.fk_idMunicipio, payload.fk_idCategoria]);
             return true;
         } catch (error) {
             throw error;

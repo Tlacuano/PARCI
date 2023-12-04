@@ -22,26 +22,18 @@ import { AumentarVotoNegativoInteractor } from "../use-cases/aumentar-voto-negat
 const opinionRouter = Router();
 
 export class OpinonController {
-    consultarOpinionesByReporteId = async (req: Request, res: Response) => {
-        try {
-            const payload = req.body as RequestConsultarReportesDto;
 
+    static consultarOpinionesByReporteId = async (payload: RequestConsultarReportesDto) => {
+        try {
             const repositorio: OpinionesRepository = new OpinionStorageGateway;
             const consultarOpinionesByReporteIdInteractor = new ConsultarOpinionesByReporteIdInteractor(repositorio);
 
-            const resultado = await consultarOpinionesByReporteIdInteractor.execute(payload.fk_idReporte);
+            const resultado = await consultarOpinionesByReporteIdInteractor.execute(payload);
 
-            const body: ResponseApi<Opinion[]> = {
-                data: resultado,
-                message: 'Opiniones consultadas correctamente',
-                status: 200,
-                error: false
-            }
+            return resultado;
 
-            res.status(body.status).json(body);
         } catch (error) {
-            const errorBody = validarError(error as Error);
-            res.status(errorBody.status).json(errorBody);
+            throw error;
         }
     }
 
@@ -181,7 +173,6 @@ export class OpinonController {
 
 const opinionController = new OpinonController();
 
-opinionRouter.post('/consultar-opiniones', opinionController.consultarOpinionesByReporteId);
 opinionRouter.post('/registrar-opinion', opinionController.registrarOpinion);
 opinionRouter.post('/eliminar-opinion', opinionController.eliminarOpinon);
 opinionRouter.post('/modificar-opinion', opinionController.modificarOpinion);

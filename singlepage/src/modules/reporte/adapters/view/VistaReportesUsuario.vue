@@ -5,42 +5,49 @@
                 <b-row align-h="between">
                     <b-col cols="12" md="4">
                         <b-row class="mt-4">
-                            <b-container>
-                                <b-row>
+                            <b-container >
+                                <b-row >
                                     <b-col cols="12">
                                         <b-card>
                                             <b-row class="mt-4">
                                                 <b-col cols="12">
-                                                    <b-select>
-                                                        <option value="">Seleccionar Categoria</option>
-                                                    </b-select>
+                                                    <b-form-group label="Categorias:">
+                                                        <b-form-select v-model="filtros.fk_idCategoria">
+                                                            <template #first>
+                                                                <b-form-select-option :value=undefined disabled>Seleccione...</b-form-select-option>
+                                                            </template>
+                                                        </b-form-select>
+                                                    </b-form-group>
                                                 </b-col>
                                             </b-row>
                                             <b-row class="mt-4">
                                                 <b-col cols="12">
-                                                    <b-select>
-                                                        <option value="">Seleccionar Municipio</option>
-                                                    </b-select>
+                                                    <b-form-group label="Municipio:">
+                                                        <b-form-select></b-form-select>
+                                                    </b-form-group>
                                                 </b-col>
                                             </b-row>
-                                            <b-row class="mt-4">
+                                            <b-row class="mt-4 mb-3">
                                                 <b-col cols="12">
-                                                    <b-form-datepicker class="custom-datepicker"></b-form-datepicker>
+                                                    <b-form-group label="Fecha:">
+                                                        <b-form-datepicker 
+                                                            class="custom-datepicker" 
+                                                            placeholder="Seleccione..."
+                                                            hideHeader
+                                                            hideFooter
+                                                            locale="es"
+                                                            :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                                                            ></b-form-datepicker>
+                                                    </b-form-group>
                                                 </b-col>
                                             </b-row>
-                                            <b-card-footer class="text-center">
-                                                <b-row>
-                                                    <b-col cols="12">
-                                                        <b-card>
-                                                            <b-row>
-                                                                <b-col cols="12">
-                                                                    <b-button style="width:100%; padding:8px; background-color: var(--color-primary);">Registrar Reporte</b-button> 
-                                                                </b-col>
-                                                            </b-row>
-                                                        </b-card>
-                                                    </b-col>
-                                                </b-row>
-                                            </b-card-footer>
+                                        </b-card>
+                                        <b-card class="text-center mt-4">
+                                            <b-row>
+                                                <b-col cols="12">
+                                                    <b-button v-b-modal.registrar-reporte style="width:100%; padding:8px; background-color: var(--color-primary);">Registrar Reporte</b-button> 
+                                                </b-col>
+                                            </b-row>
                                         </b-card>
                                     </b-col>
                                 </b-row>
@@ -52,19 +59,19 @@
                             <b-container>
                                 <b-row>
                                     <b-col cols="12">
-                                        <b-card class="contenedor_reportes">
-                                            <b-container fluid>
+
+                                            <b-container fluid class="contenedor_reportes">
                                                 <b-row v-for="reporte in reportes">
                                                     <b-col cols="12">
                                                         <b-card class="mb-4">
                                                             <b-container>
-                                                                <b-row class=" px-5">
+                                                                <b-row class=" px-3">
                                                                     <b-col cols="10">
                                                                         <b-row>
                                                                             <b-col cols="1" class="text-center" style="padding: 0px;">
                                                                                 <b-avatar size="3rem"></b-avatar>
                                                                             </b-col>
-                                                                            <b-col cols="10" style="padding: 0px;">
+                                                                            <b-col cols="10" style="padding: 3px;">
                                                                                 <b-row>
                                                                                     <b-col cols="12">
                                                                                         {{ reporte.nombre }} {{ reporte.apellido_paterno}}
@@ -86,35 +93,35 @@
                                                                         </b-row>
                                                                     </b-col>
                                                                 </b-row>
-                                                                <b-row class="mt-4  px-5">
-                                                                    <b-col cols="12" class="text-center">
+                                                                <b-row class="mt-4 justify-content-md-center">
+                                                                    <b-col cols="9" class="text-center">
                                                                         <b-img fluid rounded :src="reporte.imagen[0]" :alt="reporte.titulo"  @click="verReporte(reporte.id_reporte)" class="seleccionable"/>                                                    
                                                                     </b-col>      
                                                                 </b-row>
-                                                                <b-row class="mt-4  px-5">
-                                                                    <b-col cols="12">
-                                                                            <b-container fluid>
-                                                                                <b-row>
-                                                                                    <b-col cols="12" class="text-center">
-                                                                                        <h4>{{ reporte.titulo }}</h4>
-                                                                                        <hr/>
-                                                                                    </b-col>
-                                                                                </b-row>
-                                                                                <b-row>
-                                                                                    <b-col cols="6" class="text-center">
-                                                                                        <span>
-                                                                                            <b-icon :icon="reporte.voto_usuario === 'positivo' ? 'hand-thumbs-up-fill' : 'hand-thumbs-up'"></b-icon>
-                                                                                            {{ reporte.votos_positivos }}
-                                                                                        </span>
-                                                                                    </b-col>
-                                                                                    <b-col cols="6"  class="text-center">
-                                                                                        <span>
-                                                                                            <b-icon :icon="reporte.voto_usuario === 'positivo' ? 'hand-thumbs-down-fill' : 'hand-thumbs-down'"></b-icon>
-                                                                                            {{ reporte.votos_negativos }}
-                                                                                        </span>
-                                                                                    </b-col>
-                                                                                </b-row>
-                                                                            </b-container>
+                                                                <b-row class="mt-4 justify-content-md-center">
+                                                                    <b-col cols="10">
+                                                                        <b-container fluid>
+                                                                            <b-row>
+                                                                                <b-col cols="12" class="text-center">
+                                                                                    <h5>{{ reporte.titulo }}</h5>
+                                                                                    <hr/>
+                                                                                </b-col>
+                                                                            </b-row>
+                                                                            <b-row>
+                                                                                <b-col cols="6" class="text-center">
+                                                                                    <span>
+                                                                                        <b-icon :icon="reporte.voto_usuario === 'positivo' ? 'hand-thumbs-up-fill' : 'hand-thumbs-up'"></b-icon>
+                                                                                        {{ reporte.votos_positivos }}
+                                                                                    </span>
+                                                                                </b-col>
+                                                                                <b-col cols="6"  class="text-center">
+                                                                                    <span>
+                                                                                        <b-icon :icon="reporte.voto_usuario === 'positivo' ? 'hand-thumbs-down-fill' : 'hand-thumbs-down'"></b-icon>
+                                                                                        {{ reporte.votos_negativos }}
+                                                                                    </span>
+                                                                                </b-col>
+                                                                            </b-row>
+                                                                        </b-container>
                                                                     </b-col>
                                                                 </b-row>
                                                             </b-container>
@@ -122,7 +129,7 @@
                                                     </b-col>
                                                 </b-row>
                                             </b-container>
-                                        </b-card>
+
                                     </b-col>
                                 </b-row>
                             </b-container>
@@ -131,6 +138,8 @@
                 </b-row>
             </b-col>
         </b-row>
+
+        <RegistrarReporte/>
     </b-container>
 </template>
 
@@ -141,9 +150,13 @@
     import { ObtenerReportesDTO } from '../dtos/reponse-get-reporte';
     import { ReporteController } from '../reporte.controller';
     import { encriptar } from '../../../../kernel/crypto-js';
+    import RegistrarReporte from './components/RegistrarReporte.vue';
 
     export default Vue.extend({
         name: 'VistaReportesUsuario',
+        components: {
+            RegistrarReporte
+        },
         data() {
             return {
                 filtros:{
@@ -198,7 +211,7 @@
 
 <style>
     .contenedor_reportes{
-        max-height: 87vh; 
+        height: 87vh; 
         overflow-y: auto;
     }
 

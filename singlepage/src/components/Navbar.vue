@@ -80,7 +80,6 @@ import { cambioPersonalizacion } from '@/kernel/cambioPersonalizacion';
         methods: {
             obtenerPersonalizacion(){
                 window.addEventListener('storage', () => {
-                    console.log('cambio');
                     
                     this.obtenerPersonalizacion();
                 });

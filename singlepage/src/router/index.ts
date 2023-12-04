@@ -25,7 +25,6 @@ const routes: Array<RouteConfig> = [
           },
         ]
       },
-      
       {
         path:'a/municipios',
         name:'Municipios',
