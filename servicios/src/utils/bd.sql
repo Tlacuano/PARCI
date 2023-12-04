@@ -2,6 +2,7 @@ create database PARCI;
 use PARCI;
 
 
+
 CREATE TABLE entidades_federativas (
   id_entidad INT NOT NULL AUTO_INCREMENT,
   nombre_entidad VARCHAR(45) NULL,
@@ -85,7 +86,7 @@ CREATE TABLE reportes (
   fecha DATE NULL,
   titulo VARCHAR(45) NULL,
   descripcion TEXT NULL, -- Cambiado a tipo TEXT
-  imagen JSON NULL,
+  imagen varchar(100) NULL,
   fk_idPersona INT NULL,
   fk_idMunicipio INT NULL,
   fk_idCategoria INT NULL,
@@ -131,7 +132,8 @@ CREATE TABLE opiniones (
 );
 
 CREATE TABLE visitas (
-numero_visitas BIGINT
+numero_visitas BIGINT,
+  fecha DATE NULL
 );
 
 CREATE TABLE votos_opinion (
@@ -175,6 +177,16 @@ CREATE TABLE votos_reporte (
         ON UPDATE NO ACTION
 );
 
+ALTER TABLE `parci`.`personas` 
+ADD COLUMN `fk_idEntidad_federativa` INT NULL AFTER `fk_idMunicipio`,
+ADD INDEX `fk_idEntidad_Federativa_Personas_idx` (`fk_idEntidad_federativa` ASC) VISIBLE;
+;
+ALTER TABLE `parci`.`personas` 
+ADD CONSTRAINT `fk_idEntidad_Federativa_Personas`
+  FOREIGN KEY (`fk_idEntidad_federativa`)
+  REFERENCES `parci`.`entidades_federativas` (`id_entidad`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
 
 
 
@@ -468,9 +480,6 @@ insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Oscuro'
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Claro', 'Mediana', 4);
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Oscuro', 'Mediana', 5);
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Claro', 'Grande', 6);
-
-
-select * from usuarios;
 
 
 insert into reportes (fecha, titulo, descripcion, imagen, fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) 
