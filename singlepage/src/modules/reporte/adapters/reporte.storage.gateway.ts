@@ -7,10 +7,12 @@ import { RequestConsultarReporteUsuarioDTO } from "./dtos/request-consultar-repo
 import { ResponseConsultarReporteUsuarioDTO } from "./dtos/response-consultar-reporte-usuario.dto";
 import { insertReporteDTO } from "./dtos/registrar-reporte.dto";
 import { votarReporteDTO } from "./dtos/votar-reporte.dto";
+import { ResponseReportesEnEsperaDto } from "./dtos/response-consultar-reportes-espera.dto";
 
 
 
 export class ReporteStorageGateway implements ReporteRepository{
+
 
     async getReporte(payload: ObtenerReporteDTO): Promise<ResponseApi<ObtenerReportesDTO[]>> {
         const respuesta = await api.doPost('/reportes/consultar', payload);
@@ -38,5 +40,12 @@ export class ReporteStorageGateway implements ReporteRepository{
         return{
             ...respuesta.data
         } as ResponseApi<boolean>
+    }
+
+    async consultarReportesEnEspera(payload: null): Promise<ResponseApi<ResponseReportesEnEsperaDto[]>> {
+        const respuesta = await api.doGet('/reportes/consultar-en-espera');
+        return{
+            ...respuesta.data
+        } as ResponseApi<ResponseReportesEnEsperaDto[]>
     }
 }

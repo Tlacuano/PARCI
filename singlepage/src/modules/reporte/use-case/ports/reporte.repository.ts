@@ -5,6 +5,7 @@ import { RequestConsultarReporteUsuarioDTO } from '../../adapters/dtos/request-c
 import { ResponseConsultarReporteUsuarioDTO } from '../../adapters/dtos/response-consultar-reporte-usuario.dto';
 import { ResponseApi } from './../../../../kernel/types';
 import { votarReporteDTO } from '../../adapters/dtos/votar-reporte.dto';
+import { ResponseReportesEnEsperaDto } from '../../adapters/dtos/response-consultar-reportes-espera.dto';
 
 
 export interface ReporteRepository {
@@ -14,5 +15,5 @@ export interface ReporteRepository {
     registrarReporte(payload:insertReporteDTO) : Promise<ResponseApi<string>>;
     votarReporte(payload:votarReporteDTO) : Promise<ResponseApi<boolean>>;
 
-
+    consultarReportesEnEspera(payload: null): Promise<ResponseApi<ResponseReportesEnEsperaDto[]>>;
 }

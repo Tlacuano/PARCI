@@ -1,3 +1,4 @@
+import { ResponseReportesEnEsperaDto } from './dtos/response-consultar-reportes-espera.dto';
 import { ConsultarInformacionOpinionesInteractor } from './../../usuarios/use-cases/consultar-informacion-opiniones.interactor';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -110,7 +111,7 @@ export class ReporteController {
             const interactor = new ObtenerReportesEnEsperaInteractor(repository);
             const result = await interactor.execute(null);
 
-            const body: ResponseApi<Reporte[]> = {
+            const body: ResponseApi<ResponseReportesEnEsperaDto[]> = {
                 data: result,
                 message: 'Los reportes en espera han sido encontrados',
                 error: false,

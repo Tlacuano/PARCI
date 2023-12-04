@@ -10,6 +10,7 @@ import { ObtenerReportesDTO } from "./dtos/reponse-get-reporte";
 import { RequestConsultarReporteUsuarioDTO } from "./dtos/request-consultar-reporte-usuario.dto";
 import { ResponseConsultarReporteUsuarioDTO } from "./dtos/response-consultar-reporte-usuario.dto";
 import { ResponseConsultarVotoPorUsuarioDTO } from "./dtos/response-consultar-voto-por-usuario.dto";
+import { ResponseReportesEnEsperaDto } from "./dtos/response-consultar-reportes-espera.dto";
 
 export class ReporteStorageGateway implements ReporteRepository {
 
@@ -71,7 +72,7 @@ export class ReporteStorageGateway implements ReporteRepository {
 
     async getReporte(obtenerReporteDTO: ObtenerReporteDTO): Promise<ObtenerReportesDTO[]>{
         try{
-            let queryPart1 =   `SELECT r.id_reporte, r.titulo, r.imagen, DATE_FORMAT(r.fecha, '%Y-%m-%d') as fecha, p.nombre, p.apellido_paterno, p.apellido_materno, c.nombre_categoria, c.color, COUNT(CASE WHEN vr.voto = 'positivo' THEN 1 END) AS votos_positivos, COUNT(CASE WHEN vr.voto = 'negativo' THEN 1 END) AS votos_negativos, MAX((SELECT vr_inner.voto FROM votos_reporte vr_inner  JOIN personas p_inner ON vr_inner.fk_idPersona = p_inner.id_persona JOIN usuarios u_inner ON p_inner.id_persona = u_inner.fk_idPersona WHERE vr_inner.fk_idReporte = r.id_reporte AND u_inner.usuario = ? LIMIT 1)) AS voto_usuario FROM reportes r JOIN personas p ON r.fk_idPersona = p.id_persona JOIN categorias c ON r.fk_idCategoria = c.id_categoria JOIN municipios m ON r.fk_idMunicipio = m.id_municipio LEFT JOIN votos_reporte vr ON r.id_reporte = vr.fk_idReporte LEFT JOIN usuarios u ON u.fk_idPersona = p.id_persona WHERE r.estado = 'Publicado' AND u.usuario = ? AND m.id_municipio = ?`;
+            let queryPart1 =   `SELECT r.id_reporte, r.titulo, r.imagen, DATE_FORMAT(r.fecha, '%Y-%m-%d') as fecha, p.nombre, p.apellido_paterno, p.apellido_materno, c.nombre_categoria, c.color, COUNT(CASE WHEN vr.voto = 'positivo' THEN 1 END) AS votos_positivos, COUNT(CASE WHEN vr.voto = 'negativo' THEN 1 END) AS votos_negativos, MAX((SELECT vr_inner.voto FROM votos_reporte vr_inner  JOIN personas p_inner ON vr_inner.fk_idPersona = p_inner.id_persona JOIN usuarios u_inner ON p_inner.id_persona = u_inner.fk_idPersona WHERE vr_inner.fk_idReporte = r.id_reporte AND u_inner.usuario = ? LIMIT 1)) AS voto_usuario FROM reportes r JOIN personas p ON r.fk_idPersona = p.id_persona JOIN categorias c ON r.fk_idCategoria = c.id_categoria JOIN municipios m ON r.fk_idMunicipio = m.id_municipio LEFT JOIN votos_reporte vr ON r.id_reporte = vr.fk_idReporte LEFT JOIN usuarios u ON u.fk_idPersona = p.id_persona WHERE r.estado = 'Publicado' AND m.id_municipio = ?`;
             if(obtenerReporteDTO?.fecha){
                 queryPart1 += ' AND r.fecha = ?';
             } else if (obtenerReporteDTO?.fk_idCategoria){
@@ -80,7 +81,7 @@ export class ReporteStorageGateway implements ReporteRepository {
 
             const query = queryPart1 + ` GROUP BY r.id_reporte, r.titulo, r.imagen, r.fecha, p.nombre, p.apellido_paterno, p.apellido_materno, c.nombre_categoria, c.color;`;
 
-            const result = await ConexionBD<ObtenerReportesDTO[]>(query, [obtenerReporteDTO.usuario, obtenerReporteDTO.usuario, obtenerReporteDTO.fk_idMunicipio, obtenerReporteDTO.fecha || obtenerReporteDTO.fk_idCategoria]);
+            const result = await ConexionBD<ObtenerReportesDTO[]>(query, [obtenerReporteDTO.usuario, obtenerReporteDTO.fk_idMunicipio, obtenerReporteDTO.fecha || obtenerReporteDTO.fk_idCategoria]);
 
             return result;
         } catch (error) {
@@ -88,9 +89,9 @@ export class ReporteStorageGateway implements ReporteRepository {
         }
     }
 
-    async obtenerReportesEnEspera(): Promise<Reporte[]> {
+    async obtenerReportesEnEspera(): Promise<ResponseReportesEnEsperaDto[]> {
         try {
-            const resultado = await ConexionBD<Reporte[]>('SELECT r.fecha, r.descripcion, m.nombre_municipio as nombre_municipio, ef.nombre_entidad FROM reportes r JOIN municipios m ON r.fk_idMunicipio = m.id_municipio JOIN entidades_federativas ef ON m.fk_idEntidad = ef.id_entidad WHERE r.estado = "Espera"', []);
+            const resultado = await ConexionBD<ResponseReportesEnEsperaDto[]>("select r.id_reporte, r.titulo, r.descripcion, r.imagen, DATE_FORMAT(r.fecha, '%Y-%m-%d') as fecha, c.color, c.nombre_categoria, concat(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre_completo_persona, p.correo_electronico from reportes r join categorias c on r.fk_idCategoria = c.id_categoria join personas p on p.id_persona = r.fk_idPersona WHERE r.estado = 'Espera'", []);
 
             return resultado;
         } catch (error) {

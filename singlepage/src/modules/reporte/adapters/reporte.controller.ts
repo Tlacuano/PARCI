@@ -1,5 +1,6 @@
 import { ResponseApi } from "../../../kernel/types";
 import { ConsultarReporteUsuarioInteractor } from "../use-case/consultar-reporte-usuario.interactor";
+import { ConsultarReportesEnEsperaInteractor } from "../use-case/consultar-reportes-en-espera.interactor";
 import { ObtenerReportesInteractor } from "../use-case/obtener-reportes.interactor";
 import { ReporteRepository } from "../use-case/ports/reporte.repository";
 import { RegistrarReporteInteractor } from "../use-case/registrar-reporte.interactor";
@@ -63,6 +64,18 @@ export class ReporteController {
             const votarReporteInteractor = new VotarReporteInteractor(repositorio);
 
             const respuesta = await votarReporteInteractor.execute(payload);
+            return respuesta;
+        } catch (error) {
+            return this.obtenerError(error);
+        }
+    }
+
+    consultarReportesEnEspera = async () => {
+        try {
+            const repositorio: ReporteRepository = new ReporteStorageGateway();
+            const consultarReportesEnEsperaInteractor = new ConsultarReportesEnEsperaInteractor(repositorio);
+
+            const respuesta = await consultarReportesEnEsperaInteractor.execute(null);
             return respuesta;
         } catch (error) {
             return this.obtenerError(error);
