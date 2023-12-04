@@ -34,18 +34,20 @@ export class EntidadFederativaController {
   };
 
   // CONSULTAR ENTIDADES FEDERATIVAS ACTIVAS
-  obtenerEntidadesFederativasActivas = async () => {
+  static obtenerEntidadesFederativasActivas_local = async () => {
     try {
       const repositorio: EntidadFederativaRepository = new EntidadFederativaStorageGateway();
-      const obtenerEntidadesFederativasActivasInteractor = new ObtenerEntidadesFederativasActivasInteractor(
-        repositorio
-      );
+      const obtenerEntidadesFederativasActivasInteractor = new ObtenerEntidadesFederativasActivasInteractor(repositorio);
 
       const respuesta = await obtenerEntidadesFederativasActivasInteractor.execute();
 
       return respuesta;
-    } catch (error) {
-      return this.obtenerError(error);
+    } catch (error: any) {
+      return {
+        status: error.status,
+        error: true,
+        message: error.message,
+      } as ResponseApi<any>;
     }
   };
 
