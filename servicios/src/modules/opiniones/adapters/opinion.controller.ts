@@ -40,7 +40,7 @@ export class OpinonController {
     registrarOpinion = async (req: Request, res: Response) => {
         try {
             const payload = req.body as RequestRegistrarOpinionDto;
-
+            
             const usuario = await usuariosBoundary.getInfoOpiniones_Local(payload.usuario) as InformacionOpinionesDto;
             
             if (usuario.fecha_opinion) { 
@@ -74,8 +74,10 @@ export class OpinonController {
 
             await usuariosBoundary.actualizarInfoOpiniones_Local(modificarInformacionOpiniones);
 
-            const body: ResponseApi<boolean> = {
-                data: resultado,
+            const opiniones = await OpinonController.consultarOpinionesByReporteId({fk_idReporte: payload.fk_idReporte, usuario: payload.usuario} as RequestConsultarReportesDto)
+            
+            const body: ResponseApi<Opinion[]> = {
+                data: opiniones,
                 message: 'Opinion registrada correctamente',
                 status: 200,
                 error: false
@@ -83,6 +85,7 @@ export class OpinonController {
 
             res.status(body.status).json(body);
         } catch (error) {
+            
             const errorBody = validarError(error as Error);
             res.status(errorBody.status).json(errorBody);
         }

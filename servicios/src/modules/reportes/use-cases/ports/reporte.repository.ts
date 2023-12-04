@@ -7,6 +7,7 @@ import { ObtenerReporteDTO } from "../../adapters/dtos/obtener-reporte.dto";
 import { ObtenerReportesDTO } from "../../adapters/dtos/reponse-get-reporte";
 import { RequestConsultarReporteUsuarioDTO } from "../../adapters/dtos/request-consultar-reporte-usuario.dto";
 import { ResponseConsultarReporteUsuarioDTO } from "../../adapters/dtos/response-consultar-reporte-usuario.dto";
+import { ResponseConsultarVotoPorUsuarioDTO } from "../../adapters/dtos/response-consultar-voto-por-usuario.dto";
 
 export interface ReporteRepository {
     getReporte(payload: ObtenerReporteDTO):Promise<ObtenerReportesDTO[]>;
@@ -18,6 +19,9 @@ export interface ReporteRepository {
     modificarEstadoReporte(payload: modificarEstadoReporteDTO):Promise<boolean>;
 
     consultarReporteUsuario(payload: RequestConsultarReporteUsuarioDTO): Promise<ResponseConsultarReporteUsuarioDTO>;
+
+    consultarVotoPorUsuario(payload:votarReporteDTO) : Promise<ResponseConsultarVotoPorUsuarioDTO>;
+    modificarVotoPorUsuario(payload: votarReporteDTO): Promise<boolean>;
 }
 
 

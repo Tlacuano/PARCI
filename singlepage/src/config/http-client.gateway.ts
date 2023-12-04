@@ -86,7 +86,18 @@ AxiosClient.interceptors.response.use(
                                 titleAlert = "No se pudo modificar la entidad federativa";
                                 messageAlert = "No se pudo modificar la entidad federativa";
                                 break;
-                            
+                            case "No se puede dejar una opinion vacia":
+                                titleAlert = "campos incompletos";
+                                messageAlert = "No se puede dejar una opinion vacia";
+                                break;
+                            case "No se pudo registrar la opinion":
+                                titleAlert = "Vaya...";
+                                messageAlert = "No se pudo registrar la opinion";
+                                break;
+                            case "Ya no puedes dar mas opiniones por el dia de hoy":
+                                titleAlert = "Ya no puedes dar mas opiniones por el dia de hoy";
+                                messageAlert = "haz alcanzado el limite de opiniones por dia";
+                                break;
                         }                        
                         Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning", confirmButtonColor: "var(--color-primary)" });
                         break;

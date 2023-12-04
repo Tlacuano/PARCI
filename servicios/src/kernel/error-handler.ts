@@ -58,9 +58,13 @@ const errores: { [x: string]: ResponseApi<undefined> } = {
   "No se pudo modificar la opinion": {status: 400, error: true, message: "No se pudo modificar la opinion"},
   "El voto debe ser positivo o negativo": {status: 400, error: true, message: "El voto debe ser positivo o negativo"},
   "La fecha de la opinion no puede ser mayor a la actual": {status: 400, error: true, message: "La fecha de la opinion no puede ser mayor a la actual"},
+  "No se puede dejar una opinion vacia": {status: 400, error: true, message: "No se puede dejar una opinion vacia"},
 
   //reportes
   "No se encontró el reporte solicitado" : {status: 404, error: true, message: "No se encontró el reporte solicitado"},
+
+  //votos
+  "El voto es requerido" : {status: 400, error: true, message: "El voto es requerido"},
 };
 
 export const validarError = (error: Error): ResponseApi<undefined> => {

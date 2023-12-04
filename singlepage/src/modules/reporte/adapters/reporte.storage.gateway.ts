@@ -5,6 +5,8 @@ import { ObtenerReportesDTO } from "./dtos/reponse-get-reporte";
 import api from '../../../config/http-client.gateway';
 import { RequestConsultarReporteUsuarioDTO } from "./dtos/request-consultar-reporte-usuario.dto";
 import { ResponseConsultarReporteUsuarioDTO } from "./dtos/response-consultar-reporte-usuario.dto";
+import { insertReporteDTO } from "./dtos/registrar-reporte.dto";
+import { votarReporteDTO } from "./dtos/votar-reporte.dto";
 
 
 
@@ -22,5 +24,19 @@ export class ReporteStorageGateway implements ReporteRepository{
         return{
             ...respuesta.data
         } as ResponseApi<ResponseConsultarReporteUsuarioDTO>
+    }
+
+    async registrarReporte(payload: insertReporteDTO): Promise<ResponseApi<string>> {
+        const respuesta = await api.doPost('/reportes/registrar', payload);
+        return{
+            ...respuesta.data
+        } as ResponseApi<string>
+    }
+
+    async votarReporte(payload: votarReporteDTO): Promise<ResponseApi<boolean>> {
+        const respuesta = await api.doPost('/reportes/votar', payload);
+        return{
+            ...respuesta.data
+        } as ResponseApi<boolean>
     }
 }

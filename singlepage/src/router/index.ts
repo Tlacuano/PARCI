@@ -27,6 +27,14 @@ const routes: Array<RouteConfig> = [
       },
       {
         path:'m',
+        component:() => import('../modules/autenticacion/adapters/view/Home.vue'),
+        children:[
+          {
+            path:'/',
+            name:'Reportes',
+            component:() => import('../modules/reporte/adapters/view/VistaReportesModerador.vue')
+          },
+        ]
       },
 
       //Rutas de usuario

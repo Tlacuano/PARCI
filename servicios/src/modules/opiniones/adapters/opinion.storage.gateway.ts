@@ -42,9 +42,6 @@ export class OpinionStorageGateway implements OpinionesRepository{
             o.fk_idReporte;
         `, [payload.usuario, payload.fk_idReporte]);
 
-            if (resultado.length === 0) {
-                throw new Error('Server Error');
-            }
 
             return resultado;
         } catch (error) {
@@ -54,7 +51,7 @@ export class OpinionStorageGateway implements OpinionesRepository{
 
     async registrarOpinion(payload: RequestRegistrarOpinionDto): Promise<boolean> {
         try {
-            const resultado = await ConexionBD<any>(`INSERT INTO opiniones (fecha, opinion, votos_positivos, votos_negativos, fk_idReporte, fk_idPersona) VALUES (?, ?, 0, 0, ?, (SELECT id_persona FROM personas join usuarios ON fk_idPersona = id_persona WHERE usuario = ?))`, [payload.fecha, payload.opinion, payload.fk_idReporte, payload.usuario]);
+            const resultado = await ConexionBD<any>(`INSERT INTO opiniones (fecha, opinion, fk_idReporte, fk_idPersona) VALUES (?, ?, ?, (SELECT id_persona FROM personas join usuarios ON fk_idPersona = id_persona WHERE usuario = ?))`, [payload.fecha, payload.opinion, payload.fk_idReporte, payload.usuario]);
 
             if (resultado.insertId === 0) {
                 throw new Error('No se pudo registrar la opinion');

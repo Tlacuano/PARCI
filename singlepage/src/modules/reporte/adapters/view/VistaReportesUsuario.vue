@@ -12,9 +12,9 @@
                                             <b-row class="mt-4">
                                                 <b-col cols="12">
                                                     <b-form-group label="Categorias:">
-                                                        <b-form-select v-model="filtros.fk_idCategoria">
+                                                        <b-form-select v-model="filtros.fk_idCategoria" :options="categorias" value-field="id_categoria" text-field="nombre_categoria">
                                                             <template #first>
-                                                                <b-form-select-option :value=undefined disabled>Seleccione...</b-form-select-option>
+                                                                <b-form-select-option :value=undefined>Ninguno</b-form-select-option>
                                                             </template>
                                                         </b-form-select>
                                                     </b-form-group>
@@ -27,10 +27,11 @@
                                                     </b-form-group>
                                                 </b-col>
                                             </b-row>
-                                            <b-row class="mt-4 mb-3">
+                                            <b-row class="mt-4">
                                                 <b-col cols="12">
                                                     <b-form-group label="Fecha:">
-                                                        <b-form-datepicker 
+                                                        <b-form-datepicker
+                                                            v-model="filtros.fecha"
                                                             class="custom-datepicker" 
                                                             placeholder="Seleccione..."
                                                             hideHeader
@@ -39,6 +40,12 @@
                                                             :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
                                                             ></b-form-datepicker>
                                                     </b-form-group>
+                                                </b-col>
+                                            </b-row>
+                                            <b-row>
+                                                <b-col cols="12" class="mt-1  mb-3">
+                                                    <hr>
+                                                    <b-button  style="width:100%; padding:8px;" @click="obtenerReportes">Filtrar</b-button>
                                                 </b-col>
                                             </b-row>
                                         </b-card>
@@ -59,7 +66,6 @@
                             <b-container>
                                 <b-row>
                                     <b-col cols="12">
-
                                             <b-container fluid class="contenedor_reportes">
                                                 <b-row v-for="reporte in reportes">
                                                     <b-col cols="12">
@@ -95,7 +101,7 @@
                                                                 </b-row>
                                                                 <b-row class="mt-4 justify-content-md-center">
                                                                     <b-col cols="9" class="text-center">
-                                                                        <b-img fluid rounded :src="reporte.imagen[0]" :alt="reporte.titulo"  @click="verReporte(reporte.id_reporte)" class="seleccionable"/>                                                    
+                                                                        <b-img fluid rounded :src="reporte.imagen" :alt="reporte.titulo"  @click="verReporte(reporte.id_reporte)" class="seleccionable" style="max-height: 55vh;"/>                                                    
                                                                     </b-col>      
                                                                 </b-row>
                                                                 <b-row class="mt-4 justify-content-md-center">
@@ -109,14 +115,14 @@
                                                                             </b-row>
                                                                             <b-row>
                                                                                 <b-col cols="6" class="text-center">
-                                                                                    <span>
+                                                                                    <span class="seleccionable" @click="votarReporte(reporte.id_reporte, 'positivo')">
                                                                                         <b-icon :icon="reporte.voto_usuario === 'positivo' ? 'hand-thumbs-up-fill' : 'hand-thumbs-up'"></b-icon>
                                                                                         {{ reporte.votos_positivos }}
                                                                                     </span>
                                                                                 </b-col>
                                                                                 <b-col cols="6"  class="text-center">
-                                                                                    <span>
-                                                                                        <b-icon :icon="reporte.voto_usuario === 'positivo' ? 'hand-thumbs-down-fill' : 'hand-thumbs-down'"></b-icon>
+                                                                                    <span class="seleccionable" @click="votarReporte(reporte.id_reporte, 'negativo')">
+                                                                                        <b-icon :icon="reporte.voto_usuario === 'negativo' ? 'hand-thumbs-down-fill' : 'hand-thumbs-down'"></b-icon>
                                                                                         {{ reporte.votos_negativos }}
                                                                                     </span>
                                                                                 </b-col>
@@ -151,6 +157,9 @@
     import { ReporteController } from '../reporte.controller';
     import { encriptar } from '../../../../kernel/crypto-js';
     import RegistrarReporte from './components/RegistrarReporte.vue';
+    import { categoria } from '../../../../modules/categorias/entities/categoria';
+    import { CategoriaBoundary } from '../../../../modules/categorias/adapters/categoria.boundary';
+import { votarReporteDTO } from '../dtos/votar-reporte.dto';
 
     export default Vue.extend({
         name: 'VistaReportesUsuario',
@@ -166,7 +175,9 @@
                     fk_idCategoria : undefined
                 } as ObtenerReporteDTO,
 
-                reportes: [] as ObtenerReportesDTO[]
+                reportes: [] as ObtenerReportesDTO[],
+                categorias: [] as categoria[],
+
             }
         },
         methods: {
@@ -178,9 +189,10 @@
                 this.filtros.fk_idMunicipio = informacionUsuario.municipio;
 
                 this.obtenerReportes();
+                this.obtenerCategorias();
             },
 
-            async obtenerReportes(){
+            async obtenerReportes(){                
                 try {
                     const controller = new ReporteController();
                     const response = await controller.obtenerReportes(this.filtros);
@@ -195,9 +207,39 @@
                 }
             },
 
+            async obtenerCategorias(){
+                try {
+                    const respuesta = await CategoriaBoundary.getCategorias_local();
+                    this.categorias = respuesta.data as categoria[];
+                } catch (error) {
+                    
+                }
+            },
+
             verReporte(id_reporte: number){                
                 const parametroSeguro = encriptar(id_reporte.toString());
                 this.$router.push(`u/reporte/${parametroSeguro}`);
+            },
+
+            async votarReporte(id_reporte:number, voto: string){
+                console.log(id_reporte, voto);
+                
+                try {
+                    const VotarReporteDto = {
+                        id_reporte : id_reporte,
+                        voto : voto,
+                        usuario : this.filtros.usuario
+                    } as votarReporteDTO;
+
+                    const controller = new ReporteController();
+                    const respuesta = await controller.votarReporte(VotarReporteDto);
+
+                    if(!respuesta.error){
+                        this.obtenerReportes();
+                    }
+                } catch (error) {
+                    
+                }
             }
         },
         mounted() {

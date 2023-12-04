@@ -1,3 +1,6 @@
+import { ConsultarInformacionOpinionesInteractor } from './../../usuarios/use-cases/consultar-informacion-opiniones.interactor';
+import * as fs from 'fs';
+import * as path from 'path';
 import { OpinionBoundary } from './../../opiniones/adapters/opinion.boundary';
 import { Request, Response, Router } from "express";
 import { ReporteRepository } from "../use-cases/ports/reporte.repository";
@@ -22,6 +25,9 @@ import { RequestConsultarReporteUsuarioDTO } from "./dtos/request-consultar-repo
 import { ConsultarReporteUsuarioInteractor } from "../use-cases/consultarReporteUsuario.interactor";
 import { RequestConsultarReportesDto } from '../../../modules/opiniones/adapters/dto/request-consultar-reportes.dto';
 import { ResponseConsultarReporteUsuarioDTO } from './dtos/response-consultar-reporte-usuario.dto';
+import { ConsultarVotoPorUsuarioInteractor } from '../use-cases/consultar-voto-por-usuario.interactor';
+import { ModificarVotoPorUsuario } from '../use-cases/modificar-voto-por-usuario.interactor';
+
 
 const reporteRouter = Router();
 
@@ -35,6 +41,12 @@ export class ReporteController {
             const consultarReporteUsuarioInteractor = new ConsultarReporteUsuarioInteractor(repository);
 
             const resultado = await consultarReporteUsuarioInteractor.execute(payload);
+
+            //conseguir la imagen del reporte por su ruta del directorio C:/PARCI
+            const rutaImagen = resultado.imagen;
+            const imagenBuffer = fs.readFileSync(rutaImagen);
+            const imagenBase64 = Buffer.from(imagenBuffer).toString('base64');
+            resultado.imagen = `data:image/png;base64,${imagenBase64}`;
 
             //ahora consultamos las opiniones con el id del reporte
             const opinionesDelReporte = await OpinionBoundary.consultarReporteUsuario({ usuario:payload.usuario, fk_idReporte: payload.id_reporte } as RequestConsultarReportesDto);
@@ -50,6 +62,8 @@ export class ReporteController {
 
             res.status(body.status).json(body);
         } catch (error) {
+            console.log(error);
+            
             const errorBody = validarError(error as Error);
             res.status(errorBody.status).json(errorBody);
         }
@@ -65,6 +79,13 @@ export class ReporteController {
 
             const reportes = await getReporteInteractor.execute(payload);
             
+            for(let i = 0; i < reportes.length; i++){
+                //conseguir la imagen de cada reporte por su ruta del directorio C:/PARCI
+                const rutaImagen = reportes[i].imagen;
+                const imagenBuffer = fs.readFileSync(rutaImagen);
+                const imagenBase64 = Buffer.from(imagenBuffer).toString('base64');
+                reportes[i].imagen = `data:image/png;base64,${imagenBase64}`;
+            }
             
 
             const body: ResponseApi<ObtenerReportesDTO[]> = {
@@ -76,6 +97,8 @@ export class ReporteController {
 
             res.status(body.status).json(body);
         } catch (error) {
+            console.log(error);
+            
             const errorBody = validarError(error as Error);
             res.status(errorBody.status).json(errorBody);
         }
@@ -103,13 +126,39 @@ export class ReporteController {
 
     registrarReporte = async (_req: Request, res: Response) => {
         try {
-            const payload = _req.body as insertReporteDTO;
+            const payload = _req.body as insertReporteDTO;            
 
+            //sacar los datos base64 de la imagen
+            const datosBase64 = payload.imagen.split(';base64,').pop() as string;
+            //sacar el tipo de imagen
+            const tipoImagen = payload.imagen.substring(11, payload.imagen.indexOf(';'));
+            //convertir los datos base64 a un buffer
+            const imagenBuffer = Buffer.from(datosBase64, 'base64');
+            
+            // Generar un nombre único para el archivo (puedes usar algo como un timestamp)
+            const nombreArchivo = `imagen_${payload.usuario}_${new Date().toLocaleDateString().replace(/[/:]/g, '-')}.${tipoImagen}`;
+
+            // Ruta donde se guardará la imagen
+            const rutaDirectorio = 'C:/PARCI';
+            const rutaImagen = path.join(rutaDirectorio, nombreArchivo);
+            // Verificar que el directorio existe, si no, crearlo
+            if (fs.existsSync(rutaDirectorio)) {               
+                fs.writeFileSync(rutaImagen, imagenBuffer, 'binary');
+            }
+            //guardar la ruta de la imagen en la base de datos
+            payload.imagen = rutaImagen.replace(/\\/g, '/');
+            //convertir la fecha a un formato valido para mysql
+            const splitFecha = payload.fecha.split('/');
+            payload.fecha = `${splitFecha[2]}-${splitFecha[1]}-${splitFecha[0]}`;
+            
+            
+            
             const repository: ReporteRepository = new ReporteStorageGateway();
             const interactor = new InsertReporteInteractor(repository);
-
+            
             const result = await interactor.execute(payload);
 
+            //const result =2 as any;
             const body: ResponseApi<boolean> = {
                 data: result,
                 message: 'El reporte ha sido registrado correctamente',
@@ -120,6 +169,8 @@ export class ReporteController {
             res.status(body.status).json(body);
 
         } catch (error) {
+            console.log(error);
+            
             const errorBody = validarError(error as Error);
             res.status(errorBody.status).json(errorBody);
         }
@@ -175,12 +226,22 @@ export class ReporteController {
             const payload = _req.body as votarReporteDTO;
 
             const repository:ReporteRepository = new ReporteStorageGateway();
-            const interactor = new VotarReporteInteractor(repository);
+            
+            const consultarVotoPorUsuarioInteractor = new ConsultarVotoPorUsuarioInteractor(repository);
+            const resultado = await consultarVotoPorUsuarioInteractor.execute(payload);
 
-            const result = await interactor.execute(payload);
+            if(resultado === undefined){
+                //registrar voto
+                const interactor = new VotarReporteInteractor(repository);
+                const respuestaRegistroVoto = await interactor.execute(payload);
+            }else{
+                //modificar voto
+                const interactor = new ModificarVotoPorUsuario(repository);
+                const respuestaModificacionVoto = await interactor.execute(payload);
+            }
 
             const body: ResponseApi<boolean> = {
-                data: result,
+                data: true,
                 message: 'Se a votado satisfactoriamente en el reporte',
                 error: false,
                 status: 200, 
@@ -229,7 +290,7 @@ reporteRouter.get('/consultar-en-espera', reporteController.obtenerReportesEnEsp
 reporteRouter.put('/modificar', reporteController.modificarReporte);
 reporteRouter.post('/registrar', reporteController.registrarReporte);
 reporteRouter.delete('/eliminar', reporteController.eliminarReporte);
-reporteRouter.put('/votar', reporteController.votarReporte);
+reporteRouter.post('/votar', reporteController.votarReporte);
 reporteRouter.put('/modificar-estado', reporteController.modificarEstadoReporte);
 
 export default reporteRouter;

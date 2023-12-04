@@ -2,7 +2,7 @@
     <div>
         <b-container fluid>
             <b-row class="mt-4">
-                <b-col cols="8">
+                <b-col cols="12" md="8">
                     <b-row>
                         <b-col cols="12">
                             <b-card>
@@ -45,19 +45,8 @@
                                     </b-row>
                                 </b-container>
                                 <b-row class="justify-content-md-center mb-4">
-                                    <b-col cols="10">
-                                        <b-carousel
-                                            id="imagenes-reporte"
-                                            style="text-shadow: 0px 0px 2px #000"
-                                            controls
-                                            indicators
-                                        >
-                                            <b-carousel-slide
-                                                v-for="(imagen, index) in reporte.imagen"
-                                                :key="index"
-                                                :img-src="imagen"
-                                            ></b-carousel-slide>
-                                        </b-carousel>
+                                    <b-col cols="10" class="text-center">
+                                        <b-img :src="reporte.imagen" fluid style="max-height: 61.5vh;"></b-img>
                                     </b-col>
                                 </b-row>
                             </b-card>
@@ -65,10 +54,10 @@
                     </b-row>
                 </b-col>
 
-                <b-col cols="4">
+                <b-col cols="12" md="4">
                     <b-row>
                         <b-col cols="12">
-                            <b-card>
+                            <b-card class="opiniones">
                                 <b-container>
                                     <b-row class="mt-3">
                                         <b-col cols="12">
@@ -102,8 +91,7 @@
                                             <b-container class="contenedor_opiniones">
                                                 <b-row v-for="opinion in reporte.opiniones">
                                                     <b-col cols="12">
-                                                        <b-card>
-                                                            <b-container >
+                                                            <b-container class="mt-4">
                                                                 <b-row>
                                                                     <b-col cols="2">
                                                                         <b-avatar size="2rem"></b-avatar>
@@ -124,7 +112,7 @@
                                                                         </b-container>
                                                                     </b-col>
                                                                 </b-row>
-                                                                <b-row class="mt-4">
+                                                                <b-row class="mt-2">
                                                                     <b-col cols="6" class="text-center">
                                                                         <span>
                                                                             <b-icon :icon="opinion.voto_usuario === 'positivo' ? 'hand-thumbs-up-fill' : 'hand-thumbs-up'"></b-icon>
@@ -139,10 +127,22 @@
                                                                     </b-col>
                                                                 </b-row>
                                                             </b-container>
-                                                        </b-card>
                                                     </b-col>
                                                 </b-row>
                                             </b-container>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row class="mt-5">
+                                        <b-col cols="12" class="text-right">
+                                            <b-form-textarea
+                                                v-model="nuevaOpinion.opinion"
+                                                placeholder="Ingrese su opinión"                 
+                                                rows="3"
+                                            ></b-form-textarea>
+                                            <b-button  @click="RegistrarOpinion" style="background-color: var(--color-primary);" class="mt-2">
+                                                Enviar
+                                                <b-icon icon="symmetry-horizontal"></b-icon>
+                                            </b-button>
                                         </b-col>
                                     </b-row>
                                 </b-container>
@@ -162,6 +162,9 @@
     import { desencriptar } from '../../../../kernel/crypto-js';
     import { ReporteController } from '../reporte.controller';
     import { RequestConsultarReporteUsuarioDTO } from '../dtos/request-consultar-reporte-usuario.dto';
+    import { OpinionBoundary } from '../../../../modules/opiniones/adapters/opinion.boundary';
+    import { RequestRegistrarOpinionDto } from '@/modules/opiniones/adapters/dto/request-registrar-opinion.dto';
+    import { Opinion } from '../../../../modules/opiniones/entities/opinion';
 
     export default Vue.extend({
         name: 'VerReporteUsuario',
@@ -170,6 +173,7 @@
             return {
                 reporte: {} as ResponseConsultarReporteUsuarioDTO,
                 requestConsultarReporteUsuario: {} as RequestConsultarReporteUsuarioDTO,
+                nuevaOpinion: { } as RequestRegistrarOpinionDto,
             }
         },
         methods: {
@@ -199,6 +203,24 @@
                 
             },
 
+            async RegistrarOpinion(){
+                try {
+
+                    this.nuevaOpinion.fk_idReporte = this.reporte.id_reporte;
+                    this.nuevaOpinion.usuario = this.requestConsultarReporteUsuario.usuario;
+                    this.nuevaOpinion.fecha = new Date().toLocaleDateString();
+
+                    const respuesta = await OpinionBoundary.registrarOpinion(this.nuevaOpinion);
+
+                    if(!respuesta.error){
+                        this.reporte.opiniones = respuesta.data as Opinion[];
+                        
+                    }
+                    this.nuevaOpinion.opinion = '';
+                } catch (error) {
+                    console.log(error);
+                }
+            },
 
 
             
@@ -214,8 +236,13 @@
         display: flex;
     }
 
+    .opiniones{
+        height: 86vh; 
+        
+    }
+
     .contenedor_opiniones{
-        height: 54vh; 
+        height: 30vh; 
         overflow-y: auto;
     }
 
