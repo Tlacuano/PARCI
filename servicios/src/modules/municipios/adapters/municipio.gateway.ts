@@ -8,7 +8,7 @@ import { RegistrarMunicipioDTO } from "./dtos/registrar-municipio.dto";
 export class MunicipioStorageGateway implements MunicipioRepository {
     async getMunicipios(): Promise<Municipio[]> {
         try {
-            const resultado  = await ConexionBD<Municipio[]>("SELECT id_municipio, nombre_municipio, fk_idEntidad FROM municipios WHERE estado = 1", []);
+            const resultado  = await ConexionBD<Municipio[]>("SELECT * FROM municipios WHERE estado = 1", []);
             return resultado;
         } catch (error) {
             throw error;
@@ -17,7 +17,7 @@ export class MunicipioStorageGateway implements MunicipioRepository {
 
     async getMunicipiosPorEntidad(fk_idEntidad: number): Promise<Municipio[]> {
         try {
-            const resultado = await ConexionBD<Municipio[]>("SELECT id_municipio, nombre_municipio FROM municipios WHERE fk_idEstado = ? AND estado = 1", [fk_idEntidad]);
+            const resultado = await ConexionBD<Municipio[]>("SELECT * FROM municipios WHERE fk_idEstado = ? AND estado = 1", [fk_idEntidad]);
             return resultado;
         } catch (error) {
             throw error;
