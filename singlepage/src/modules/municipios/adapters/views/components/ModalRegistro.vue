@@ -40,7 +40,7 @@
 import Vue from "vue";
 import { MunicipioController } from "../../municipio.controller";
 import { RegistrarMunicipioDTO } from "../../dtos/registrar-municipio.dto";
-import { EntidadFederativaController } from "@/modules/entidades/adapters/entidad-federativa.controller";
+import { EntidadFederativaBoundary } from "@/modules/entidades/adapters/entidad-federativa.boundary";
 
 export default Vue.extend({
   name: "ModalRegistro",
@@ -61,9 +61,7 @@ export default Vue.extend({
   methods: {
     async cargarEntidadesFederativas() {
       try {
-        const controladorEntidades = new EntidadFederativaController();
-        const respuesta =
-          await controladorEntidades.obtenerEntidadesFederativas();
+        const respuesta = await EntidadFederativaBoundary.obtenerEntidadesFederativasActivas_local();
 
         if (!respuesta.error) {
           this.entidadesFederativas = respuesta.data;
