@@ -15,7 +15,7 @@
             <b-row>
                 <b-col cols="12">
                     <b-form-group label="Titulo:">
-                        <b-form-input v-model="nuevoReporte.titulo" placeholder="Ingrese el titulo del reporte"></b-form-input>
+                        <b-form-input  v-model="nuevoReporte.titulo" placeholder="Ingrese el titulo del reporte"></b-form-input>
                     </b-form-group>
                 </b-col>
             </b-row>
@@ -31,10 +31,20 @@
                     </b-form-group>
                 </b-col>
             </b-row>
-            
+                <b-col cols="12">
+                    <b-form-group label="Imagen:">
+                        <b-form-file
+                            :state="Boolean(imagen)"
+                            placeholder="Seleccione una imagen..."
+                            accept="image/*"
+                            @change="handleFileChange($event)"
+                        ></b-form-file>
+                    </b-form-group>
+                    
+                </b-col>
             <b-row>
                 <b-col cols="12">
-                    
+                    <b-button variant="primary" @click="RegistrarReporte">Registrar</b-button>
                 </b-col>
             </b-row>
         </b-container>
@@ -46,6 +56,7 @@
     import { insertReporteDTO } from '../../dtos/registrar-reporte.dto';
     import { CategoriaBoundary } from '../../../../../modules/categorias/adapters/categoria.boundary';
     import { categoria } from '../../../../../modules/categorias/entities/categoria';
+    import { ReporteController } from '../../reporte.controller';
 
     export default Vue.extend({
         name: 'RegistrarReporte',
@@ -56,9 +67,25 @@
             return {
                 nuevoReporte : {} as insertReporteDTO,
                 categorias: [] as categoria[],
+
+                imagen: null as File | null,
+                imagenBase64: null as string | null,
             }
         },
         methods: {
+            async RegistrarReporte(){
+                try {
+                    const controller = new ReporteController();
+                    const respuesta = await controller.registrarReporte(this.nuevoReporte);
+
+                    if(!respuesta.error){
+                        console.log(respuesta);
+                    }
+
+                } catch (error) {
+                    console.log(error);
+                }
+            },
             //obtener datos del usuario, fecha de hoy y categorias
             async obtenerDatos(){
                 const infoUsuario = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -76,7 +103,32 @@
             },
             insertarSaltoDeLinea(){
                 this.nuevoReporte.descripcion += '\n';
-            }
+            },
+            //manejo de imagen
+            async handleFileChange(event : any) {
+                const fileInput = event.target;
+      
+                if (fileInput.files.length > 0) {
+                    const selectedFile = fileInput.files[0];
+                    
+                    // Aquí puedes acceder a e.target.result si es relevante para tu caso
+                    // Por ejemplo, si necesitas leer el contenido de un archivo de imagen
+                    const reader = new FileReader();
+
+                    reader.onload = (e) => {
+                    // e.target.result contiene la información del archivo
+                        console.log("Contenido del archivo:", e.target?.result);
+                        this.nuevoReporte.imagen = e.target?.result as string
+                    };
+                    reader.readAsDataURL(selectedFile);
+                    
+                    
+                }
+        
+                
+                
+                
+            },
         },
         mounted() {
             this.obtenerDatos();
