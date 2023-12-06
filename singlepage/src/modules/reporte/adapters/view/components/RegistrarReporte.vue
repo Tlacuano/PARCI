@@ -42,9 +42,9 @@
                     </b-form-group>
                     
                 </b-col>
-            <b-row>
-                <b-col cols="12">
-                    <b-button variant="primary" @click="RegistrarReporte">Registrar</b-button>
+            <b-row class="mt-4">
+                <b-col cols="12 text-right">
+                    <b-button style="background-color: var(--color-primary);" @click="RegistrarReporte">Registrar</b-button>
                 </b-col>
             </b-row>
         </b-container>
@@ -75,12 +75,27 @@
         methods: {
             async RegistrarReporte(){
                 try {
-                    const controller = new ReporteController();
-                    const respuesta = await controller.registrarReporte(this.nuevoReporte);
 
-                    if(!respuesta.error){
-                        console.log(respuesta);
-                    }
+                    Vue.swal({
+                        title: 'Estas seguro?',
+                        text: "Se registrara el reporte",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: 'var(--color-primary)',
+                        cancelButtonColor: 'var(--color-secondary)',
+                        confirmButtonText: 'Si, registrar!'
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            const controller = new ReporteController();
+                            const respuesta = await controller.registrarReporte(this.nuevoReporte);
+
+                            Vue.swal(
+                                'Registrado!',
+                                'El reporte ha sido registrado. Se enviara a moderación',
+                                'success'
+                            )
+                        }
+                    })            
 
                 } catch (error) {
                     console.log(error);
