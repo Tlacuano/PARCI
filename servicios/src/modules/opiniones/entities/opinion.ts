@@ -6,6 +6,7 @@ export type Opinion = {
     votos_negativos: number,
     fk_idReporte: number,
     nombre_completo_persona: number,
+    usuario : string,
     voto_usuario?: string
     
 }

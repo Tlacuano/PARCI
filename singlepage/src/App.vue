@@ -55,7 +55,7 @@
             }
           }
           if(usuario.rol === 'Usuario'){
-            if (!this.$route.path.includes('/u')  && this.$route.path !== '/configuracion' ) {
+            if (!this.$route.path.startsWith('/u')  && this.$route.path !== '/configuracion' ) {
               this.$router.push('/u');
             }
           }
