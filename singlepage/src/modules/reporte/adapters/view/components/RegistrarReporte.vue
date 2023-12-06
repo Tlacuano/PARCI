@@ -89,11 +89,16 @@
                             const controller = new ReporteController();
                             const respuesta = await controller.registrarReporte(this.nuevoReporte);
 
-                            Vue.swal(
-                                'Registrado!',
-                                'El reporte ha sido registrado. Se enviara a moderación',
-                                'success'
-                            )
+                            if(!respuesta.error){
+                                Vue.swal({
+                                    title: 'Reporte registrado',
+                                    text: "El reporte se registro correctamente",
+                                    icon: 'success',
+                                    confirmButtonColor: 'var(--color-primary)',
+                                    confirmButtonText: 'Aceptar'
+                                })
+                            }
+
                         }
                     })            
 
