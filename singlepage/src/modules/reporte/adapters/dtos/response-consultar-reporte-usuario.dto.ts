@@ -9,6 +9,7 @@ export type ResponseConsultarReporteUsuarioDTO = {
     nombre: string;
     apellido_paterno: string;
     apellido_materno?: string;
+    usuario: string,
     nombre_categoria: string;   
     nombre_municipio: string;
     color: string;

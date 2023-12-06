@@ -15,9 +15,12 @@ import { RequestEliminarOpinionDto } from "./dto/request-eliminar-opinion.dto";
 import { EliminarOpinionInteractor } from "../use-cases/eliminar-opinion.interactor";
 import { RequestModificarOpinionDto } from "./dto/request-modificar-opinion.dto";
 import { ModificarOpinionInteractor } from "../use-cases/modificar-opinion.interactor";
-import { RequestVotarOpinionDto } from "./dto/request-votar-opinion.dto";
-import { AumentarVotoPositivoInteractor } from "../use-cases/aumentar-voto-positivo.interactor";
-import { AumentarVotoNegativoInteractor } from "../use-cases/aumentar-voto-negativo.interactor";
+import { ConsultarVotoPorUsuarioOpinionInteractor } from "../use-cases/consultar-voto-opinion.interactor";
+import { VotarOpinionDto } from "./dto/request-votar-opinion.dto";
+import { ModificarVotoOpinionInteractor } from "../use-cases/modificar-voto-opinion.interactor";
+import { RegistrarVotoOpinionInteractor } from "../use-cases/registrar-voto-opinion.interactor";
+import { EliminarVotoOpinionInteractor } from "../use-cases/eliminar-voto-opinon.interactor";
+
 
 const opinionRouter = Router();
 
@@ -100,8 +103,11 @@ export class OpinonController {
 
             const resultado = await eliminarOpinionInteractor.execute(payload);
 
-            const body: ResponseApi<boolean> = {
-                data: resultado,
+            //se debe obtener las opiniones actualizadas
+           const opiniones = await OpinonController.consultarOpinionesByReporteId({fk_idReporte: payload.fk_idReporte, usuario: payload.usuario} as RequestConsultarReportesDto)
+
+            const body: ResponseApi<Opinion[]> = {
+                data: opiniones,
                 message: 'Opinion eliminada correctamente',
                 status: 200,
                 error: false
@@ -137,35 +143,44 @@ export class OpinonController {
         }
     }
 
+
     votarOpinion = async (req: Request, res: Response) => {
         try {
-            const payload = req.body as RequestVotarOpinionDto;
+            //consultar votos
+            const payload = req.body as VotarOpinionDto;
 
             const repositorio: OpinionesRepository = new OpinionStorageGateway;
 
-            switch (payload.voto) {
-                case 'positivo':
-                    let aumentarVotoPositivoInteractor = new AumentarVotoPositivoInteractor(repositorio);
-                    await aumentarVotoPositivoInteractor.execute(payload.id_opinion);
-                    break;
-                case 'negativo':
-                    let aumentarVotoNegativoInteractor = new AumentarVotoNegativoInteractor(repositorio);
-                    await aumentarVotoNegativoInteractor.execute(payload.id_opinion);
+            const consultarVotoUsuarioOpinionInteractor = new ConsultarVotoPorUsuarioOpinionInteractor(repositorio);
+            const resultado = await consultarVotoUsuarioOpinionInteractor.execute(payload);
 
-                    break;
-                default:
-                    throw new Error('El voto debe ser positivo o negativo');
+            //si el usuario ya voto, actualizar el voto sino crearlo, si los votos son iguales, eliminar el voto
+            if(resultado === undefined){
+                const registrarVotoOpinionInteractor = new RegistrarVotoOpinionInteractor(repositorio);
+                const resultado = await registrarVotoOpinionInteractor.execute(payload);
+            }else if(resultado.voto_usuario === payload.voto){
+                const eliminarVotoOpinionInteractor = new EliminarVotoOpinionInteractor(repositorio);
+                const resultado = await eliminarVotoOpinionInteractor.execute(payload);
+            }else{
+                const modificarVotoOpinionInteractor = new ModificarVotoOpinionInteractor(repositorio);
+                const resultado = await modificarVotoOpinionInteractor.execute(payload);
             }
 
-            const body: ResponseApi<boolean> = {
-                data: true,
+            //retornar las opiniones
+            const opiniones = await OpinonController.consultarOpinionesByReporteId({fk_idReporte: payload.fk_idReporte, usuario: payload.usuario} as RequestConsultarReportesDto)
+
+            const body: ResponseApi<Opinion[]> = {
+                data: opiniones,
                 message: 'Voto registrado correctamente',
                 status: 200,
                 error: false
             }
 
             res.status(body.status).json(body);
+
         } catch (error) {
+            console.log(error);
+            
             const errorBody = validarError(error as Error);
             res.status(errorBody.status).json(errorBody);
         }
@@ -179,5 +194,6 @@ const opinionController = new OpinonController();
 opinionRouter.post('/registrar-opinion', opinionController.registrarOpinion);
 opinionRouter.post('/eliminar-opinion', opinionController.eliminarOpinon);
 opinionRouter.post('/modificar-opinion', opinionController.modificarOpinion);
+opinionRouter.post('/votar-opinion', opinionController.votarOpinion);
 
 export default opinionRouter;

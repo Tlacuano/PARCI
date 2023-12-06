@@ -9,6 +9,7 @@ import { RequestConsultarReporteUsuarioDTO } from "../../adapters/dtos/request-c
 import { ResponseConsultarReporteUsuarioDTO } from "../../adapters/dtos/response-consultar-reporte-usuario.dto";
 import { ResponseConsultarVotoPorUsuarioDTO } from "../../adapters/dtos/response-consultar-voto-por-usuario.dto";
 import { ResponseReportesEnEsperaDto } from "../../adapters/dtos/response-consultar-reportes-espera.dto";
+import { ResponseConsultarReporteEsperaDto } from "../../adapters/dtos/response-consultar-reporte-espera.dto";
 
 export interface ReporteRepository {
     getReporte(payload: ObtenerReporteDTO):Promise<ObtenerReportesDTO[]>;
@@ -16,13 +17,16 @@ export interface ReporteRepository {
     modificarReporte(payload: modifyReporteDTO):Promise<boolean>;
     insertReporte(payload: insertReporteDTO): Promise<boolean>;
     deleteReporte (id_report: number): Promise<boolean>;
-    votarReporte(payload: votarReporteDTO):Promise<boolean>;
+    
     modificarEstadoReporte(payload: modificarEstadoReporteDTO):Promise<boolean>;
 
     consultarReporteUsuario(payload: RequestConsultarReporteUsuarioDTO): Promise<ResponseConsultarReporteUsuarioDTO>;
+    consultarReporteEnEspera(payload: RequestConsultarReporteUsuarioDTO): Promise<ResponseConsultarReporteEsperaDto>;
 
+    votarReporte(payload: votarReporteDTO):Promise<boolean>;
     consultarVotoPorUsuario(payload:votarReporteDTO) : Promise<ResponseConsultarVotoPorUsuarioDTO>;
     modificarVotoPorUsuario(payload: votarReporteDTO): Promise<boolean>;
+    eliminarVotoReporte(payload: votarReporteDTO): Promise<boolean>;
 }
 
 

@@ -23,7 +23,7 @@
                         >
                             <b-icon 
                                 style=" color: var(--text-color)"
-                                icon="columns-gap"  />
+                                icon="gear"  />
                         </button>
                     </div>
 

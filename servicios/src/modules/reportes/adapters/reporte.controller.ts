@@ -28,6 +28,7 @@ import { RequestConsultarReportesDto } from '../../../modules/opiniones/adapters
 import { ResponseConsultarReporteUsuarioDTO } from './dtos/response-consultar-reporte-usuario.dto';
 import { ConsultarVotoPorUsuarioInteractor } from '../use-cases/consultar-voto-por-usuario.interactor';
 import { ModificarVotoPorUsuario } from '../use-cases/modificar-voto-por-usuario.interactor';
+import { EliminarVotoReporteInteractor } from '../use-cases/eliminar-voto-reporte.interactor';
 
 
 const reporteRouter = Router();
@@ -70,7 +71,7 @@ export class ReporteController {
         }
     }
 
-
+    //este en realidad trae todos los reportes segun filtros
     getReporte = async (_req: Request, res: Response) => {
         try {
             const payload = _req.body as ObtenerReporteDTO;
@@ -230,11 +231,15 @@ export class ReporteController {
             
             const consultarVotoPorUsuarioInteractor = new ConsultarVotoPorUsuarioInteractor(repository);
             const resultado = await consultarVotoPorUsuarioInteractor.execute(payload);
-
+            
             if(resultado === undefined){
                 //registrar voto
                 const interactor = new VotarReporteInteractor(repository);
                 const respuestaRegistroVoto = await interactor.execute(payload);
+            }else if(resultado.voto_usuario === payload.voto){
+                //eliminar voto
+                const interactor = new EliminarVotoReporteInteractor(repository);
+                const respuestaEliminacionVoto = await interactor.execute(payload);
             }else{
                 //modificar voto
                 const interactor = new ModificarVotoPorUsuario(repository);

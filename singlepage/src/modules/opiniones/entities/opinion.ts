@@ -2,6 +2,7 @@ export type Opinion = {
     id_opinion: number,
     fecha: string,
     opinion: string,
+    usuario: string,
     votos_positivos: number,
     votos_negativos: number,
     fk_idReporte: number,

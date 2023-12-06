@@ -74,33 +74,42 @@
                                     </b-row>
                                     <b-row>
                                         <b-col cols="6" class="text-center">
-                                            <span>
+                                            <h5>
                                                 <b-icon :icon="reporte.voto_usuario === 'positivo' ? 'hand-thumbs-up-fill' : 'hand-thumbs-up'"></b-icon>
                                                 {{ reporte.votos_positivos }}
-                                            </span>
+                                            </h5>
                                         </b-col>
                                         <b-col cols="6" class="text-center">
-                                            <span>
+                                            <h5>
                                                 <b-icon :icon="reporte.voto_usuario === 'negativo' ? 'hand-thumbs-down-fill' : 'hand-thumbs-down'"></b-icon>
                                                 {{ reporte.votos_negativos }}
-                                            </span>
+                                            </h5>
                                         </b-col>
                                     </b-row>
-                                    <b-row class="mt-4">
+                                    <b-row class="mt-3">
                                         <b-col cols="12">
                                             <b-container class="contenedor_opiniones">
-                                                <b-row v-for="opinion in reporte.opiniones">
+                                                <b-row v-for="opinion in reporte.opiniones" class="mt-1">
                                                     <b-col cols="12">
                                                             <b-container class="mt-4">
                                                                 <b-row>
-                                                                    <b-col cols="2">
+                                                                    <b-col cols="2" md="2">
                                                                         <b-avatar size="2rem"></b-avatar>
                                                                     </b-col>
-                                                                    <b-col cols="10" style="padding: 1px">
+                                                                    <b-col cols="9" md="9" style="padding: 1px">
                                                                         {{ opinion.nombre_completo_persona }}
                                                                     </b-col>
+                                                                    <b-col cols="1" style="padding: 1px" v-if="opinion.usuario === requestConsultarReporteUsuario.usuario">
+                                                                        <b-dropdown   variant="link" toggle-class="text-decoration-none" no-caret >
+                                                                        <template #button-content>
+                                                                            <b-icon icon="three-dots-vertical"></b-icon>
+                                                                        </template>
+                                                                        <b-dropdown-item ><span>Modificar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><b-icon icon="pencil"/></small></span></b-dropdown-item>
+                                                                        <b-dropdown-item @click="EliminarOpinion(opinion)" ><span>Eliminar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><b-icon icon="trash"/></small></span></b-dropdown-item>
+                                                                    </b-dropdown>
+                                                                    </b-col>
                                                                 </b-row>
-                                                                <b-row class="justify-content-md-center mt-1">
+                                                                <b-row class="justify-content-md-center m-1">
                                                                     <b-col cols="10">
                                                                         <b-container>
                                                                             <b-row>
@@ -114,14 +123,14 @@
                                                                 </b-row>
                                                                 <b-row class="mt-2">
                                                                     <b-col cols="6" class="text-center">
-                                                                        <span>
-                                                                            <b-icon :icon="opinion.voto_usuario === 'positivo' ? 'hand-thumbs-up-fill' : 'hand-thumbs-up'"></b-icon>
+                                                                        <span class="seleccionable">
+                                                                            <b-icon @click="VotarOpinionUsuario(opinion,'positivo')" :icon="opinion.voto_usuario === 'positivo' ? 'hand-thumbs-up-fill' : 'hand-thumbs-up'"></b-icon>
                                                                             {{ opinion.votos_positivos }}
                                                                         </span>
                                                                     </b-col>
                                                                     <b-col cols="6" class="text-center">
-                                                                        <span>
-                                                                            <b-icon :icon="opinion.voto_usuario === 'negativo' ? 'hand-thumbs-down-fill' : 'hand-thumbs-down'"></b-icon>
+                                                                        <span class="seleccionable">
+                                                                            <b-icon @click="VotarOpinionUsuario(opinion,'negativo')" :icon="opinion.voto_usuario === 'negativo' ? 'hand-thumbs-down-fill' : 'hand-thumbs-down'"></b-icon>
                                                                             {{ opinion.votos_negativos }}
                                                                         </span>
                                                                     </b-col>
@@ -132,7 +141,7 @@
                                             </b-container>
                                         </b-col>
                                     </b-row>
-                                    <b-row class="mt-5">
+                                    <b-row class="mt-1">
                                         <b-col cols="12" class="text-right">
                                             <b-form-textarea
                                                 v-model="nuevaOpinion.opinion"
@@ -151,6 +160,7 @@
                     </b-row>
                 </b-col>
             </b-row>
+
         </b-container>
     </div>
 </template>
@@ -163,8 +173,10 @@
     import { ReporteController } from '../reporte.controller';
     import { RequestConsultarReporteUsuarioDTO } from '../dtos/request-consultar-reporte-usuario.dto';
     import { OpinionBoundary } from '../../../../modules/opiniones/adapters/opinion.boundary';
-    import { RequestRegistrarOpinionDto } from '@/modules/opiniones/adapters/dto/request-registrar-opinion.dto';
+    import { RequestRegistrarOpinionDto } from '../../../../modules/opiniones/adapters/dto/request-registrar-opinion.dto';
     import { Opinion } from '../../../../modules/opiniones/entities/opinion';
+    import { VotarOpinionDto } from '../../../../modules/opiniones/adapters/dto/request-votar-opinion.dto';
+    import { RequestEliminarOpinionDto } from '../../../../modules/opiniones/adapters/dto/request-eliminar-opinion.dto';
 
     export default Vue.extend({
         name: 'VerReporteUsuario',
@@ -174,6 +186,8 @@
                 reporte: {} as ResponseConsultarReporteUsuarioDTO,
                 requestConsultarReporteUsuario: {} as RequestConsultarReporteUsuarioDTO,
                 nuevaOpinion: { } as RequestRegistrarOpinionDto,
+                votarOpinion: {} as VotarOpinionDto,
+                eliminarOpinion: {} as RequestEliminarOpinionDto,
             }
         },
         methods: {
@@ -187,15 +201,14 @@
 
                 this.consultarReporte();                
             },
+
             async consultarReporte(){
                 try {
                     const controller = new ReporteController();
                     const respuesta = await controller.consultarReporteUsuario(this.requestConsultarReporteUsuario);
 
                     if(!respuesta.error){
-                        this.reporte = respuesta.data;
-                        console.log(this.reporte);
-                        
+                        this.reporte = respuesta.data;                        
                     }
                 } catch (error) {
                     
@@ -214,7 +227,6 @@
 
                     if(!respuesta.error){
                         this.reporte.opiniones = respuesta.data as Opinion[];
-                        
                     }
                     this.nuevaOpinion.opinion = '';
                 } catch (error) {
@@ -222,6 +234,51 @@
                 }
             },
 
+            async VotarOpinionUsuario(opinion: Opinion, voto: string){
+                try {
+                    this.votarOpinion.id_opinion = opinion.id_opinion;
+                    this.votarOpinion.voto = voto;
+                    this.votarOpinion.usuario = this.requestConsultarReporteUsuario.usuario;
+                    this.votarOpinion.fk_idReporte = this.reporte.id_reporte;
+
+                    const respuesta = await OpinionBoundary.votarOpinion(this.votarOpinion);
+
+                    if(!respuesta.error){
+                        this.reporte.opiniones = respuesta.data as Opinion[];
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+
+            async EliminarOpinion(opinion: Opinion){
+                try {
+                    this.eliminarOpinion.id_opinion = opinion.id_opinion;
+                    this.eliminarOpinion.usuario = this.requestConsultarReporteUsuario.usuario;
+                    this.eliminarOpinion.fk_idReporte = this.reporte.id_reporte;
+
+                    Vue.swal({
+                        title: '¿Estas seguro?',
+                        text: "Se eliminara la opinión",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: 'var(--color-primary)',
+                        cancelButtonColor: 'var(--color-secondary)',
+                        cancelButtonText:'Cancelar',
+                        confirmButtonText: 'Si, eliminar'
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            const respuesta = await OpinionBoundary.eliminarOpinion(this.eliminarOpinion);
+
+                            if(!respuesta.error){
+                                this.reporte.opiniones = respuesta.data as Opinion[];
+                            }
+                        }
+                    })
+                } catch (error) {
+                    console.log(error);
+                }
+            },
 
             
         },
@@ -242,7 +299,7 @@
     }
 
     .contenedor_opiniones{
-        height: 30vh; 
+        height: 38vh; 
         overflow-y: auto;
     }
 
@@ -258,6 +315,10 @@
     .contenedor_opiniones::-webkit-scrollbar-track {
         background-color: #c2c2c2; 
         border-radius: 6px;
+    }
+
+    .seleccionable{
+        cursor: pointer;
     }
 
 </style>

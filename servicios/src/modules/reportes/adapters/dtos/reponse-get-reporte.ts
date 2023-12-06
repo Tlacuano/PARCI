@@ -6,6 +6,7 @@ export type ObtenerReportesDTO = {
     nombre: string,
     apellido_paterno: string,
     apellido_materno?: string,
+    usuario: string,
     nombre_categoria: string,
     color: string,
     votos_positivos: number,

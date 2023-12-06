@@ -11,9 +11,9 @@ import { RequestConsultarReporteUsuarioDTO } from "./dtos/request-consultar-repo
 import { ResponseConsultarReporteUsuarioDTO } from "./dtos/response-consultar-reporte-usuario.dto";
 import { ResponseConsultarVotoPorUsuarioDTO } from "./dtos/response-consultar-voto-por-usuario.dto";
 import { ResponseReportesEnEsperaDto } from "./dtos/response-consultar-reportes-espera.dto";
+import { ResponseConsultarReporteEsperaDto } from "./dtos/response-consultar-reporte-espera.dto";
 
 export class ReporteStorageGateway implements ReporteRepository {
-
 
     async consultarReporteUsuario(payload: RequestConsultarReporteUsuarioDTO): Promise<ResponseConsultarReporteUsuarioDTO> {        
         try {
@@ -132,14 +132,13 @@ export class ReporteStorageGateway implements ReporteRepository {
 
     async consultarVotoPorUsuario(payload: votarReporteDTO): Promise<ResponseConsultarVotoPorUsuarioDTO> {
         try {
-            const resultado = await ConexionBD<ResponseConsultarVotoPorUsuarioDTO[]>('select vr.voto from votos_reporte vr join reportes r on vr.fk_idReporte = r.id_reporte join personas p on vr.fk_idPersona = (select id_persona FROM personas join usuarios ON fk_idPersona = id_persona WHERE usuario = ?) where r.id_reporte = ?;',[payload.usuario,payload.id_reporte]);
+            const resultado = await ConexionBD<ResponseConsultarVotoPorUsuarioDTO[]>('select vr.voto as voto_usuario from votos_reporte vr join reportes r on vr.fk_idReporte = r.id_reporte join personas p on vr.fk_idPersona = (select id_persona FROM personas join usuarios ON fk_idPersona = id_persona WHERE usuario = ?) where r.id_reporte = ?;',[payload.usuario,payload.id_reporte]);
 
             return resultado[0];
         } catch (error) {
             throw error;
         }
     }
-
 
     async votarReporte (payload:votarReporteDTO): Promise <boolean>{
         try{
@@ -158,6 +157,10 @@ export class ReporteStorageGateway implements ReporteRepository {
     async modificarVotoPorUsuario(payload: votarReporteDTO): Promise<boolean> {
         try {
             const respuesta = await ConexionBD<any>('UPDATE votos_reporte SET voto = ? WHERE fk_idPersona = (select id_persona FROM personas join usuarios ON fk_idPersona = id_persona WHERE usuario = ?) AND fk_idReporte = ?', [payload.voto, payload.usuario, payload.id_reporte]);
+
+            if(respuesta.affectedRows === 0){
+                throw new Error('Server Error');
+            }
 
             return true;
         } catch (error) {
@@ -189,4 +192,50 @@ export class ReporteStorageGateway implements ReporteRepository {
         }
     }  
 
+    async eliminarVotoReporte(payload: votarReporteDTO): Promise<boolean> {
+        try {
+            const respuesta = await ConexionBD<any>('DELETE FROM votos_reporte WHERE fk_idPersona = (select id_persona FROM personas join usuarios ON fk_idPersona = id_persona WHERE usuario = ?) AND fk_idReporte = ?', [payload.usuario, payload.id_reporte]);
+
+            if(respuesta.affectedRows === 0){
+                throw new Error('Server Error');
+            }
+
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async consultarReporteEnEspera(payload: RequestConsultarReporteUsuarioDTO): Promise<ResponseConsultarReporteEsperaDto> {
+        try {
+            const resultado = await ConexionBD<ResponseConsultarReporteEsperaDto[]>(` select 
+            r.id_reporte, 
+            r.fecha, 
+            r.titulo, 
+            r.descripcion, 
+            r.imagen,
+            concat(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre_completo_persona,
+            p.correo_electronico,
+            c.nombre_categoria,
+            c.color,
+            m.nombre_municipio
+        from 
+            reportes r
+        join
+            personas p on r.fk_idPersona = p.id_persona
+        join
+            categorias c on r.fk_idCategoria = c.id_categoria
+        join 
+            municipios m on r.fk_idMunicipio = m.id_municipio
+        where id_reporte = ?`, [payload.id_reporte]);
+
+        if(resultado.length === 0){
+            throw new Error('No se encontró el reporte solicitado');
+        }
+
+        return resultado[0];
+        } catch (error) {
+            throw error;
+        }
+    }
 }

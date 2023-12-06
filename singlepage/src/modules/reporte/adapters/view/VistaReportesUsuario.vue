@@ -115,16 +115,16 @@
                                                                             </b-row>
                                                                             <b-row>
                                                                                 <b-col cols="6" class="text-center">
-                                                                                    <span class="seleccionable" @click="votarReporte(reporte.id_reporte, 'positivo')">
+                                                                                    <h5 class="seleccionable" @click="votarReporte(reporte.id_reporte, 'positivo')">
                                                                                         <b-icon :icon="reporte.voto_usuario === 'positivo' ? 'hand-thumbs-up-fill' : 'hand-thumbs-up'"></b-icon>
                                                                                         {{ reporte.votos_positivos }}
-                                                                                    </span>
+                                                                                    </h5>
                                                                                 </b-col>
                                                                                 <b-col cols="6"  class="text-center">
-                                                                                    <span class="seleccionable" @click="votarReporte(reporte.id_reporte, 'negativo')">
+                                                                                    <h5 class="seleccionable" @click="votarReporte(reporte.id_reporte, 'negativo')">
                                                                                         <b-icon :icon="reporte.voto_usuario === 'negativo' ? 'hand-thumbs-down-fill' : 'hand-thumbs-down'"></b-icon>
                                                                                         {{ reporte.votos_negativos }}
-                                                                                    </span>
+                                                                                    </h5>
                                                                                 </b-col>
                                                                             </b-row>
                                                                         </b-container>
@@ -198,9 +198,9 @@ import { votarReporteDTO } from '../dtos/votar-reporte.dto';
                     const response = await controller.obtenerReportes(this.filtros);
                     
                     if(!response.error){
-                        console.log(response.data);
                         
-                        this.reportes = response.data;  
+                        this.reportes = response.data;
+                        
                     }    
                 } catch (error) {
                     
