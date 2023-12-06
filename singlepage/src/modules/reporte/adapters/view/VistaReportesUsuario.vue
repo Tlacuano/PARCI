@@ -66,7 +66,7 @@
                             <b-container>
                                 <b-row>
                                     <b-col cols="12">
-                                            <b-container fluid class="contenedor_reportes">
+                                            <b-container fluid class="contenedor_reportes" v-if="reportes.length > 0">
                                                 <b-row v-for="reporte in reportes">
                                                     <b-col cols="12">
                                                         <b-card class="mb-4">
@@ -135,7 +135,15 @@
                                                     </b-col>
                                                 </b-row>
                                             </b-container>
-
+                                            <b-container v-else>
+                                                <b-row>
+                                                    <b-col cols="12">
+                                                        <b-alert show variant="warning">
+                                                            No hay reportes en espera
+                                                        </b-alert>
+                                                    </b-col>
+                                                </b-row>
+                                            </b-container>
                                     </b-col>
                                 </b-row>
                             </b-container>
