@@ -122,7 +122,7 @@ CREATE TABLE opiniones (
   CONSTRAINT fk_idReporte
     FOREIGN KEY (fk_idReporte)
     REFERENCES reportes (id_reporte)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT fk_idPersona
     FOREIGN KEY (fk_idPersona)
@@ -176,6 +176,8 @@ CREATE TABLE votos_reporte (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 );
+
+
 
 
 insert into entidades_federativas (nombre_entidad, estado) values ('Aguascalientes', 1);
@@ -468,6 +470,10 @@ insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Oscuro'
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Claro', 'Mediana', 4);
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Oscuro', 'Mediana', 5);
 insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Claro', 'Grande', 6);
+
+
+select * from usuarios;
+select * from entidades_federativas;
 
 
 insert into reportes (fecha, titulo, descripcion, imagen, fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) 
