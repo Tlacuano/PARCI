@@ -3,9 +3,11 @@ import { CambiarEstadoMunicipioDTO } from "../../adapters/dtos/cambiar-estado-mu
 import { ModificarMunicipioDTO } from "../../adapters/dtos/modificar-municipio.dto";
 import { RegistrarMunicipioDTO } from "../../adapters/dtos/registrar-municipio.dto";
 import { Municipio } from "../../entities/municipio";
+import { MunicipioActivo } from "../../adapters/dtos/municipio-activo.dto";
 
 export interface MunicipioRepository {
     getMunicipios(): Promise<ResponseApi<Municipio[]>>;
+    getMunicipiosActivos(): Promise<ResponseApi<MunicipioActivo[]>>;
     buscarMunicipioPorNombre(payload: string): Promise<ResponseApi<Municipio[]> | null>;
     getMunicipiosPorEntidad(fk_idEntidad: number): Promise<ResponseApi<Municipio[]>>;
     registrarMunicipio(payload: RegistrarMunicipioDTO): Promise<ResponseApi<boolean>>;

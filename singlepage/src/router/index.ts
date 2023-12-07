@@ -23,13 +23,14 @@ const routes: Array<RouteConfig> = [
             name:'EntidadesFederativas',
             component:() => import('../modules/entidades/adapters/views/Entidades.vue')
           },
+          {
+            path:'municipios',
+            name:'Municipios',
+            component:() => import('../modules/municipios/adapters/views/Municipios.vue')
+          },
         ]
       },
-      {
-        path:'municipios',
-        name:'Municipios',
-        component:() => import('../modules/municipios/adapters/views/Municipios.vue')
-      },
+
       {
         path:'m',
         component:() => import('../modules/autenticacion/adapters/view/Home.vue'),
