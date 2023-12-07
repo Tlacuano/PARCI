@@ -16,7 +16,7 @@
       <b-col cols="12" lg="2">
         <b-button
           class="w-100 mb-2"
-          v-modal.modal-registro
+          v-b-modal.modal-registro
           style="background-color: var(--color-primary)"
         >
           <b-icon icon="plus-square-fill" />
@@ -54,7 +54,13 @@
             {
               key: 'nombre_municipio',
               label: 'Nombre',
-              thStyle: { width: '85%' },
+              thStyle: { width: '35%' },
+              sortable: true,
+            },
+            {
+              key: 'nombre_entidad',
+              label: 'Entidad Federativa',
+              thStyle: { width: '35%' },
               sortable: true,
             },
             {
@@ -65,7 +71,7 @@
             },
           ]"
           :per-page="perPage"
-          :current="currentPage"
+          :current-page="currentPage"
           :filter="filter"
         >
           <template #cell(acciones)="row">
@@ -91,7 +97,7 @@
                   "
                 >
                   <b-icon
-                    :icon="row.item.estado === 1 ? 'check-cicle' : 'x-circle'"
+                    :icon="row.item.estado === 1 ? 'check-circle' : 'x-circle'"
                   />
                 </b-button>
               </b-col>

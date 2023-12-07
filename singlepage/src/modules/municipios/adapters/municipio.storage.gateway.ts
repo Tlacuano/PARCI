@@ -5,8 +5,16 @@ import { MunicipioRepository } from "../use-cases/ports/municipios.repository";
 import { RegistrarMunicipioDTO } from "./dtos/registrar-municipio.dto";
 import { ModificarMunicipioDTO } from "./dtos/modificar-municipio.dto";
 import { CambiarEstadoMunicipioDTO } from "./dtos/cambiar-estado-municipio.dto";
+import { MunicipioActivo } from "./dtos/municipio-activo.dto";
 
-export class MunicipioStorageGateway implements MunicipioRepository{
+export class MunicipioStorageGateway implements MunicipioRepository {
+
+    async getMunicipiosActivos(): Promise<ResponseApi<MunicipioActivo[]>> {
+        const respuesta = await api.doGet("/municipios/consultar-activos");
+        return {
+            ...respuesta.data,
+        } as ResponseApi<MunicipioActivo[]>;
+    }
     
     async getMunicipios(): Promise<ResponseApi<Municipio[]>> {
         const respuesta = await api.doGet("/municipios/consultar");
