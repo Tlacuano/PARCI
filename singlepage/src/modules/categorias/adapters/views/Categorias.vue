@@ -2,16 +2,17 @@
   <b-container fluid class="mt-4">
     <b-row>
       <b-col cols="12">
-        <h4 class="mb-4">Gestión de Municipios</h4>
+        <h4 class="mb-4">Gestión de Categorias</h4>
       </b-col>
       <b-col cols="12" lg="3">
         <b-pagination
           align="fill"
           v-model="currentPage"
-          :total-rows="municipios.length"
+          :total-rows="categorias.length"
           :per-page="perPage"
           aria-controls="entity-table"
-        ></b-pagination>
+        >
+        </b-pagination>
       </b-col>
       <b-col cols="12" lg="2">
         <b-button
@@ -22,13 +23,13 @@
           <b-icon icon="plus-square-fill" />
           Agregar
         </b-button>
-        <ModalRegistro @registrado="getMunicipios" />
+        <ModalRegistro @registrado="getCategorias" />
         <ModalEditar
-          :municipio="municipioSeleccionado"
-          @editado="getMunicipios"
+          :categoria="categoriaSeleccionada"
+          @editado="getCategorias"
         />
       </b-col>
-      <b-col col="12" lg="7">
+      <b-col cols="12" lg="7">
         <b-input-group class="mb-2">
           <b-form-input v-model="filter" placeholder="Buscar" />
           <b-input-group-append>
@@ -38,29 +39,29 @@
           </b-input-group-append>
         </b-input-group>
       </b-col>
-      <b-col cols="12" v-if="municipios.length > 0">
+      <b-col cols="12" v-if="categorias.length > 0">
         <b-table
           id="entity-table"
           hover
-          :items="municipios"
+          :items="categorias"
           :fields="[
             {
-              key: 'id_municipio',
+              key: 'id_categoria',
               label: 'Número',
               thStyle: { width: '5%' },
               sortable: true,
               class: 'text-center',
             },
             {
-              key: 'nombre_municipio',
+              key: 'nombre_categoria',
               label: 'Nombre',
-              thStyle: { width: '35%' },
+              thStyle: { width: '55%' },
               sortable: true,
             },
             {
-              key: 'nombre_entidad',
-              label: 'Entidad Federativa',
-              thStyle: { width: '35%' },
+              key: 'color',
+              label: 'Color identificador',
+              thStyle: { width: '30%' },
               sortable: true,
             },
             {
@@ -79,7 +80,7 @@
               <b-col cols="6" class="text-center">
                 <b-button
                   size="sm"
-                  @click="seleccionarMunicipio(row.item)"
+                  @click="seleccionarCategoria(row.item)"
                   v-b-modal.modal-editar
                   variant="primary"
                 >
@@ -89,11 +90,11 @@
               <b-col cols="6" class="text-center">
                 <b-button
                   size="sm"
-                  @click="cambiarEstadoMunicipio(row.item)"
+                  @click="cambiarEstadoCategoria(row.item)"
                   :style="
                     row.item.estado === 1
                       ? 'background-color: var(--color-primary)'
-                      : 'background-color: var(--color-secondary)'
+                      : 'background-color var(--color-secondary)'
                   "
                 >
                   <b-icon
@@ -108,7 +109,7 @@
       <b-col cols="12" v-else>
         <b-card>
           <b-card-text class="text-center">
-            No hay Municipios registrados
+            No hay categorias registradas
           </b-card-text>
         </b-card>
       </b-col>
@@ -118,11 +119,11 @@
 
 <script lang="ts">
 import Vue, { defineAsyncComponent } from "vue";
-import { Municipio } from "../../entities/municipio";
-import { MunicipioController } from "../municipio.controller";
+import { categoria } from "../../entities/categoria";
+import { CategoriaController } from "../categoria.controller";
 
 export default Vue.extend({
-  name: "Municipios",
+  name: "Categorias",
 
   components: {
     ModalRegistro: defineAsyncComponent(
@@ -132,73 +133,77 @@ export default Vue.extend({
       () => import("./components/ModalEditar.vue")
     ),
   },
+
   data() {
     return {
-      municipios: [] as Municipio[],
-      municipioSeleccionado: {} as Municipio,
-
+      //Categorias
+      categorias: [] as categoria[],
+      categoriaSeleccionada: {} as categoria,
+      //Filtros
       filter: "" as string,
-
+      //Paginacion
       currentPage: 1,
       perPage: 10,
     };
   },
 
   methods: {
-    seleccionarMunicipio(municipio: Municipio) {
-      this.municipioSeleccionado = { ...municipio };
+    //Seleccionar categoria
+    seleccionarCategoria(categoria: categoria) {
+      this.categoriaSeleccionada = { ...categoria };
     },
 
-    async getMunicipios() {
-      this.municipios = [];
-
+    //Obtener categorias
+    async getCategorias() {
+      this.categorias = [];
       try {
-        const controlador = new MunicipioController();
-        const respuesta = await controlador.getMunicipios();
+        const controller = new CategoriaController();
+        const response = await controller.getCategorias();
 
-        if (!respuesta.error) {
-          this.municipios = respuesta.data;
+        if (!response.error) {
+          this.categorias = response.data!;
+          console.log(this.categorias);
         }
       } catch (error) {
         console.log(error);
       }
     },
 
-    async cambiarEstadoMunicipio(municipio: Municipio) {
+    //Cambiar estado de categoria
+    async cambiarEstadoCategoria(categoria: categoria) {
       try {
         Vue.swal({
           title: "¿Estas seguro?",
-          text: `¿Deseas ${
-            municipio.estado === 1 ? "desactivar" : "activar"
-          } el municipio ${municipio.nombre_municipio}?`,
+          text: `Deseas ${
+            categoria.estado === 1 ? "desactivar" : "activar"
+          } la categoria ${categoria.nombre_categoria}?`,
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "var(--color-primary)",
           cancelButtonColor: "var(--color-secondary)",
-          cancelButtonText: "Cancelaar",
+          cancelButtonText: "Cancelar",
           confirmButtonText: `Si, ${
-            municipio.estado === 1 ? "desactivar" : "activar"
+            categoria.estado === 1 ? "desactivar" : "activar"
           }`,
         }).then(async (result) => {
           if (result.isConfirmed) {
-            municipio.estado = municipio.estado === 1 ? 0 : 1;
-
-            const controlador = new MunicipioController();
-            const respuesta = await controlador.cambiarEstadoMunicipio(
-              municipio
+            categoria.estado = categoria.estado === 1 ? 0 : 1;
+            const controlador = new CategoriaController();
+            const respuesta = await controlador.cambiarEstadoCategoria(
+              categoria
             );
 
             if (!respuesta.error) {
               Vue.swal({
                 title: "¡Éxito!",
                 text: `Se ha ${
-                  municipio.estado === 1 ? "activado" : "desactivado"
-                } el municipio ${municipio.nombre_municipio}`,
+                  categoria.estado === 1 ? "activado" : "desactivado"
+                } la categoria ${categoria.nombre_categoria}`,
                 icon: "success",
-                confirmButtonColor: "var(--color-primary)",
+                confirmButtonColor: "var(--color-´primary)",
                 confirmButtonText: "Aceptar",
-              });
-              this.getMunicipios();
+              }),
+                this.getCategorias();
             }
           }
         });
@@ -209,30 +214,9 @@ export default Vue.extend({
   },
 
   mounted() {
-    this.getMunicipios();
+    this.getCategorias();
   },
 });
 </script>
 
-<style scoped>
-.card-body {
-  padding: 0.5rem 1rem;
-}
-
-.gray-box {
-  background-color: #cecece;
-  color: black;
-  padding: 0.5rem 1rem;
-}
-
-.id-box {
-  align-items: center;
-  background-color: #cecece;
-  color: black;
-  font-weight: bold;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  width: 100%;
-}
-</style>
+<style scoped></style>

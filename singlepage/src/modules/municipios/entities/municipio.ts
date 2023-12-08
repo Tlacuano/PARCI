@@ -3,4 +3,5 @@ export type Municipio = {
     nombre_municipio: string;
     fk_idEntidad: number;
     estado: number;
+    nombre_entidad: string;
 }

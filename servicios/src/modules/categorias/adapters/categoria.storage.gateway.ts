@@ -7,66 +7,67 @@ import { modificarEstadoCategoriaDTO } from "./dtos/modificar-estado-categoria";
 import { RegistrarCategoriaDTO } from "./dtos/registrar-categoria.dto";
 
 export class CategoriaStorageGateway implements CategoriaRepository {
-
-    async getCategoria(): Promise<categoria[]> {
-        try{
-            const result = await ConexionBD <categoria[]>('SELECT id_categoria, nombre_categoria, color FROM categorias', [])
-            return result;
-        } catch(error){
-            throw error;
-        }
+  async getCategoria(): Promise<categoria[]> {
+    try {
+      const result = await ConexionBD<categoria[]>(
+        "SELECT id_categoria, nombre_categoria, color, estado FROM categorias",
+        []
+      );
+      return result;
+    } catch (error) {
+      throw error;
     }
+  }
 
-    async insertCategoria(payload: insertCategoriaDto): Promise<boolean> {
-        try {
-            await ConexionBD<boolean>('INSERT INTO categorias (nombre_categoria, color, estado) VALUES (?, ?, 1)', [payload.nombre_categoria,payload.color])
-            return true;
-        } catch (error) {
-            throw error;
-        }
+  async insertCategoria(payload: insertCategoriaDto): Promise<boolean> {
+    try {
+      await ConexionBD<boolean>(
+        "INSERT INTO categorias (nombre_categoria, color, estado) VALUES (?, ?, 1)",
+        [payload.nombre_categoria, payload.color]
+      );
+      return true;
+    } catch (error) {
+      throw error;
     }
-    
-    async modificarCategoria(payload: modifyCategoriaDTO): Promise<boolean> {
-        try {
-          await ConexionBD<boolean>("UPDATE categorias SET nombre_categoria = ?, color = ? WHERE id_categoria = ?", [payload.nombre_categoria,payload.color,payload.id_categoria]);
-          return true;
-        } catch (error) {
-          throw error;
-        }
-      }
+  }
 
-      
-    async modificarEstadoCategoria (payload:modificarEstadoCategoriaDTO): Promise <boolean>{
-        try{
+  async modificarCategoria(payload: modifyCategoriaDTO): Promise<boolean> {
+    try {
+      await ConexionBD<boolean>(
+        "UPDATE categorias SET nombre_categoria = ?, color = ? WHERE id_categoria = ?",
+        [payload.nombre_categoria, payload.color, payload.id_categoria]
+      );
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  }
 
-            const existeCategoria = await ConexionBD<any>('SELECT estado FROM categorias WHERE id_categoria=?', [payload.id_categoria]);
+  async modificarEstadoCategoria(
+    payload: modificarEstadoCategoriaDTO
+  ): Promise<boolean> {
+    try {
+      const result = await ConexionBD<boolean>(
+        "UPDATE categorias SET estado = ? WHERE id_categoria = ?",
+        [payload.estado, payload.id_categoria]
+      );
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  }
 
-            if (!existeCategoria || existeCategoria.length === 0){
-                throw new Error('La categoria solicitada a modificar no existe.');
-            }
-
-            if (payload.estado !== 1 && payload.estado !== 0) {
-                throw new Error('El estado de la categoría debe ser 0 o 1.');
-            }
-
-            const result = await ConexionBD<any>(`UPDATE categorias SET estado = ? WHERE id_categoria = ?`, [payload.estado, payload.id_categoria]);
-            console.log(result);
-            return true;
-        }catch (error){
-            console.error(error)
-            throw error;
-        }
-    } 
-
-    async buscarCategoriaPorNombre(payload: RegistrarCategoriaDTO): Promise<categoria[] | null> {
-        try {
-          const resultado = await ConexionBD<categoria[]>("SELECT id_categoria, nombre_categoria FROM categorias WHERE nombre_categoria LIKE ?", [
-            `%${payload.nombre_categoria}%`,
-          ]);
-          return resultado;
-        } catch (error) {
-          throw error;
-        }
-      }
-    
+  async buscarCategoriaPorNombre(
+    payload: RegistrarCategoriaDTO
+  ): Promise<categoria[] | null> {
+    try {
+      const resultado = await ConexionBD<categoria[]>(
+        "SELECT id_categoria, nombre_categoria FROM categorias WHERE nombre_categoria LIKE ?",
+        [`%${payload.nombre_categoria}%`]
+      );
+      return resultado;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -97,7 +97,7 @@ export class CategoriaController {
 
             const body: ResponseApi<boolean> = {
                 data: true,
-                message: 'Se a modificado el estado del reporte',
+                message: `Se a modificado el estado del reporte a ${payload.estado == 1 ? "activado" : "desactivado"}`,
                 error: false,
                 status: 200, 
             };
