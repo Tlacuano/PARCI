@@ -1,10 +1,12 @@
 import { ResponseApi } from "../../../kernel/types";
 import { ConsultarReporteUsuarioInteractor } from "../use-case/consultar-reporte-usuario.interactor";
 import { ConsultarReportesEnEsperaInteractor } from "../use-case/consultar-reportes-en-espera.interactor";
+import { ModificarReporteInteractor } from "../use-case/modificar-reporte.interactor";
 import { ObtenerReportesInteractor } from "../use-case/obtener-reportes.interactor";
 import { ReporteRepository } from "../use-case/ports/reporte.repository";
 import { RegistrarReporteInteractor } from "../use-case/registrar-reporte.interactor";
 import { VotarReporteInteractor } from "../use-case/votar-reporte.interactor";
+import { modifyReporteDTO } from "./dtos/modify-reporte.dto";
 import { ObtenerReporteDTO } from "./dtos/obtener-reporte.dto";
 import { insertReporteDTO } from "./dtos/registrar-reporte.dto";
 import { RequestConsultarReporteUsuarioDTO } from "./dtos/request-consultar-reporte-usuario.dto";
@@ -81,4 +83,18 @@ export class ReporteController {
             return this.obtenerError(error);
         }
     }
+
+    modificarReporte = async (payload: modifyReporteDTO) => {
+        try {
+            const repositorio: ReporteRepository = new ReporteStorageGateway();
+            const modificarReporteInteractor = new ModificarReporteInteractor(repositorio);
+
+            const respuesta = await modificarReporteInteractor.execute(payload);
+            return respuesta;
+        } catch (error) {
+            return this.obtenerError(error);
+        }
+    }
+
+
 }

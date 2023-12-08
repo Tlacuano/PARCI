@@ -4,6 +4,7 @@ export type ObtenerReportesDTO = {
     imagen: string,
     fecha: Date,
     nombre: string,
+    usuario: string,
     apellido_paterno: string,
     apellido_materno?: string,
     nombre_categoria: string,

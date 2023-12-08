@@ -98,6 +98,22 @@ AxiosClient.interceptors.response.use(
                                 titleAlert = "Ya no puedes dar mas opiniones por el dia de hoy";
                                 messageAlert = "haz alcanzado el limite de opiniones por dia";
                                 break;
+                            case "El titulo del reporte es requerido":
+                                titleAlert = "campos incompletos";
+                                messageAlert = "El titulo del reporte es requerido";
+                                break;
+                            case "La descripcion del reporte es requerido":
+                                titleAlert = "campos incompletos";
+                                messageAlert = "La descripcion del reporte es requerido";
+                                break;
+                            case "La categoria del reporte es requerido":
+                                titleAlert = "campos incompletos";
+                                messageAlert = "La categoria es requerida";
+                                break;
+                            case "La imagen del reporte es requerido":
+                                titleAlert = "campos incompletos";
+                                messageAlert = "La imagen del reporte es requerido";
+                                break;
                             
                         }                        
                         Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning", confirmButtonColor: "var(--color-primary)" });

@@ -12,6 +12,16 @@ export class ModificarReporteInteractor implements UseCase<modifyReporteDTO, boo
             throw new Error("El id del reporte es requerido");
         }
 
+        if(!payload.titulo){
+            throw new Error("El titulo del reporte es requerido");
+        }
+
+        if(!payload.descripcion){
+            throw new Error("La descripcion del reporte es requerido");
+        }
+
+        
+
     return this.repository.modificarReporte(payload);
     }
 }
