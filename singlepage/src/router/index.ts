@@ -54,6 +54,13 @@ const routes: Array<RouteConfig> = [
                 "../modules/reporte/adapters/view/VistaReportesModerador.vue"
               ),
           },
+          {
+            path: "reporte/:id?",
+            props: true,
+            name: "VerReporte",
+            component: () =>
+              import("../modules/reporte/adapters/view/VerReporteModerador.vue"),
+          }
         ],
       },
 

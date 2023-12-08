@@ -1,5 +1,4 @@
 import { ResponseReportesEnEsperaDto } from './dtos/response-consultar-reportes-espera.dto';
-import { ConsultarInformacionOpinionesInteractor } from './../../usuarios/use-cases/consultar-informacion-opiniones.interactor';
 import * as fs from 'fs';
 import * as path from 'path';
 import { OpinionBoundary } from './../../opiniones/adapters/opinion.boundary';
@@ -16,11 +15,9 @@ import { InsertReporteInteractor} from './../use-cases/insert-reporte.interactor
 import { EliminarReporteInteractor } from "../use-cases/delete-reporte.interactor";
 import { votarReporteDTO } from "./dtos/votar-reporte.dto";
 import { VotarReporteInteractor } from './../use-cases/votar-reporte.interactor';
-import { ModificarEstadoReporteInteractor } from "../use-cases/modificar-estado-reporte.interactor";
-import { modificarEstadoReporteDTO } from "./dtos/modificar-estado-reporte.dto";
 import { ObtenerReporteDTO } from "./dtos/obtener-reporte.dto";
 import { ObtenerReportesEnEsperaInteractor } from "../use-cases/obtener-reportes-en-espera.interactor";
-import { ObtenerReportesDTO } from "./dtos/reponse-get-reporte";
+import { ObtenerReportesDTO } from "./dtos/response-get-reporte";
 import { RequestConsultarReporteUsuarioDTO } from "./dtos/request-consultar-reporte-usuario.dto";
 import { ConsultarReporteUsuarioInteractor } from "../use-cases/consultarReporteUsuario.interactor";
 import { RequestConsultarReportesDto } from '../../../modules/opiniones/adapters/dto/request-consultar-reportes.dto';
@@ -29,6 +26,11 @@ import { ConsultarVotoPorUsuarioInteractor } from '../use-cases/consultar-voto-p
 import { ModificarVotoPorUsuario } from '../use-cases/modificar-voto-por-usuario.interactor';
 import { EliminarVotoReporteInteractor } from '../use-cases/eliminar-voto-reporte.interactor';
 import { RequestEliminarReporteDTO } from './dtos/request-eliminar-reporte.dto';
+import { ConsultarReporteEnEsperaInteractor } from '../use-cases/consultar-reporte-espera.interactor';
+import { ResponseConsultarReporteEsperaDto } from './dtos/response-consultar-reporte-espera.dto';
+import { NuevoEstadoReporteDTO } from './dtos/nuevo-estado-reporte.dto';
+import { sendEmail } from '../../../kernel/nodemailer';
+import { ModificarEstadoReporteInteractor } from '../use-cases/modificar-estado-reporte.interactor';
 
 
 const reporteRouter = Router();
@@ -293,15 +295,59 @@ export class ReporteController {
     }
 
     //moderador
+    consultarReporteEnEspera = async (_req: Request, _res: Response) => {
+        try {
+            const payload = _req.body as RequestConsultarReporteUsuarioDTO;
+
+            const repository: ReporteRepository = new ReporteStorageGateway();
+            const obtenerReporteEnEspera = new ConsultarReporteEnEsperaInteractor(repository);
+
+            const resultado = await obtenerReporteEnEspera.execute(payload);
+
+            //conseguir la imagen del reporte por su ruta del directorio C:/PARCI
+            const rutaImagen = resultado.imagen;
+            const imagenBuffer = fs.readFileSync(rutaImagen);
+            const imagenBase64 = Buffer.from(imagenBuffer).toString('base64');
+            resultado.imagen = `data:image/png;base64,${imagenBase64}`;
+
+            const body: ResponseApi<ResponseConsultarReporteEsperaDto> = {
+                data: resultado,
+                message: 'El reporte ha sido encontrado satisfactoriamente',
+                error: false,
+                status: 200,
+            };
+
+            _res.status(body.status).json(body);
+
+        } catch (error) {
+            const errorBody = validarError(error as Error);
+            _res.status(errorBody.status).json(errorBody);
+        }
+    }
+
+
     modificarEstadoReporte = async (_req: Request, _res: Response) => {
         try{
-            const payload = _req.body as modificarEstadoReporteDTO;
+            const payload = _req.body as NuevoEstadoReporteDTO;
+
+            let mensaje = "";
+            let mensajeResaltado = "";
+
+            if(payload.estado === "Aprobado"){
+                mensaje = "Su reporte ha sido aprobado para su publicación en la plataforma";
+                mensajeResaltado = "Su reporte ha sido aprobado";
+            }else if(payload.estado === "Rechazado"){
+                mensaje = payload.motivo;
+                mensajeResaltado = "Su reporte ha sido rechazado";
+            }
+
+            await sendEmail(payload.correo_electronico, 'REVISIÓN DE REPORTE | Sistema de Participación Ciudadana', payload.titulo,mensaje, mensajeResaltado);
 
             const repository:ReporteRepository = new ReporteStorageGateway();
             const interactor = new ModificarEstadoReporteInteractor(repository);
 
             await interactor.execute(payload);
-
+                        
             const body: ResponseApi<boolean> = {
                 data: true,
                 message: 'Se a modificado el estado del reporte',
@@ -328,6 +374,7 @@ reporteRouter.post('/modificar', reporteController.modificarReporte);
 reporteRouter.post('/registrar', reporteController.registrarReporte);
 reporteRouter.delete('/eliminar', reporteController.eliminarReporte);
 reporteRouter.post('/votar', reporteController.votarReporte);
-reporteRouter.put('/modificar-estado', reporteController.modificarEstadoReporte);
+reporteRouter.post('/modificar-estado', reporteController.modificarEstadoReporte);
+reporteRouter.post('/consultar-espera', reporteController.consultarReporteEnEspera);
 
 export default reporteRouter;

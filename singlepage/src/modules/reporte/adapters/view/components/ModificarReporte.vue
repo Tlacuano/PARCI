@@ -47,8 +47,8 @@
 <script lang="ts">
     import Vue from 'vue';
     import { ResponseConsultarReporteUsuarioDTO } from '../../dtos/response-consultar-reporte-usuario.dto';
-import { modifyReporteDTO } from '../../dtos/modify-reporte.dto';
-import { ReporteController } from '../../reporte.controller';
+    import { modifyReporteDTO } from '../../dtos/modify-reporte.dto';
+    import { ReporteController } from '../../reporte.controller';
 
     export default Vue.extend({
         name: 'ModificarReporte',
