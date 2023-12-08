@@ -18,7 +18,7 @@
                             <span  ><b-icon icon="person"/>&nbsp;&nbsp;Gestión de Usuarios</span>
                         </div>
                     </b-col>
-                    <b-col cols="12"   v-if="rol==='Administrador'" class="opcion">
+                    <b-col cols="12"   v-if="rol==='Administrador'" class="opcion" @click="dirigir('/a/categorias')">
                         <div class="text-start mt-2">
                             <span ><b-icon icon="person" />&nbsp;&nbsp;Categorías de reportes</span>
                         </div>
