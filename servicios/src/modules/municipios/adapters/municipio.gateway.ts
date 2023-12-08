@@ -34,7 +34,7 @@ export class MunicipioStorageGateway implements MunicipioRepository {
   async getMunicipiosPorEntidad(fk_idEntidad: number): Promise<Municipio[]> {
     try {
       const resultado = await ConexionBD<Municipio[]>(
-        "SELECT * FROM municipios WHERE fk_idEstado = ? AND estado = 1",
+        "SELECT * FROM municipios WHERE fk_idEntidad = ? AND estado = 1",
         [fk_idEntidad]
       );
       return resultado;

@@ -28,7 +28,7 @@
           @editado="getMunicipios"
         />
       </b-col>
-      <b-col col="12" lg="7">
+      <b-col cols="12" lg="7">
         <b-input-group class="mb-2">
           <b-form-input v-model="filter" placeholder="Buscar" />
           <b-input-group-append>
@@ -151,6 +151,7 @@ export default Vue.extend({
 
     async getMunicipios() {
       this.municipios = [];
+      
 
       try {
         const controlador = new MunicipioController();
