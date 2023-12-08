@@ -10,6 +10,10 @@ export class ModificarEstadoCategoriaInteractor implements UseCase<modificarEsta
         if(!payload.id_categoria){
             throw new Error("El id de la categoria es requerido");
         }
+
+        if(payload.estado !== 0 && payload.estado !== 1){
+            throw new Error("Estado invalido")
+        }
         
     return this.repository.modificarEstadoCategoria(payload);
     }

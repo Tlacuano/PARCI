@@ -23,6 +23,11 @@ const routes: Array<RouteConfig> = [
             name:'EntidadesFederativas',
             component:() => import('../modules/entidades/adapters/views/Entidades.vue')
           },
+          {
+            path:'categorias',
+            name:'Categorias',
+            component:() => import('../modules/categorias/adapters/views/Categorias.vue')
+          },
         ]
       },
       {
@@ -45,11 +50,6 @@ const routes: Array<RouteConfig> = [
             component:() => import('../modules/reporte/adapters/view/VerReporteUsuario.vue')
           }
         ]
-      },
-      {
-        path: 'categoria',
-        name: 'Categorias',
-        component:() => import('@/modules/categorias/adapters/views/CategoriasPage.vue')
       },
       {
         path:'configuracion',
