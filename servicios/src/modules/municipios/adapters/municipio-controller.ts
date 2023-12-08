@@ -63,7 +63,8 @@ export class MunicipiosController {
 
     getMunicipiosPorEntidad = async (req: Request, res: Response) => {
         try {
-            const { fk_idEntidad } = req.body
+            const fk_idEntidadStr  = req.params;
+            const fk_idEntidad = Number(fk_idEntidadStr.fk_idEntidad);
 
             const repositorio: MunicipioRepository = new MunicipioStorageGateway();
             const getMunicipiosPorEntidadInteractor = new GetMunicipiosPorEntidadInteractor(repositorio);
@@ -183,7 +184,7 @@ const municipiosController = new MunicipiosController();
 municipiosRouter.get("/consultar", municipiosController.getMunicipios);
 municipiosRouter.get("/consultar-activos", municipiosController.getMunicipiosActivos)
 municipiosRouter.get("/buscar-por-nombre", municipiosController.buscarMunicipioPorNombre);
-municipiosRouter.get("/consultar-por-entidad",municipiosController.getMunicipiosPorEntidad);
+municipiosRouter.get("/consultar-por-entidad/:fk_idEntidad", municipiosController.getMunicipiosPorEntidad);
 municipiosRouter.post("/registrar", municipiosController.registrarMunicipio)
 municipiosRouter.put("/modificar", municipiosController.modificarMunicipio);
 municipiosRouter.put("/cambiar-estado", municipiosController.cambiarEstadoMunicipio);
