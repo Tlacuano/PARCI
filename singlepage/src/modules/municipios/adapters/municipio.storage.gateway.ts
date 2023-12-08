@@ -25,7 +25,7 @@ export class MunicipioStorageGateway implements MunicipioRepository {
     }
 
     async getMunicipiosPorEntidad(fk_idEntidad: number): Promise<ResponseApi<Municipio[]>> {
-        const respuesta = await api.doGet("/municipios/consultar-por-entidad", {fk_idEntidad});
+        const respuesta = await api.doGet(`/municipios/consultar-por-entidad/${fk_idEntidad}`);
 
         return {
             ...respuesta.data,
