@@ -8,21 +8,22 @@ export class InsertReporteInteractor implements UseCase<insertReporteDTO, boolea
 
     async execute(payload: insertReporteDTO): Promise<boolean> {
 
-        if(!payload.fecha){
-            throw new Error("La fecha del reporte no puede estar vacio..")
+        if(payload.titulo === "" || payload.titulo === undefined || payload.titulo === null){
+            throw new Error("El titulo del reporte es requerido")
         }
 
-        if(payload.titulo === ""){
-            throw new Error("El titulo del reporte no puede estar vacio..")
+        if(payload.descripcion === "" || payload.descripcion === undefined || payload.descripcion === null){
+            throw new Error("La descripcion del reporte es requerido")
         }
 
-        if(payload.imagen === ""){
-            throw new Error("La imagen del reporte no puede estar vacio..")
+        if(payload.imagen === "" || payload.imagen === undefined || payload.imagen === null){
+            throw new Error("La imagen del reporte es requerido")
         }
 
-        if(payload.fk_idMunicipio === null){
-            throw new Error("El municipio del reporte no puede estar vacio..")
+        if(payload.fk_idCategoria === undefined || payload.fk_idCategoria === null){
+            throw new Error("La categoria del reporte es requerido")
         }
+
         
         return this.reporteRepository.insertReporte(payload);
     }

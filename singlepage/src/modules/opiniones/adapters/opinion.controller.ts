@@ -4,6 +4,7 @@ import { OpinionRepository } from "../use-cases/ports/opinon.repository";
 import { RegistrarOpinionInteractor } from "../use-cases/registrar-opinion.interactor";
 import { VotarOpinionInteractor } from "../use-cases/votar-opinion.interactor";
 import { RequestEliminarOpinionDto } from "./dto/request-eliminar-opinion.dto";
+import { RequestModificarOpinionDto } from "./dto/request-modificar-opinion.dto";
 import { RequestRegistrarOpinionDto } from "./dto/request-registrar-opinion.dto";
 import { VotarOpinionDto } from "./dto/request-votar-opinion.dto";
 import { OpinionStorageGateway } from "./opinion.storage.gateway";
@@ -55,5 +56,7 @@ export class OpinionController {
             throw error;
         }
     }
+
+
 
 }

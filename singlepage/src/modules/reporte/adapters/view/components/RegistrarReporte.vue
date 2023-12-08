@@ -1,5 +1,5 @@
 <template>
-    <b-modal id="registrar-reporte" size="lg"  centered hideFooter title="Registrar reporte">
+    <b-modal id="registrar-reporte" size="lg"  centered hideFooter title="Registrar reporte" @hidden="cerrar()">
         <b-container fluid>
             <b-row>
                 <b-col cols="12">
@@ -97,6 +97,8 @@
                                     confirmButtonColor: 'var(--color-primary)',
                                     confirmButtonText: 'Aceptar'
                                 })
+                                this.cerrar();
+
                             }
 
                         }
@@ -141,14 +143,20 @@
                         this.nuevoReporte.imagen = e.target?.result as string
                     };
                     reader.readAsDataURL(selectedFile);
-                    
-                    
                 }
-        
-                
-                
                 
             },
+
+            cerrar(){
+                this.$bvModal.hide('registrar-reporte');
+                this.limpiar();
+            },
+            limpiar(){
+                this.nuevoReporte = {} as insertReporteDTO;
+                this.imagen = null;
+                this.imagenBase64 = null;
+
+            }
         },
         mounted() {
             this.obtenerDatos();

@@ -9,8 +9,10 @@
                                 <b-row >
                                     <b-col cols="12">
                                         <b-card>
-                                            <b-row class="mt-4">
+                                            <b-row class="mt-1">
                                                 <b-col cols="12">
+                                                    <h4>Filtros de búsqueda</h4>
+                                                    <hr>
                                                     <b-form-group label="Categorias:">
                                                         <b-form-select v-model="filtros.fk_idCategoria" :options="categorias" value-field="id_categoria" text-field="nombre_categoria">
                                                             <template #first>
@@ -20,13 +22,7 @@
                                                     </b-form-group>
                                                 </b-col>
                                             </b-row>
-                                            <b-row class="mt-4">
-                                                <b-col cols="12">
-                                                    <b-form-group label="Municipio:">
-                                                        <b-form-select></b-form-select>
-                                                    </b-form-group>
-                                                </b-col>
-                                            </b-row>
+            
                                             <b-row class="mt-4">
                                                 <b-col cols="12">
                                                     <b-form-group label="Fecha:">
@@ -36,6 +32,7 @@
                                                             placeholder="Seleccione..."
                                                             hideHeader
                                                             hideFooter
+                                                            reset-button
                                                             locale="es"
                                                             :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
                                                             ></b-form-datepicker>
@@ -43,8 +40,7 @@
                                                 </b-col>
                                             </b-row>
                                             <b-row>
-                                                <b-col cols="12" class="mt-1  mb-3">
-                                                    <hr>
+                                                <b-col cols="12" class="mt-3  mb-3">
                                                     <b-button  style="width:100%; padding:8px;" @click="obtenerReportes">Filtrar</b-button>
                                                 </b-col>
                                             </b-row>
@@ -72,12 +68,12 @@
                                                         <b-card class="mb-4">
                                                             <b-container>
                                                                 <b-row class=" px-3">
-                                                                    <b-col cols="10">
+                                                                    <b-col cols="9">
                                                                         <b-row>
-                                                                            <b-col cols="1" class="text-center" style="padding: 0px;">
+                                                                            <b-col cols="2" md="1" class="text-center" style="padding: 0px;">
                                                                                 <b-avatar size="3rem"></b-avatar>
                                                                             </b-col>
-                                                                            <b-col cols="10" style="padding: 3px;">
+                                                                            <b-col cols="8" md="9" style="padding: 3px;">
                                                                                 <b-row>
                                                                                     <b-col cols="12">
                                                                                         {{ reporte.nombre }} {{ reporte.apellido_paterno}}
@@ -89,12 +85,22 @@
                                                                                     </b-col>
                                                                                 </b-row>
                                                                             </b-col>
+                                                                            
                                                                         </b-row>
                                                                     </b-col>
-                                                                    <b-col cols="2" class="text-right">
+                                                                    <b-col cols="3" class="text-right">
                                                                         <b-row >
-                                                                            <b-col cols="12" class="text-right">
+                                                                            <b-col cols="8" class="text-right" style="padding: 0%;">
                                                                                 <b-badge :style="{ backgroundColor:reporte.color}">{{ reporte.nombre_categoria }}</b-badge>
+                                                                            </b-col>
+                                                                            <b-col v-if="reporte.usuario === filtros.usuario" cols="2" class="text-right">
+                                                                                <b-dropdown variant="link" size="sm" class="text-right" no-caret>
+                                                                                    <template #button-content>
+                                                                                        <b-icon icon="three-dots-vertical"></b-icon>
+                                                                                    </template>
+                                                                                    <b-dropdown-item @click="seleccionarReporte(reporte)" >Editar</b-dropdown-item>
+                                                                                    <b-dropdown-item @click="seleccionarReporte(reporte)">Eliminar</b-dropdown-item>
+                                                                                </b-dropdown>
                                                                             </b-col>
                                                                         </b-row>
                                                                     </b-col>
@@ -138,8 +144,8 @@
                                             <b-container v-else>
                                                 <b-row>
                                                     <b-col cols="12">
-                                                        <b-alert show variant="warning">
-                                                            No hay reportes en espera
+                                                        <b-alert show >
+                                                            No hay reportes
                                                         </b-alert>
                                                     </b-col>
                                                 </b-row>
@@ -152,7 +158,7 @@
                 </b-row>
             </b-col>
         </b-row>
-
+        <ModificarReporte :reporte="reporteSeleccionado"/>
         <RegistrarReporte/>
     </b-container>
 </template>
@@ -167,12 +173,17 @@
     import RegistrarReporte from './components/RegistrarReporte.vue';
     import { categoria } from '../../../../modules/categorias/entities/categoria';
     import { CategoriaBoundary } from '../../../../modules/categorias/adapters/categoria.boundary';
-import { votarReporteDTO } from '../dtos/votar-reporte.dto';
+    import { votarReporteDTO } from '../dtos/votar-reporte.dto';
+    import ModificarReporte from './components/ModificarReporte.vue';
+    import { RequestConsultarReporteUsuarioDTO } from '../dtos/request-consultar-reporte-usuario.dto';
+    import { ResponseConsultarReporteUsuarioDTO } from '../dtos/response-consultar-reporte-usuario.dto';
 
     export default Vue.extend({
         name: 'VistaReportesUsuario',
         components: {
-            RegistrarReporte
+            RegistrarReporte,
+            ModificarReporte
+
         },
         data() {
             return {
@@ -185,6 +196,8 @@ import { votarReporteDTO } from '../dtos/votar-reporte.dto';
 
                 reportes: [] as ObtenerReportesDTO[],
                 categorias: [] as categoria[],
+
+                reporteSeleccionado: {} as ResponseConsultarReporteUsuarioDTO
 
             }
         },
@@ -207,8 +220,7 @@ import { votarReporteDTO } from '../dtos/votar-reporte.dto';
                     
                     if(!response.error){
                         
-                        this.reportes = response.data;
-                        
+                        this.reportes = response.data;                        
                     }    
                 } catch (error) {
                     
@@ -230,7 +242,6 @@ import { votarReporteDTO } from '../dtos/votar-reporte.dto';
             },
 
             async votarReporte(id_reporte:number, voto: string){
-                console.log(id_reporte, voto);
                 
                 try {
                     const VotarReporteDto = {
@@ -248,7 +259,27 @@ import { votarReporteDTO } from '../dtos/votar-reporte.dto';
                 } catch (error) {
                     
                 }
+            },
+
+
+
+            //modal editar
+            async seleccionarReporte( reporte : ObtenerReportesDTO){
+                const informacionReporte = {
+                    usuario : reporte.usuario,
+                    id_reporte : reporte.id_reporte,
+                } as RequestConsultarReporteUsuarioDTO;
+
+
+                const controller = new ReporteController();
+                const respuesta = await controller.consultarReporteUsuario(informacionReporte);
+
+                if(!respuesta.error){
+                    this.reporteSeleccionado = respuesta.data;
+                    this.$bvModal.show('modificar-reporte');                     
+                }
             }
+
         },
         mounted() {
             this.obtenerInformacion();
