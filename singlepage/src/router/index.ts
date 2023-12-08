@@ -68,6 +68,11 @@ const routes: Array<RouteConfig> = [
         path:'configuracion',
         name:'Configuracion',
         component:() => import('../modules/personalizacion/adapters/view/Personalizacion.vue')
+      },
+      {
+        path: 'perfil',
+        name: 'Perfil',
+        component:() => import('../modules/usuarios/adapters/views/Perfil.vue')
       }
     ]
   }
