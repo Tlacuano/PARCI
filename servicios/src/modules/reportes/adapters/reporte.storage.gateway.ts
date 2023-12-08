@@ -4,17 +4,18 @@ import { ReporteRepository } from "../use-cases/ports/reporte.repository";
 import { insertReporteDTO } from "./dtos/registrar-reporte.dto";
 import { modifyReporteDTO } from "./dtos/modify-reporte.dto";
 import { votarReporteDTO } from "./dtos/votar-reporte.dto";
-import { modificarEstadoReporteDTO } from "./dtos/modificar-estado-reporte.dto";
 import { ObtenerReporteDTO } from "./dtos/obtener-reporte.dto";
-import { ObtenerReportesDTO } from "./dtos/reponse-get-reporte";
+import { ObtenerReportesDTO } from "./dtos/response-get-reporte";
 import { RequestConsultarReporteUsuarioDTO } from "./dtos/request-consultar-reporte-usuario.dto";
 import { ResponseConsultarReporteUsuarioDTO } from "./dtos/response-consultar-reporte-usuario.dto";
 import { ResponseConsultarVotoPorUsuarioDTO } from "./dtos/response-consultar-voto-por-usuario.dto";
 import { ResponseReportesEnEsperaDto } from "./dtos/response-consultar-reportes-espera.dto";
 import { ResponseConsultarReporteEsperaDto } from "./dtos/response-consultar-reporte-espera.dto";
 import { RequestEliminarReporteDTO } from "./dtos/request-eliminar-reporte.dto";
+import { NuevoEstadoReporteDTO } from "./dtos/nuevo-estado-reporte.dto";
 
 export class ReporteStorageGateway implements ReporteRepository {
+
 
     async consultarReporteUsuario(payload: RequestConsultarReporteUsuarioDTO): Promise<ResponseConsultarReporteUsuarioDTO> {        
         try {
@@ -169,30 +170,6 @@ export class ReporteStorageGateway implements ReporteRepository {
         }
     }
 
-    async modificarEstadoReporte (payload:modificarEstadoReporteDTO): Promise <boolean>{
-        try{
-
-            const existeReporte = await ConexionBD<any>('SELECT estado FROM reportes WHERE id_reporte=?', [payload.id_reporte]);
-
-            if (!existeReporte || existeReporte.length === 0){
-                throw new Error('El reporte solicitado no existe.');
-            }
-
-            const estadoReporte = existeReporte[0].estado;
-
-            if(estadoReporte !=='Espera'){
-                throw new Error('El reporte debe de tener el estado en "Espera" para poder modificar su estado.')
-            }
-
-            const result = await ConexionBD<any>(`UPDATE reportes SET estado = ? WHERE id_reporte = ?`, [payload.estado, payload.id_reporte]);
-            console.log(result);
-            return true;
-        }catch (error){
-            console.error(error)
-            throw error;
-        }
-    }  
-
     async eliminarVotoReporte(payload: votarReporteDTO): Promise<boolean> {
         try {
             const respuesta = await ConexionBD<any>('DELETE FROM votos_reporte WHERE fk_idPersona = (select id_persona FROM personas join usuarios ON fk_idPersona = id_persona WHERE usuario = ?) AND fk_idReporte = ?', [payload.usuario, payload.id_reporte]);
@@ -211,7 +188,7 @@ export class ReporteStorageGateway implements ReporteRepository {
         try {
             const resultado = await ConexionBD<ResponseConsultarReporteEsperaDto[]>(` select 
             r.id_reporte, 
-            r.fecha, 
+            DATE_FORMAT(r.fecha, '%Y-%m-%d') as fecha, 
             r.titulo, 
             r.descripcion, 
             r.imagen,
@@ -239,4 +216,19 @@ export class ReporteStorageGateway implements ReporteRepository {
             throw error;
         }
     }
+
+    async modificarEstadoReporte(payload: NuevoEstadoReporteDTO): Promise<boolean> {
+        try {
+            const result = await ConexionBD<any>("UPDATE reportes SET estado = ? WHERE id_reporte = ?", [payload.estado, payload.id_reporte]);
+
+            if(result.affectedRows === 0){
+                throw new Error('Error al cambiar el estado del reporte');
+            }
+
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }

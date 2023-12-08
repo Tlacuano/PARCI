@@ -46,7 +46,7 @@
                                 </b-container>
                                 <b-row class="justify-content-md-center mb-4">
                                     <b-col cols="10" class="text-center">
-                                        <b-img :src="reporte.imagen" fluid style="max-height: 61.5vh;"></b-img>
+                                        <b-img :src="reporte.imagen" fluid style="max-height: 65.5vh;"></b-img>
                                     </b-col>
                                 </b-row>
                             </b-card>
@@ -59,31 +59,37 @@
                         <b-col cols="12">
                             <b-card class="opiniones">
                                 <b-container>
-                                    <b-row class="mt-3 contendor_descripcion">
+                                    <b-row class="mt-1 contendor_descripcion">
                                         <b-col cols="12">
                                             <b-row>
                                                 <b-col cols="12">
                                                     <span class="text-muted">{{ reporte.nombre_municipio }}</span>
                                                     <br>
                                                     <br>
-                                                    {{ reporte.descripcion  }}
-                                                    <hr>
+                                                    <p style="text-align: justify;">
+                                                        {{ reporte.descripcion  }}
+                                                    </p>
                                                 </b-col>
                                             </b-row>
-                                            <b-row>
-                                                <b-col cols="6" class="text-center">
-                                                    <h5>
-                                                        <b-icon class="seleccionable" @click="votarReporteUsuario('positivo')" :icon="reporte.voto_usuario === 'positivo' ? 'hand-thumbs-up-fill' : 'hand-thumbs-up'"></b-icon>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row>
+                                        <b-col>
+                                            <hr>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row>
+                                        <b-col cols="6" class="text-center">
+                                            <h5>
+                                                <b-icon class="seleccionable" @click="votarReporteUsuario('positivo')" :icon="reporte.voto_usuario === 'positivo' ? 'hand-thumbs-up-fill' : 'hand-thumbs-up'"></b-icon>
                                                         {{ reporte.votos_positivos }}
-                                                    </h5>
-                                                </b-col>
-                                                <b-col cols="6" class="text-center">
-                                                    <h5>
-                                                        <b-icon class="seleccionable" @click="votarReporteUsuario('negativo')" :icon="reporte.voto_usuario === 'negativo' ? 'hand-thumbs-down-fill' : 'hand-thumbs-down'"></b-icon>
-                                                        {{ reporte.votos_negativos }}
-                                                    </h5>
-                                                </b-col>
-                                            </b-row>
+                                            </h5>
+                                        </b-col>
+                                        <b-col cols="6" class="text-center">
+                                            <h5>
+                                                <b-icon class="seleccionable" @click="votarReporteUsuario('negativo')" :icon="reporte.voto_usuario === 'negativo' ? 'hand-thumbs-down-fill' : 'hand-thumbs-down'"></b-icon>
+                                                {{ reporte.votos_negativos }}
+                                            </h5>
                                         </b-col>
                                     </b-row>
                                     <b-row class="mt-2">
@@ -145,7 +151,7 @@
                                             <b-form-textarea
                                                 v-model="nuevaOpinion.opinion"
                                                 placeholder="Ingrese su opinión"                 
-                                                rows="3"
+                                                rows="2"
                                             ></b-form-textarea>
                                             <b-button  @click="RegistrarOpinion" style="background-color: var(--color-primary);" class="mt-2">
                                                 Enviar
@@ -322,8 +328,9 @@
     }
 
     .contenedor_opiniones{
-        height: 38vh; 
+        height: 37vh; 
         overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .contenedor_opiniones::-webkit-scrollbar {
@@ -345,7 +352,7 @@
     }
 
     .contendor_descripcion{
-        height: 21vh; 
+        height: 19vh; 
         overflow-y: auto;
     }
 

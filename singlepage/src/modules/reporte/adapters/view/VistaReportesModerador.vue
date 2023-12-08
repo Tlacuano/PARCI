@@ -5,7 +5,7 @@
                 <h4 class="mb-4">Gestión de Reportes</h4>
             </b-col>
         </b-row>
-        <b-col col="12" md="2">
+        <b-col cols="12" md="2">
             <b-pagination
                 align="fill"
                 v-model="currentPage"
@@ -43,12 +43,13 @@
                     ]"
                 >
                     <template #cell(acciones)="row">
-                        <b-button
+                        <b-button 
+                            @click="verReporte(row.item)"
                             size="sm"
                             class="mx-1"
                             style="background-color: var(--color-primary)"
                         >
-                            <b-icon icon="eye-fill" />
+                            <b-icon  icon="eye-fill" />
                         </b-button>
                     </template>
                 </b-table>
@@ -66,6 +67,7 @@
     import Vue from 'vue';
 import { ReporteController } from '../reporte.controller';
 import { ResponseReportesEnEsperaDto } from '../dtos/response-consultar-reportes-espera.dto';
+import { encriptar } from '@/kernel/crypto-js';
 
     export default Vue.extend({
         name: 'VistaReportesModerador',
@@ -84,13 +86,15 @@ import { ResponseReportesEnEsperaDto } from '../dtos/response-consultar-reportes
                     
                     if(!respuesta.error){
                         this.reportes = respuesta.data;
-                        console.log(this.reportes);
-                        
                     }
-
                 } catch (error) {
                     
                 }
+            },
+
+            verReporte(reporte: ResponseReportesEnEsperaDto){
+                const parametroSeguro = encriptar(reporte.id_reporte.toString());
+                this.$router.push(`m/reporte/${parametroSeguro}`);
             }
         },
         computed: {

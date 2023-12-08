@@ -92,7 +92,7 @@
                             if(!respuesta.error){
                                 Vue.swal({
                                     title: 'Reporte registrado',
-                                    text: "El reporte se registro correctamente",
+                                    text: "El reporte se registro correctamente, y esta en espera de ser aprobado por algún moderador",
                                     icon: 'success',
                                     confirmButtonColor: 'var(--color-primary)',
                                     confirmButtonText: 'Aceptar'

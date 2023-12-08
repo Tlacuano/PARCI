@@ -1,6 +1,6 @@
 import { UseCase } from "../../../kernel/contracts";
 import { ObtenerReporteDTO } from "../adapters/dtos/obtener-reporte.dto";
-import { ObtenerReportesDTO } from "../adapters/dtos/reponse-get-reporte";
+import { ObtenerReportesDTO } from "../adapters/dtos/response-get-reporte";
 import { Reporte } from "../entities/reporte";
 import { ReporteRepository } from "./ports/reporte.repository";
 
