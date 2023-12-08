@@ -1,5 +1,5 @@
 import { UseCase } from "../../../kernel/contracts";
-import { Municipio } from "../entities/municipios";
+import { Municipio } from "../entities/municipio";
 import { MunicipioRepository } from "./ports/municipio.repository";
 
 export class GetMunicipiosPorEntidadInteractor implements UseCase<number, Municipio[]> {

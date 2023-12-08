@@ -2,6 +2,7 @@ create database PARCI;
 use PARCI;
 
 
+
 CREATE TABLE entidades_federativas (
   id_entidad INT NOT NULL AUTO_INCREMENT,
   nombre_entidad VARCHAR(45) NULL,
@@ -85,7 +86,7 @@ CREATE TABLE reportes (
   fecha DATE NULL,
   titulo VARCHAR(45) NULL,
   descripcion TEXT NULL, -- Cambiado a tipo TEXT
-  imagen JSON NULL,
+  imagen varchar(100) NULL,
   fk_idPersona INT NULL,
   fk_idMunicipio INT NULL,
   fk_idCategoria INT NULL,
@@ -121,7 +122,7 @@ CREATE TABLE opiniones (
   CONSTRAINT fk_idReporte
     FOREIGN KEY (fk_idReporte)
     REFERENCES reportes (id_reporte)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT fk_idPersona
     FOREIGN KEY (fk_idPersona)
@@ -131,7 +132,8 @@ CREATE TABLE opiniones (
 );
 
 CREATE TABLE visitas (
-numero_visitas BIGINT
+numero_visitas BIGINT,
+  fecha DATE NULL
 );
 
 CREATE TABLE votos_opinion (
@@ -471,6 +473,7 @@ insert into personalizacion (tema, tamaño_letra, fk_idUsuario) values ('Claro',
 
 
 select * from usuarios;
+select * from entidades_federativas;
 
 
 insert into reportes (fecha, titulo, descripcion, imagen, fk_idPersona, fk_idMunicipio, fk_idCategoria, estado) 

@@ -17,17 +17,10 @@ export class RegistrarOpinonInteractor implements UseCase<RequestRegistrarOpinio
             throw new Error('No se puede dejar una opinion vacia');
         }
 
-        if(validateRegex(regexValidationNoEspaciosInicioFin,payload.opinion)){
-            throw new Error('No se puede dejar espacios al inicio o al final');
-        }
+        payload.opinion = payload.opinion.trim();
 
-        //validar que la fecha no sea mayor a la actual
-        const fechaActual = new Date();
-        const fechaOpinion = new Date(payload.fecha);
-
-        if(fechaActual < fechaOpinion){
-            throw new Error('La fecha de la opinion no puede ser mayor a la actual');
-        }
+        const splitFecha = payload.fecha.split('/');
+        payload.fecha = `${splitFecha[2]}-${splitFecha[1]}-${splitFecha[0]}`;
 
         if(payload.fecha === '' || payload.fecha === undefined){
             throw new Error('Campos requeridos incompletos');
