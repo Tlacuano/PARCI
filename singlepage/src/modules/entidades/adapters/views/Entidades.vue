@@ -14,11 +14,7 @@
         ></b-pagination>
       </b-col>
       <b-col cols="12" lg="2">
-        <b-button
-          class="w-100 mb-2"
-          v-b-modal.modal-registro
-          style="background-color: var(--color-primary)"
-        >
+        <b-button class="w-100 mb-2" v-b-modal.modal-registro style="background-color: var(--color-primary)">
           <b-icon icon="plus-square-fill" />
           Agregar
         </b-button>
@@ -68,12 +64,7 @@
           <template #cell(acciones)="row">
             <b-row>
               <b-col cols="6" class="text-center">
-                <b-button
-                  size="sm"
-                  @click="seleccionarEntidad(row.item)"
-                  v-b-modal.modal-editar
-                  variant="primary"
-                >
+                <b-button size="sm" @click="seleccionarEntidad(row.item)" v-b-modal.modal-editar variant="primary">
                   <b-icon icon="pencil-square" />
                 </b-button>
               </b-col>
@@ -87,9 +78,7 @@
                       : 'background-color: var(--color-secondary)'
                   "
                 >
-                  <b-icon
-                    :icon="row.item.estado === 1 ? 'check-circle' : 'x-circle'"
-                  />
+                  <b-icon :icon="row.item.estado === 1 ? 'check-circle' : 'x-circle'" />
                 </b-button>
               </b-col>
             </b-row>
@@ -98,9 +87,7 @@
       </b-col>
       <b-col cols="12" v-else>
         <b-card>
-          <b-card-text class="text-center">
-            No hay entidades federativas registradas
-          </b-card-text>
+          <b-card-text class="text-center"> No hay entidades federativas registradas </b-card-text>
         </b-card>
       </b-col>
     </b-row>
@@ -115,12 +102,8 @@ import { EntidadFederativaController } from "../entidad-federativa.controller";
 export default Vue.extend({
   name: "Entidades",
   components: {
-    ModalRegistro: defineAsyncComponent(
-      () => import("./components/ModalRegistro.vue")
-    ),
-    ModalEditar: defineAsyncComponent(
-      () => import("./components/ModalEditar.vue")
-    ),
+    ModalRegistro: defineAsyncComponent(() => import("./components/ModalRegistro.vue")),
+    ModalEditar: defineAsyncComponent(() => import("./components/ModalEditar.vue")),
   },
   data() {
     return {
@@ -136,6 +119,14 @@ export default Vue.extend({
       perPage: 10,
     };
   },
+
+  watch: {
+    filter(newFilter: string) {
+      this.currentPage = 1;
+      this.$refs["entity-table"].filter(newFilter);
+    },
+  },
+
   methods: {
     // Seleccionar entidad federativa
     seleccionarEntidad(entidad: EntidadFederativa) {
@@ -162,32 +153,28 @@ export default Vue.extend({
       try {
         Vue.swal({
           title: "¿Estas seguro?",
-          text: `¿Deseas ${
-            entidad.estado === 1 ? "desactivar" : "activar"
-          } la entidad federativa ${entidad.nombre_entidad}?`,
+          text: `¿Deseas ${entidad.estado === 1 ? "desactivar" : "activar"} la entidad federativa ${
+            entidad.nombre_entidad
+          }?`,
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "var(--color-primary)",
           cancelButtonColor: "var(--color-secondary)",
           cancelButtonText: "Cancelar",
-          confirmButtonText: `Si, ${
-            entidad.estado === 1 ? "desactivar" : "activar"
-          }`,
+          confirmButtonText: `Si, ${entidad.estado === 1 ? "desactivar" : "activar"}`,
         }).then(async (result) => {
           if (result.isConfirmed) {
             entidad.estado = entidad.estado === 1 ? 0 : 1;
 
             const controlador = new EntidadFederativaController();
-            const respuesta = await controlador.cambiarEstadoEntidadFederativa(
-              entidad
-            );
+            const respuesta = await controlador.cambiarEstadoEntidadFederativa(entidad);
 
             if (!respuesta.error) {
               Vue.swal({
                 title: "¡Éxito!",
-                text: `Se ha ${
-                  entidad.estado === 1 ? "activado" : "desactivado"
-                } la entidad federativa ${entidad.nombre_entidad}`,
+                text: `Se ha ${entidad.estado === 1 ? "activado" : "desactivado"} la entidad federativa ${
+                  entidad.nombre_entidad
+                }`,
                 icon: "success",
                 confirmButtonColor: "var(--color-primary)",
                 confirmButtonText: "Aceptar",
@@ -207,5 +194,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
