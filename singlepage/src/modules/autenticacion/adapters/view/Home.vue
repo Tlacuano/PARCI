@@ -6,7 +6,7 @@
       <b-container fluid>
         <Transition v-if="inHome" name="fade" mode="out-in">
           <b-row>
-            <b-col cols="6">
+            <b-col cols="12" lg="6">
               <b-card @click="dirigir('/a/usuarios')" class="mx-4 mt-5 selectable">
                 <b-card-body>
                   <h1 class="text-center">
@@ -16,7 +16,7 @@
                 </b-card-body>
               </b-card>
             </b-col>
-            <b-col cols="6">
+            <b-col cols="12" lg="6">
               <b-card @click="dirigir('/a/categorias')" class="mx-4 mt-5 selectable">
                 <b-card-body>
                   <h1 class="text-center">
@@ -26,7 +26,7 @@
                 </b-card-body>
               </b-card>
             </b-col>
-            <b-col cols="6">
+            <b-col cols="12" lg="6">
               <b-card @click="dirigir('/a/entidades-federativas')" class="mx-4 mt-5 selectable">
                 <b-card-body>
                   <h1 class="text-center">
@@ -36,7 +36,7 @@
                 </b-card-body>
               </b-card>
             </b-col>
-            <b-col cols="6">
+            <b-col cols="12" lg="6">
               <b-card @click="dirigir('/a/municipios')" class="mx-4 mt-5 selectable">
                 <b-card-body>
                   <h1 class="text-center">
