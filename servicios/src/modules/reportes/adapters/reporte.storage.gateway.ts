@@ -125,9 +125,16 @@ export class ReporteStorageGateway implements ReporteRepository {
 
     async deleteReporte (payload: RequestEliminarReporteDTO): Promise <boolean>{
         try{
+            
             const result = await ConexionBD<any>("DELETE FROM reportes WHERE id_reporte = ?", [payload.id_reporte]);
+            
+            if(result.affectedRows === 0){
+                throw new Error('No se pudo eliminar el reporte');
+            }
+
             return true;
         }catch (error){
+        
             throw error;
         }
     } 
