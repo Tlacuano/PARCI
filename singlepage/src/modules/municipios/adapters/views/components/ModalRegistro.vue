@@ -7,7 +7,9 @@
     no-close-on-backdrop
     no-close-on-esc
     ok-title="Registrar"
+    ok-variant="success"
     cancel-title="Cancelar"
+    cancel-variant="danger"
     @ok="onRegistrar"
     :ok-disabled="municipio.nombre_municipio.trim() === ''"
     @cancel="onCancelar"
