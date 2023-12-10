@@ -91,7 +91,7 @@
 
                     Vue.swal({
                         title: 'Estas seguro?',
-                        text: "Se modificara el reporte",
+                        text: "Se modificara el reporte y estara en espera de ser aprobado por algún moderador, en caso de ser rechazado se ocultara el reporte permanentemente",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: 'var(--color-primary)',
@@ -105,7 +105,7 @@
                             if (!respuesta.error) {
                                 Vue.swal({
                                     title: 'Reporte modificado',
-                                    text: "El reporte se modifico correctamente",
+                                    text: "El reporte se modifico correctamente, y esta en espera de ser aprobado por algún moderador",
                                     icon: 'success',
                                     confirmButtonColor: 'var(--color-primary)',
                                 }).then(() => {

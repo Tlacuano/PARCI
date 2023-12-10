@@ -109,7 +109,7 @@
                                                                 </b-row>
                                                                 <b-row class="mt-4 justify-content-md-center">
                                                                     <b-col cols="9" class="text-center">
-                                                                        <b-img fluid rounded :src="reporte.imagen" :alt="reporte.titulo"  @click="verReporte(reporte.id_reporte)" class="seleccionable" style="max-height: 55vh;"/>                                                    
+                                                                        <b-img fluid rounded :src="reporte.imagen" :alt="reporte.titulo"  @click="verReporte(reporte.id_reporte)" class="seleccionable" style="max-height: 55vh; max-width: 100vh; min-height: 45vh;"/>                                                    
                                                                     </b-col>      
                                                                 </b-row>
                                                                 <b-row class="mt-4 justify-content-md-center">
