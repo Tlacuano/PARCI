@@ -22,7 +22,7 @@
                     :items="reportes"
                     :fields="[
                         {
-                            key: 'id_reporte',
+                            key:    'index',
                             label: 'Número',
                             thStyle: { width: '5%' },
                             sortable: true,
@@ -51,6 +51,9 @@
                         >
                             <b-icon  icon="eye-fill" />
                         </b-button>
+                    </template>
+                    <template #cell(index)="row">
+                        {{ row.index + 1 }}
                     </template>
                 </b-table>
             </b-col>

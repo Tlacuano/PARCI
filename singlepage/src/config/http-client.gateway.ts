@@ -114,6 +114,10 @@ AxiosClient.interceptors.response.use(
                                 titleAlert = "campos incompletos";
                                 messageAlert = "La imagen del reporte es requerido";
                                 break;
+                            case "No se pudo eliminar el reporte":
+                                titleAlert = "Vaya...";
+                                messageAlert = "No se pudo eliminar el reporte, intentalo de nuevo";
+                                break;
                             
                         }                        
                         Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning", confirmButtonColor: "var(--color-primary)" });

@@ -237,6 +237,9 @@ export class ReporteController {
     eliminarReporte = async (req: Request, res: Response) => {
         try {
             const payload = req.body as RequestEliminarReporteDTO;
+            console.log(payload);
+            
+
             const repository: ReporteRepository = new ReporteStorageGateway();
             const eliminarReporteInteractor = new EliminarReporteInteractor(repository);
     
@@ -251,6 +254,8 @@ export class ReporteController {
     
             res.status(body.status).json(body);
         } catch (error) {
+            console.log(error);
+            
             const errorBody = validarError(error as Error);
             res.status(errorBody.status).json(errorBody);
         }
@@ -333,7 +338,7 @@ export class ReporteController {
             let mensaje = "";
             let mensajeResaltado = "";
 
-            if(payload.estado === "Aprobado"){
+            if(payload.estado === "Publicado"){
                 mensaje = "Su reporte ha sido aprobado para su publicación en la plataforma";
                 mensajeResaltado = "Su reporte ha sido aprobado";
             }else if(payload.estado === "Rechazado"){
@@ -341,7 +346,7 @@ export class ReporteController {
                 mensajeResaltado = "Su reporte ha sido rechazado";
             }
 
-            await sendEmail(payload.correo_electronico, 'REVISIÓN DE REPORTE | Sistema de Participación Ciudadana', payload.titulo,mensaje, mensajeResaltado);
+            await sendEmail(payload.correo_electronico, 'REVISIÓN DE REPORTE | Sistema de Participación Ciudadana', mensajeResaltado,mensaje, payload.titulo);
 
             const repository:ReporteRepository = new ReporteStorageGateway();
             const interactor = new ModificarEstadoReporteInteractor(repository);
@@ -372,7 +377,7 @@ reporteRouter.post('/consultar', reporteController.getReporte);
 reporteRouter.get('/consultar-en-espera', reporteController.obtenerReportesEnEspera);
 reporteRouter.post('/modificar', reporteController.modificarReporte);
 reporteRouter.post('/registrar', reporteController.registrarReporte);
-reporteRouter.delete('/eliminar', reporteController.eliminarReporte);
+reporteRouter.post('/eliminar', reporteController.eliminarReporte);
 reporteRouter.post('/votar', reporteController.votarReporte);
 reporteRouter.post('/modificar-estado', reporteController.modificarEstadoReporte);
 reporteRouter.post('/consultar-espera', reporteController.consultarReporteEnEspera);

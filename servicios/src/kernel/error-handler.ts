@@ -66,6 +66,7 @@ const errores: { [x: string]: ResponseApi<undefined> } = {
   "La descripcion del reporte es requerido" : {status: 400, error: true, message: "La descripcion del reporte es requerido"},
   "La imagen del reporte es requerido" : {status: 400, error: true, message: "La imagen del reporte es requerido"},
   "La categoria del reporte es requerido" : {status: 400, error: true, message: "La categoria del reporte es requerido"},
+  "No se pudo eliminar el reporte" : {status: 400, error: true, message: "No se pudo eliminar el reporte"},
   //votos
   "El voto es requerido" : {status: 400, error: true, message: "El voto es requerido"},
 };

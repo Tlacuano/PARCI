@@ -73,6 +73,7 @@
                                 <b-button
                                     class="mx-1"
                                     style="background-color: var(--color-primary)"
+                                    @click="aprobarReporte"
                                 >
                                     <b-icon icon="check2" />
                                     Aprobar
@@ -145,7 +146,44 @@ import { NuevoEstadoReporteDTO } from '../dtos/nuevo-estado-reporte.dto';
             },
 
             async aprobarReporte(){
+                try {
+                    const controller = new ReporteController();
 
+                    this.reporteSeleccionado.id_reporte = this.reporte.id_reporte;
+                    this.reporteSeleccionado.motivo;
+                    this.reporteSeleccionado.estado = 'Publicado';
+                    this.reporteSeleccionado.titulo = this.reporte.titulo;
+                    this.reporteSeleccionado.correo_electronico = this.reporte.correo_electronico;
+
+                    Vue.swal({
+                        title: 'Estas seguro?',
+                        text: "Se aprobara el reporte y los usuarios ya podran verlo",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: 'var(--color-primary)',
+                        cancelButtonColor: 'var(--color-secondary)',
+                        cancelButtonText: 'Cancelar',
+                        confirmButtonText: 'Si, aprobar'
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            const respuesta = await controller.modficarEstadoReporte(this.reporteSeleccionado);
+                            
+                            if(!respuesta.error){
+                                Vue.swal({
+                                    title: 'Reporte aprobado',
+                                    text: "El reporte ha sido aprobado",
+                                    icon: 'success',
+                                    confirmButtonColor: 'var(--color-primary)',
+                                    confirmButtonText: 'Ok'
+                                })
+                                window.location.reload();
+                            }
+
+                        }
+                    })
+                } catch (error) {
+                    
+                }
             }
         },
         mounted() {

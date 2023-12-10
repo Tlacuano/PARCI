@@ -46,8 +46,8 @@ import { ReporteController } from '../../reporte.controller';
                         text: "Se rechazara el reporte y los usuarios ya no podran verlo",
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
+                        confirmButtonColor: 'var(--color-primary)',
+                        cancelButtonColor: 'var(--color-secondary)',
                         cancelButtonText: 'Cancelar',
                         confirmButtonText: 'Si, rechazar'
                     }).then(async (result) => {
@@ -55,19 +55,18 @@ import { ReporteController } from '../../reporte.controller';
                             const respuesta = await controller.modficarEstadoReporte(this.reporte);
                             
                             if(!respuesta.error){
-                                Vue.swal(
-                                    'Estado del reporte modificado con exito!',
-                                    'El reporte ha sido rechazado.',
-                                    'success'
-                                );
-
+                                Vue.swal({
+                                    title: 'Reporte rechazado',
+                                    text: "El reporte ha sido rechazado",
+                                    icon: 'success',
+                                    confirmButtonColor: 'var(--color-primary)',
+                                    confirmButtonText: 'Ok'
+                                })
                                 this.close();
                             }
 
                         }
-                    })
-
-                    
+                    })  
                 } catch (error) {
                     console.log(error);
                 }
