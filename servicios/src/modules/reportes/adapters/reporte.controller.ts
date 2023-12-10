@@ -135,6 +135,7 @@ export class ReporteController {
             if(payload.imagen === "" || payload.imagen === undefined || payload.imagen === null){
                 throw new Error("La imagen del reporte es requerido")
             }
+                        
 
             //sacar los datos base64 de la imagen
             const datosBase64 = payload.imagen.split(';base64,').pop() as string;
@@ -190,9 +191,9 @@ export class ReporteController {
     modificarReporte = async (req: Request, res: Response) => {
         try {
             const payload = req.body as modifyReporteDTO;
-            
             //sacar los datos base64 de la imagen
             const datosBase64 = payload.imagen.split(';base64,').pop() as string;
+
             //sacar el tipo de imagen
             const tipoImagen = payload.imagen.substring(11, payload.imagen.indexOf(';'));
             //convertir los datos base64 a un buffer

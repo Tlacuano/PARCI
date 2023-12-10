@@ -75,7 +75,7 @@
         methods: {
             async RegistrarReporte(){
                 try {
-
+                    this.nuevoReporte.fecha = new Date().toLocaleDateString() as any;
                     Vue.swal({
                         title: 'Estas seguro?',
                         text: "Se registrara el reporte",

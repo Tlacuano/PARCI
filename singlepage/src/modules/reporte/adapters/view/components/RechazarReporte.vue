@@ -61,8 +61,11 @@ import { ReporteController } from '../../reporte.controller';
                                     icon: 'success',
                                     confirmButtonColor: 'var(--color-primary)',
                                     confirmButtonText: 'Ok'
+                                }).then(() => {
+                                    window.location.reload();
                                 })
                                 this.close();
+
                             }
 
                         }

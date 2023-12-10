@@ -46,7 +46,7 @@
                                 </b-container>
                                 <b-row class="justify-content-md-center mb-4">
                                     <b-col cols="10" class="text-center">
-                                        <b-img :src="reporte.imagen" fluid style="height: 63vh;"></b-img>
+                                        <b-img :src="reporte.imagen" fluid style="max-height: 63vh; min-width: 70vh; max-width: 100vh;"></b-img>
                                     </b-col>
                                 </b-row>
                             </b-card>
