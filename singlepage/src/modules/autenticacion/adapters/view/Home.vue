@@ -10,7 +10,7 @@
               <b-card @click="dirigir('/a/usuarios')" class="mx-4 mt-5 selectable">
                 <b-card-body>
                   <h1 class="text-center">
-                    <b-icon icon="person-fill" />
+                    <b-icon icon="people-fill" />
                     Gestion de Usuarios
                 </h1>
                 </b-card-body>
