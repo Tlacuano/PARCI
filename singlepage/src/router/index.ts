@@ -68,7 +68,7 @@ const routes: Array<RouteConfig> = [
       {
         path: "u",
         component: () =>
-          import("../modules/autenticacion/adapters/view/Home.vue"),
+          import("../modules/autenticacion/adapters/view/SinHome.vue"),
         children: [
           {
             path: "/",
