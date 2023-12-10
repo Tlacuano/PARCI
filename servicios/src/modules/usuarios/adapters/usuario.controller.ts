@@ -186,7 +186,7 @@ export class UsuarioController {
     eliminarUsuario = async (req: Request, res: Response) => {
         try {
             const payload = req.body as EliminarUsuarioDTO;
-
+            console.log(req.body);
             const repositorio: UsuarioRepository =
                 new UsuarioStorageGateway();
             const eliminarUsuarioInteractor = new EliminarUsuarioInteractor(
@@ -206,6 +206,7 @@ export class UsuarioController {
         } catch (error) {
             const errorBody = validarError(error as Error);
             res.status(errorBody.status).json(errorBody);
+            console.log(error);
         }
     };
 

@@ -8,11 +8,12 @@ import { ResponseConsultarReporteUsuarioDTO } from "./dtos/response-consultar-re
 import { insertReporteDTO } from "./dtos/registrar-reporte.dto";
 import { votarReporteDTO } from "./dtos/votar-reporte.dto";
 import { ResponseReportesEnEsperaDto } from "./dtos/response-consultar-reportes-espera.dto";
+import { modifyReporteDTO } from "./dtos/modify-reporte.dto";
+import { RequestEliminarReporteDTO } from "./dtos/request-eliminar-reporte.dto";
 
 
 
 export class ReporteStorageGateway implements ReporteRepository{
-
 
     async getReporte(payload: ObtenerReporteDTO): Promise<ResponseApi<ObtenerReportesDTO[]>> {
         const respuesta = await api.doPost('/reportes/consultar', payload);
@@ -48,4 +49,20 @@ export class ReporteStorageGateway implements ReporteRepository{
             ...respuesta.data
         } as ResponseApi<ResponseReportesEnEsperaDto[]>
     }
+
+    async modificarReporte(payload: modifyReporteDTO): Promise<ResponseApi<boolean>> {
+        const respuesta = await api.doPost('/reportes/modificar', payload);
+        return{
+            ...respuesta.data
+        } as ResponseApi<boolean>
+    }
+
+    async eliminarReporte(payload: RequestEliminarReporteDTO): Promise<ResponseApi<boolean>> {
+        const respuesta = await api.doPost('/reportes/eliminar', payload);
+        return{
+            ...respuesta.data
+        } as ResponseApi<boolean>
+    }
+
+
 }

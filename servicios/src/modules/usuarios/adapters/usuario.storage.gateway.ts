@@ -43,9 +43,10 @@ export class UsuarioStorageGateway implements UsuarioRepository {
 
     async eliminarUsuario(payload: EliminarUsuarioDTO): Promise<boolean> {
         try {
-            await ConexionBD<boolean>("DELETE FROM usuarios WHERE id_usuario = ?", [payload.id_usuario]);
+            await ConexionBD<boolean>("DELETE FROM usuarios WHERE id_usuario = (SELECT id_usuario FROM (SELECT * FROM usuarios) AS u WHERE usuario = ?)", [payload.usuario]);
             return true;
         } catch (error) {
+            console.log(error);
             throw error;
         }
     }

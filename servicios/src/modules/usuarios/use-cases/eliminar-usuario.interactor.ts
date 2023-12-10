@@ -8,7 +8,7 @@ export class EliminarUsuarioInteractor implements UseCase<EliminarUsuarioDTO, bo
 
     async execute(payload: EliminarUsuarioDTO): Promise<boolean> {
 
-        if (!payload.id_usuario) {
+        if (!payload.usuario) {
             throw new Error("Campos requeridos incompletos");
         }
 

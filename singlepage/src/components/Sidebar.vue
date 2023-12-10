@@ -8,8 +8,10 @@
                     </b-col>
 
 
-                    <b-col cols="12" class="text-start mt-4 opcion" @click="dirigir('/perfil')">
-                        <span><b-icon icon="person" /> Perfil</span>
+                    <b-col cols="12"   v-if="rol==='Administrador'" class="opcion" @click="dirigir('/a/perfil')">
+                        <div class="text-start mt-2">
+                            <span><b-icon icon="person" />&nbsp;&nbsp;Perfil</span>
+                        </div>
                     </b-col>
 
 
@@ -18,7 +20,7 @@
                             <span><b-icon icon="person" />&nbsp;&nbsp;Gestión de Usuarios</span>
                         </div>
                     </b-col>
-                    <b-col cols="12" v-if="rol === 'Administrador'" class="opcion">
+                    <b-col cols="12"   v-if="rol==='Administrador'" class="opcion" @click="dirigir('/a/categorias')">
                         <div class="text-start mt-2">
                             <span><b-icon icon="person" />&nbsp;&nbsp;Categorías de reportes</span>
                         </div>
@@ -42,6 +44,16 @@
                         </div>
                     </b-col>
 
+                    <b-col cols="12"   v-if="rol==='Moderador'" class="opcion" @click="dirigir('/m/perfil')">
+                        <div class="text-start mt-2">
+                            <span><b-icon icon="person" />&nbsp;&nbsp;Perfil</span>
+                        </div>
+                    </b-col>
+                    <b-col cols="12"   v-if="rol==='Usuario'" class="opcion" @click="dirigir('/u/perfil')">
+                        <div class="text-start mt-2">
+                            <span><b-icon icon="person" />&nbsp;&nbsp;Perfil</span>
+                        </div>
+                    </b-col>
                     <b-col cols="12" v-if="rol === 'Usuario'" class="opcion" @click="dirigir('/u')">
                         <div class="text-start mt-2">
                             <span><b-icon icon="person" />&nbsp;&nbsp;Reportes</span>

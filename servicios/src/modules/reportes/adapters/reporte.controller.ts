@@ -7,7 +7,6 @@ import { Request, Response, Router } from "express";
 import { ReporteRepository } from "../use-cases/ports/reporte.repository";
 import { ReporteStorageGateway } from "./reporte.storage.gateway";
 import { ResponseApi } from "../../../kernel/types";
-import { Reporte } from "../entities/reporte";
 import { validarError } from "../../../kernel/error-handler";
 import { GetReporteInteractor} from "../use-cases/get-reporte.interactor";
 import { insertReporteDTO } from "./dtos/registrar-reporte.dto";
@@ -29,6 +28,7 @@ import { ResponseConsultarReporteUsuarioDTO } from './dtos/response-consultar-re
 import { ConsultarVotoPorUsuarioInteractor } from '../use-cases/consultar-voto-por-usuario.interactor';
 import { ModificarVotoPorUsuario } from '../use-cases/modificar-voto-por-usuario.interactor';
 import { EliminarVotoReporteInteractor } from '../use-cases/eliminar-voto-reporte.interactor';
+import { RequestEliminarReporteDTO } from './dtos/request-eliminar-reporte.dto';
 
 
 const reporteRouter = Router();
@@ -130,15 +130,22 @@ export class ReporteController {
         try {
             const payload = _req.body as insertReporteDTO;            
 
+            if(payload.imagen === "" || payload.imagen === undefined || payload.imagen === null){
+                throw new Error("La imagen del reporte es requerido")
+            }
+
             //sacar los datos base64 de la imagen
             const datosBase64 = payload.imagen.split(';base64,').pop() as string;
             //sacar el tipo de imagen
             const tipoImagen = payload.imagen.substring(11, payload.imagen.indexOf(';'));
             //convertir los datos base64 a un buffer
             const imagenBuffer = Buffer.from(datosBase64, 'base64');
+
+            //crear codigo random para el nombre de la imagen
+            const codigoRandom = Math.floor(Math.random() * 10000000);
             
             // Generar un nombre único para el archivo (puedes usar algo como un timestamp)
-            const nombreArchivo = `imagen_${payload.usuario}_${new Date().toLocaleDateString().replace(/[/:]/g, '-')}.${tipoImagen}`;
+            const nombreArchivo = `imagen_${payload.usuario}_${new Date().toLocaleDateString().replace(/[/:]/g, '-')}_${codigoRandom}.${tipoImagen}`;
 
             // Ruta donde se guardará la imagen
             const rutaDirectorio = 'C:/PARCI';
@@ -181,6 +188,30 @@ export class ReporteController {
     modificarReporte = async (req: Request, res: Response) => {
         try {
             const payload = req.body as modifyReporteDTO;
+            
+            //sacar los datos base64 de la imagen
+            const datosBase64 = payload.imagen.split(';base64,').pop() as string;
+            //sacar el tipo de imagen
+            const tipoImagen = payload.imagen.substring(11, payload.imagen.indexOf(';'));
+            //convertir los datos base64 a un buffer
+            const imagenBuffer = Buffer.from(datosBase64, 'base64');
+
+            //crear codigo random para el nombre de la imagen
+            const codigoRandom = Math.floor(Math.random() * 10000000);
+            
+            // Generar un nombre único para el archivo (puedes usar algo como un timestamp)
+            const nombreArchivo = `imagen_${payload.usuario}_${new Date().toLocaleDateString().replace(/[/:]/g, '-')}_${codigoRandom}.${tipoImagen}`;
+            
+             // Ruta donde se guardará la imagen
+            const rutaDirectorio = 'C:/PARCI';
+            const rutaImagen = path.join(rutaDirectorio, nombreArchivo);
+             // Verificar que el directorio existe, si no, crearlo
+            if (fs.existsSync(rutaDirectorio)) {               
+                fs.writeFileSync(rutaImagen, imagenBuffer, 'binary');                
+            }
+
+            payload.imagen = rutaImagen.replace(/\\/g, '/');
+
 
             const repository: ReporteRepository = new ReporteStorageGateway();
             const modificarReporteInteractor = new ModificarReporteInteractor(repository);
@@ -203,11 +234,11 @@ export class ReporteController {
 
     eliminarReporte = async (req: Request, res: Response) => {
         try {
-            const { id_reporte } = req.body;
+            const payload = req.body as RequestEliminarReporteDTO;
             const repository: ReporteRepository = new ReporteStorageGateway();
             const eliminarReporteInteractor = new EliminarReporteInteractor(repository);
     
-            await eliminarReporteInteractor.execute(id_reporte);
+            await eliminarReporteInteractor.execute(payload);
             
             const body: ResponseApi<boolean> = {
                 data: true,
@@ -293,7 +324,7 @@ const reporteController = new ReporteController();
 reporteRouter.post('/consultar-usuario', reporteController.consultarReporteUsuario);
 reporteRouter.post('/consultar', reporteController.getReporte);
 reporteRouter.get('/consultar-en-espera', reporteController.obtenerReportesEnEspera);
-reporteRouter.put('/modificar', reporteController.modificarReporte);
+reporteRouter.post('/modificar', reporteController.modificarReporte);
 reporteRouter.post('/registrar', reporteController.registrarReporte);
 reporteRouter.delete('/eliminar', reporteController.eliminarReporte);
 reporteRouter.post('/votar', reporteController.votarReporte);

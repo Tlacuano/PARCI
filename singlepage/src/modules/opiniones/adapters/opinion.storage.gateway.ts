@@ -5,6 +5,7 @@ import api from '../../../config/http-client.gateway';
 import { Opinion } from "../entities/opinion";
 import { VotarOpinionDto } from "./dto/request-votar-opinion.dto";
 import { RequestEliminarOpinionDto } from "./dto/request-eliminar-opinion.dto";
+import { RequestModificarOpinionDto } from "./dto/request-modificar-opinion.dto";
 
 
 
@@ -32,4 +33,10 @@ export class OpinionStorageGateway implements OpinionRepository{
         } as ResponseApi<Opinion[]>
     }
 
+    async modificarOpinion(payload: RequestModificarOpinionDto): Promise<ResponseApi<Opinion[]>> {
+        const respuesta = await api.doPost('/opiniones/modificar-opinion', payload);
+        return{
+            ...respuesta.data
+        } as ResponseApi<Opinion[]>
+    }
 }

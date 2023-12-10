@@ -1,5 +1,6 @@
 import { ResponseApi } from "../../../../kernel/types";
 import { RequestEliminarOpinionDto } from "../../adapters/dto/request-eliminar-opinion.dto";
+import { RequestModificarOpinionDto } from "../../adapters/dto/request-modificar-opinion.dto";
 import { RequestRegistrarOpinionDto } from "../../adapters/dto/request-registrar-opinion.dto";
 import { VotarOpinionDto } from "../../adapters/dto/request-votar-opinion.dto";
 import { Opinion } from "../../entities/opinion";

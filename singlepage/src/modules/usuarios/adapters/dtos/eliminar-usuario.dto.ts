@@ -1,3 +1,3 @@
 export type EliminarUsuarioDTO = {
-    id_usuario: number;
+    usuario: String;
     };

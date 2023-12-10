@@ -63,12 +63,12 @@
 
     </b-form-group>
     <b-form-group label="Municipio">
-  <b-form-select
-    v-model="persona.fk_idMunicipio"
-    :options="municipios"
-    required
-  ></b-form-select>
-</b-form-group>
+        <b-form-select v-model="persona.fk_idMunicipio" required>
+  <option v-for="municipio in municipios" :key="municipio.id_municipio" :value="municipio.id_municipio">
+    {{ municipio.nombre_municipio }}
+  </option>
+</b-form-select>
+    </b-form-group>
 
 
 
@@ -109,7 +109,7 @@ data() {
         } as RegistrarPersonaDTO,
         entidadFederativaSeleccionada: 0,
         EntidadFederativaActiva: [] as EntidadFederativaActiva[], 
-        municipios: [],
+        municipios: [] as any[],
     };
 },
 
@@ -121,43 +121,65 @@ mounted() {
 methods:{
 
     // Registrar usuario
-    async onRegistrar() {
-        try {
-            this.usuario.usuario = this.usuario.usuario.trim();
-            this.usuario.contrasena = this.usuario.contrasena.trim();
-            const controladorUsuario = new UsuarioController();
-            this.persona.nombre = this.persona.nombre.trim();
-            this.persona.apellido_paterno = this.persona.apellido_paterno.trim();
-            this.persona.apellido_materno = this.persona.apellido_materno.trim();
-            this.persona.correo_electronico = this.persona.correo_electronico.trim();
-            this.persona.fecha_nacimiento = this.persona.fecha_nacimiento;
-            this.persona.fk_idMunicipio = this.persona.fk_idMunicipio;
-            const controladorPersona = new PersonaController();
-            
-            const respuesta = await controladorUsuario.registrarUsuario(
-                this.usuario
-            );
+    // Registrar usuario
+async onRegistrar() {
+  try {
+    // Validar que todos los campos requeridos estén llenos
+    if (
+      this.usuario.usuario.trim() === '' ||
+      this.usuario.contrasena.trim() === '' ||
+      this.persona.nombre.trim() === '' ||
+      this.persona.apellido_paterno.trim() === '' ||
+      this.persona.apellido_materno.trim() === '' ||
+      this.persona.correo_electronico.trim() === '' ||
+      this.persona.fecha_nacimiento === null ||
+      this.persona.fk_idMunicipio === 0
+    ) {
+      Vue.swal({
+        title: "Error",
+        text: "Por favor, complete todos los campos requeridos.",
+        icon: "error",
+        confirmButtonColor: "var(--color-danger)",
+        confirmButtonText: "Aceptar",
+      });
+      return;
+    }
 
-            const respuesta2 = await controladorPersona.registrarPersona(
-                this.persona
-            );
+    // Realizar la validación adicional si es necesario
 
-            if (!respuesta.error && !respuesta2.error) {
-                Vue.swal({
-                    title: "¡Usuario registrado!",
-                    text: `El usuario ${this.usuario.usuario} ha sido registrado correctamente.`,
-                    icon: "success",
-                    confirmButtonColor: "var(--color-primary)",
-                    confirmButtonText: "Aceptar",
-                });
-                this.limpiar();
-                this.$emit("registrado");
-                this.$bvModal.hide("registrarUser");
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    },
+    this.usuario.usuario = this.usuario.usuario.trim();
+    this.usuario.contrasena = this.usuario.contrasena.trim();
+
+    const controladorUsuario = new UsuarioController();
+
+    this.persona.nombre = this.persona.nombre.trim();
+    this.persona.apellido_paterno = this.persona.apellido_paterno.trim();
+    this.persona.apellido_materno = this.persona.apellido_materno.trim();
+    this.persona.correo_electronico = this.persona.correo_electronico.trim();
+    this.persona.fecha_nacimiento = this.persona.fecha_nacimiento;
+
+    const controladorPersona = new PersonaController();
+
+    const respuesta = await controladorUsuario.registrarUsuario(this.usuario);
+    const respuesta2 = await controladorPersona.registrarPersona(this.persona);
+
+    if (!respuesta.error && !respuesta2.error) {
+      Vue.swal({
+        title: "¡Usuario registrado!",
+        text: `El usuario ${this.usuario.usuario} ha sido registrado correctamente.`,
+        icon: "success",
+        confirmButtonColor: "var(--color-primary)",
+        confirmButtonText: "Aceptar",
+      });
+      this.limpiar();
+      this.$emit("registrado");
+      this.$bvModal.hide("registrarUser");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+},
+
 
     async getEntidadesFederativas() {
   try {

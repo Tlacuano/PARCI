@@ -35,6 +35,7 @@ export class UsuarioStorageGateway implements UsuarioRepository{
     }
 
     async eliminarUsuario(payload: any): Promise<ResponseApi<boolean>> {
+        console.log("peilod gateway",payload);
         const respuesta = await api.doDelete("/usuarios/eliminar", payload);
         return {
             ...respuesta.data,

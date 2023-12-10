@@ -62,7 +62,10 @@ const errores: { [x: string]: ResponseApi<undefined> } = {
 
   //reportes
   "No se encontró el reporte solicitado" : {status: 404, error: true, message: "No se encontró el reporte solicitado"},
-
+  "El titulo del reporte es requerido" : {status: 400, error: true, message: "El titulo del reporte es requerido"},
+  "La descripcion del reporte es requerido" : {status: 400, error: true, message: "La descripcion del reporte es requerido"},
+  "La imagen del reporte es requerido" : {status: 400, error: true, message: "La imagen del reporte es requerido"},
+  "La categoria del reporte es requerido" : {status: 400, error: true, message: "La categoria del reporte es requerido"},
   //votos
   "El voto es requerido" : {status: 400, error: true, message: "El voto es requerido"},
 };
