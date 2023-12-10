@@ -94,7 +94,7 @@
                   :style="
                     row.item.estado === 1
                       ? 'background-color: var(--color-primary)'
-                      : 'background-color var(--color-secondary)'
+                      : 'background-color: var(--color-secondary)'
                   "
                 >
                   <b-icon
@@ -200,7 +200,7 @@ export default Vue.extend({
                   categoria.estado === 1 ? "activado" : "desactivado"
                 } la categoria ${categoria.nombre_categoria}`,
                 icon: "success",
-                confirmButtonColor: "var(--color-´primary)",
+                confirmButtonColor: "var(--color-primary)",
                 confirmButtonText: "Aceptar",
               }),
                 this.getCategorias();

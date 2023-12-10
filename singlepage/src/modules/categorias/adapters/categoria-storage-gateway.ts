@@ -18,7 +18,7 @@ export class CategoriaStorageGateway implements CategoriaRepository {
     payload: insertCategoriaDto
   ): Promise<ResponseApi<boolean>> {
     const respuesta = await api.doPost("/categorias/registrar", payload);
-    return { ...respuesta.data } as ResponseApi<boolean>;
+    return { ...respuesta.data, } as ResponseApi<boolean>;
   }
 
   async modificarCategoria(
