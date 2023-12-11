@@ -51,7 +51,7 @@ const routes: Array<RouteConfig> = [
       {
         path: "m",
         component: () =>
-          import("../modules/autenticacion/adapters/view/Home.vue"),
+          import("../modules/autenticacion/adapters/view/SinHome.vue"),
         children: [
           {
             path: "/",
@@ -60,6 +60,13 @@ const routes: Array<RouteConfig> = [
               import(
                 "../modules/reporte/adapters/view/VistaReportesModerador.vue"
               ),
+          },
+          {
+            path: "reporte/:id?",
+            props: true,
+            name: "VerReporte",
+            component: () =>
+              import("../modules/reporte/adapters/view/VerReporteModerador.vue"),
           },
           {
             path: "perfil",
@@ -75,7 +82,7 @@ const routes: Array<RouteConfig> = [
       {
         path: "u",
         component: () =>
-          import("../modules/autenticacion/adapters/view/Home.vue"),
+          import("../modules/autenticacion/adapters/view/SinHome.vue"),
         children: [
           {
             path: "/",

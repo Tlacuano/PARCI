@@ -17,30 +17,29 @@
 
                     <b-col cols="12" v-if="rol === 'Administrador'" class="opcion">
                         <div class="text-start mt-2">
-                            <span><b-icon icon="person" />&nbsp;&nbsp;Gestión de Usuarios</span>
+                            <span  ><b-icon icon="people"/>&nbsp;&nbsp;Gestión de Usuarios</span>
                         </div>
                     </b-col>
                     <b-col cols="12"   v-if="rol==='Administrador'" class="opcion" @click="dirigir('/a/categorias')">
                         <div class="text-start mt-2">
-                            <span><b-icon icon="person" />&nbsp;&nbsp;Categorías de reportes</span>
+                            <span ><b-icon icon="sticky" />&nbsp;&nbsp;Categorías de reportes</span>
                         </div>
                     </b-col>
-                    <b-col cols="12" v-if="rol === 'Administrador'" class="opcion"
-                        @click="dirigir('/a/entidades-federativas')">
-                        <div class="text-start mt-2">
-                            <span><b-icon icon="person" />&nbsp;&nbsp;Entidades federativas</span>
+                    <b-col cols="12" v-if="rol==='Administrador'" class="opcion" @click="dirigir('/a/entidades-federativas')" >
+                        <div  class="text-start mt-2">
+                            <span><b-icon icon="map" />&nbsp;&nbsp;Entidades federativas</span>
                         </div>
                     </b-col>
                     <b-col cols="12" v-if="rol === 'Administrador'" class="opcion" @click="dirigir('/a/municipios')">
                         <div class="text-start mt-2">
-                            <span><b-icon icon="person" />&nbsp;&nbsp;Municipios</span>
+                            <span  ><b-icon icon="geo-alt" />&nbsp;&nbsp;Municipios</span>
                         </div>
                     </b-col>
 
 
                     <b-col cols="12" v-if="rol === 'Moderador'" class="opcion" @click="dirigir('/m')">
                         <div class="text-start mt-2">
-                            <span><b-icon icon="person" />&nbsp;&nbsp;Reportes</span>
+                            <span  ><b-icon icon="layout-text-window" />&nbsp;&nbsp;Reportes</span>
                         </div>
                     </b-col>
 
@@ -56,7 +55,7 @@
                     </b-col>
                     <b-col cols="12" v-if="rol === 'Usuario'" class="opcion" @click="dirigir('/u')">
                         <div class="text-start mt-2">
-                            <span><b-icon icon="person" />&nbsp;&nbsp;Reportes</span>
+                            <span><b-icon icon="layout-text-window" />&nbsp;&nbsp;Reportes</span>
                         </div>
                     </b-col>
 

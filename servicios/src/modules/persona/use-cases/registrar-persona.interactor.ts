@@ -3,11 +3,11 @@ import { RegistrarPersonaDTO } from "../adapters/dtos/registrar-persona.dto";
 import { PersonaRepository } from "./ports/persona.repository";
 
 export class RegistrarPersonaInteractor
-    implements UseCase<RegistrarPersonaDTO, boolean>
+    implements UseCase<RegistrarPersonaDTO, number>
     {
     constructor(private readonly repository: PersonaRepository) {}
     
-    async execute(payload: RegistrarPersonaDTO): Promise<boolean> {
+    async execute(payload: RegistrarPersonaDTO): Promise<number> {
 
         if (!payload.nombre || !payload.apellido_paterno || !payload.apellido_materno || !payload.correo_electronico || !payload.fecha_nacimiento || !payload.fk_idMunicipio) {
             throw new Error("Campos requeridos incompletos");

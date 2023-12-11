@@ -1,15 +1,20 @@
 import { ResponseApi } from "../../../kernel/types";
+import { ConsultarReporteEnEsperaInteractor } from "../use-case/consultar-reporte-en-espera.interactor";
 import { ConsultarReporteUsuarioInteractor } from "../use-case/consultar-reporte-usuario.interactor";
 import { ConsultarReportesEnEsperaInteractor } from "../use-case/consultar-reportes-en-espera.interactor";
+import { EliminarReporteInteractor } from "../use-case/eliminar-reporte.interactor";
+import { ModificarEstadoReporte } from "../use-case/modificar-estado-reporte.interactor";
 import { ModificarReporteInteractor } from "../use-case/modificar-reporte.interactor";
 import { ObtenerReportesInteractor } from "../use-case/obtener-reportes.interactor";
 import { ReporteRepository } from "../use-case/ports/reporte.repository";
 import { RegistrarReporteInteractor } from "../use-case/registrar-reporte.interactor";
 import { VotarReporteInteractor } from "../use-case/votar-reporte.interactor";
 import { modifyReporteDTO } from "./dtos/modify-reporte.dto";
+import { NuevoEstadoReporteDTO } from "./dtos/nuevo-estado-reporte.dto";
 import { ObtenerReporteDTO } from "./dtos/obtener-reporte.dto";
 import { insertReporteDTO } from "./dtos/registrar-reporte.dto";
 import { RequestConsultarReporteUsuarioDTO } from "./dtos/request-consultar-reporte-usuario.dto";
+import { RequestEliminarReporteDTO } from "./dtos/request-eliminar-reporte.dto";
 import { votarReporteDTO } from "./dtos/votar-reporte.dto";
 import { ReporteStorageGateway } from "./reporte.storage.gateway";
 
@@ -96,5 +101,40 @@ export class ReporteController {
         }
     }
 
+    consultarReporteEnEspera = async (payload: RequestConsultarReporteUsuarioDTO) => {
+        try {
+            const repositorio: ReporteRepository = new ReporteStorageGateway();
+            const consultarReporteEnEsperaInteractor = new ConsultarReporteEnEsperaInteractor(repositorio);
+
+            const respuesta = await consultarReporteEnEsperaInteractor.execute(payload);
+            return respuesta;
+        } catch (error) {
+            return this.obtenerError(error);
+        }
+    }
+
+    modficarEstadoReporte = async (payload: NuevoEstadoReporteDTO) => {
+        try {
+            const repositorio: ReporteRepository = new ReporteStorageGateway();
+            const modificarEstadoReporteInteractor = new ModificarEstadoReporte(repositorio);
+
+            const respuesta = await modificarEstadoReporteInteractor.execute(payload);
+            return respuesta;
+        } catch (error) {
+            return this.obtenerError(error);
+        }
+    }
+
+    eliminarReporte = async (payload: RequestEliminarReporteDTO) => {
+        try {
+            const repositorio: ReporteRepository = new ReporteStorageGateway();
+            const eliminarReporteInteractor = new EliminarReporteInteractor(repositorio);
+
+            const respuesta = await eliminarReporteInteractor.execute(payload);
+            return respuesta;
+        } catch (error) {
+            return this.obtenerError(error);
+        }
+    }
 
 }

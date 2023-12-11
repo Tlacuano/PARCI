@@ -5,6 +5,7 @@ import { ModificarCuentaDTO } from "../adapters/dtos/modificar-cuenta.dto";
 import { Usuario } from "../entities/usuario";
 import { EliminarUsuarioDTO } from "../adapters/dtos/eliminar-usuario.dto";
 import { ModificarInformacionOpinionesDTO } from "./dtos/modificar-informacion-opiniones.dto";
+import { RegistrarPersonaDTO } from "../../persona/adapters/dtos/registrar-persona.dto";
 
 export class UsuarioStorageGateway implements UsuarioRepository {
 
@@ -18,9 +19,9 @@ export class UsuarioStorageGateway implements UsuarioRepository {
     }
 
 
-    async registrarUsuario(payload: RegistrarUsuarioDTO): Promise<boolean> {
+    async registrarUsuario(payload: RegistrarPersonaDTO): Promise<boolean> {
         try {
-            await ConexionBD<boolean>("INSERT INTO usuarios (usuario, contraseña, rol, codigo, fecha_opinion, contador_opinion, fk_idPersona) VALUES (?, ?, ?, ?, ?, 0, ?)", [payload.usuario, payload.contrasena, payload.rol, payload.codigo, payload.fecha_opinion, payload.fk_idPersona]);
+            await ConexionBD<boolean>("INSERT INTO usuarios (usuario, contraseña, rol, fk_idPersona) VALUES (?, ?, ?, ?)", [payload.usuario.usuario, payload.usuario.contrasena, payload.usuario.rol, payload.usuario.fk_idPersona]);
             return true;
         } catch (error) {
             throw error;

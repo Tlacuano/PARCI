@@ -9,6 +9,9 @@ import { ObtenerPersonasInteractor } from "../../personas/use-cases/get-personas
 import { RegistrarPersonaInteractor } from "../../personas/use-cases/registrar-persona.interactor";
 import { ModificarInformacionPersonaInteractor } from "../../personas/use-cases/modificar-informacion-persona.interactor";
 import { EliminarPersonaInteractor } from "../../personas/use-cases/eliminar-persona.interactor";
+import { ModificarCuentaPersonaDTO } from "./dtos/modificar-persona.dto";
+import { ModificarInformacionPersonaInteractorNombre } from "../use-cases/modificar-informacion-persona-nombre.interactor";
+import { GetPersonaInfoUsuario } from "../use-cases/obtener-persona-por-usuario.interactor";
 
 export class PersonaController{
     private obtenerError(error: any){
@@ -76,6 +79,32 @@ export class PersonaController{
         }
     };
 
+    modificarPersona = async (payload: ModificarCuentaPersonaDTO) => {
+        try{
+            const repositorio: PersonaRepository = new PersonaStorageGateway();
+            const modificarPersonaInteractor = new ModificarInformacionPersonaInteractorNombre(repositorio);
+
+            const respuesta = await modificarPersonaInteractor.execute(payload);
+
+            return respuesta;
+        }catch(error){
+            return this.obtenerError(error);
+        }
+    }
+
+    // CONSULTAR PERSONA POR USUARIO
+    getPersonaInfoByUsuario = async (usuario: string) => {
+        try{
+            const repositorio: PersonaRepository = new PersonaStorageGateway();
+            const obtenerPersonaInfoByUsuarioInteractor = new GetPersonaInfoUsuario(repositorio);
+
+            const respuesta = await obtenerPersonaInfoByUsuarioInteractor.execute(usuario);
+
+            return respuesta;
+        }catch(error){
+            return this.obtenerError(error);
+        }
+    };
     
 
 

@@ -48,7 +48,9 @@
                                         <b-card class="text-center mt-4">
                                             <b-row>
                                                 <b-col cols="12">
-                                                    <b-button v-b-modal.registrar-reporte style="width:100%; padding:8px; background-color: var(--color-primary);">Registrar Reporte</b-button> 
+                                                    <span class="text-muted">Se parte activa de tu comunidad!!</span>
+                                                    
+                                                    <b-button class="mt-2" v-b-modal.registrar-reporte style="width:100%; padding:8px; background-color: var(--color-primary);">Registrar Reporte</b-button> 
                                                 </b-col>
                                             </b-row>
                                         </b-card>
@@ -99,7 +101,7 @@
                                                                                         <b-icon icon="three-dots-vertical"></b-icon>
                                                                                     </template>
                                                                                     <b-dropdown-item @click="seleccionarReporte(reporte)" >Editar</b-dropdown-item>
-                                                                                    <b-dropdown-item @click="seleccionarReporte(reporte)">Eliminar</b-dropdown-item>
+                                                                                    <b-dropdown-item @click="eliminarReporte(reporte)">Eliminar</b-dropdown-item>
                                                                                 </b-dropdown>
                                                                             </b-col>
                                                                         </b-row>
@@ -177,6 +179,7 @@
     import ModificarReporte from './components/ModificarReporte.vue';
     import { RequestConsultarReporteUsuarioDTO } from '../dtos/request-consultar-reporte-usuario.dto';
     import { ResponseConsultarReporteUsuarioDTO } from '../dtos/response-consultar-reporte-usuario.dto';
+import { RequestEliminarReporteDTO } from '../dtos/request-eliminar-reporte.dto';
 
     export default Vue.extend({
         name: 'VistaReportesUsuario',
@@ -277,6 +280,46 @@
                 if(!respuesta.error){
                     this.reporteSeleccionado = respuesta.data;
                     this.$bvModal.show('modificar-reporte');                     
+                }
+            },
+
+            //eliminar reporte
+            async eliminarReporte(reporte : ObtenerReportesDTO){
+                const informacionReporte = {
+                    id_reporte : reporte.id_reporte,
+                } as RequestEliminarReporteDTO;
+
+                try {
+                    const controller = new ReporteController();
+                    
+                    Vue.swal({
+                        title: 'Estas seguro?',
+                        text: "Se eliminara el reporte y no podra recuperarse",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: 'var(--color-primary)',
+                        cancelButtonColor: 'var(--color-secondary)',
+                        confirmButtonText: 'Si, eliminar!'
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            const respuesta = await controller.eliminarReporte(informacionReporte);
+                            
+                            if(!respuesta.error){
+                                console.log(respuesta);
+                                
+                                Vue.swal({
+                                    title: 'Reporte eliminado',
+                                    text: "El reporte se elimino correctamente",
+                                    icon: 'success',
+                                    confirmButtonColor: 'var(--color-primary)',
+                                }).then(() => {
+                                    this.obtenerReportes();
+                                });
+                            }
+                        }
+                    })
+                } catch (error) {
+                    
                 }
             }
 

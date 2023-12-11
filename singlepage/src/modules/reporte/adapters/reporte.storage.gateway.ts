@@ -10,6 +10,8 @@ import { votarReporteDTO } from "./dtos/votar-reporte.dto";
 import { ResponseReportesEnEsperaDto } from "./dtos/response-consultar-reportes-espera.dto";
 import { modifyReporteDTO } from "./dtos/modify-reporte.dto";
 import { RequestEliminarReporteDTO } from "./dtos/request-eliminar-reporte.dto";
+import { ResponseConsultarReporteEsperaDto } from "./dtos/response-consultar-reporte-espera.dto";
+import { NuevoEstadoReporteDTO } from "./dtos/nuevo-estado-reporte.dto";
 
 
 
@@ -64,5 +66,18 @@ export class ReporteStorageGateway implements ReporteRepository{
         } as ResponseApi<boolean>
     }
 
+    async consultarReporteEnEspera(payload: RequestConsultarReporteUsuarioDTO): Promise<ResponseApi<ResponseConsultarReporteEsperaDto>> {
+        const respuesta = await api.doPost('/reportes/consultar-espera', payload);
+        return{
+            ...respuesta.data
+        } as ResponseApi<ResponseConsultarReporteEsperaDto>
+    }
+
+    async modificarEstadoReporte(payload: NuevoEstadoReporteDTO): Promise<ResponseApi<boolean>> {
+        const respuesta = await api.doPost('/reportes/modificar-estado', payload);
+        return{
+            ...respuesta.data
+        } as ResponseApi<boolean>
+    }
 
 }

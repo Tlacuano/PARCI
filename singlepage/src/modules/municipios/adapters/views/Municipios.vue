@@ -45,7 +45,7 @@
           :items="municipios"
           :fields="[
             {
-              key: 'id_municipio',
+              key: 'index',
               label: 'Número',
               thStyle: { width: '5%' },
               sortable: true,
@@ -103,6 +103,9 @@
               </b-col>
             </b-row>
           </template>
+          <template #cell(index)="row">
+            {{ row.index + 1 }}
+          </template>
         </b-table>
       </b-col>
       <b-col cols="12" v-else>
@@ -144,6 +147,13 @@ export default Vue.extend({
     };
   },
 
+  watch: {
+    filter(newFilter: string) {
+      this.currentPage = 1;
+      this.$refs["entity-table"].filter(newFilter);
+    },
+  },
+
   methods: {
     seleccionarMunicipio(municipio: Municipio) {
       this.municipioSeleccionado = { ...municipio };
@@ -151,7 +161,6 @@ export default Vue.extend({
 
     async getMunicipios() {
       this.municipios = [];
-      
 
       try {
         const controlador = new MunicipioController();
@@ -214,26 +223,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style scoped>
-.card-body {
-  padding: 0.5rem 1rem;
-}
-
-.gray-box {
-  background-color: #cecece;
-  color: black;
-  padding: 0.5rem 1rem;
-}
-
-.id-box {
-  align-items: center;
-  background-color: #cecece;
-  color: black;
-  font-weight: bold;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  width: 100%;
-}
-</style>
