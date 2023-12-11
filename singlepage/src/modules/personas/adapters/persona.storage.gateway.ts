@@ -34,7 +34,6 @@ export class PersonaStorageGateway implements PersonaRepository {
     }
 
     async getPersonaInfoByUsuario(usuario: string): Promise<ResponseApi<Persona>> {
-        console.log("EL USUARIO RECIBIDO ES ESTE ",usuario);
         const respuesta = await api.doPost("/personas/consultar-informacion", { usuario });
         return {
             ...respuesta.data,
@@ -42,7 +41,7 @@ export class PersonaStorageGateway implements PersonaRepository {
     }
 
     async modificarPersona(payload: any): Promise<ResponseApi<boolean>> {
-        const respuesta = await api.doPut("/personas/modificar", payload);
+        const respuesta = await api.doPost("/personas/modificar", payload);
         return {
             ...respuesta.data,
         } as ResponseApi<boolean>;

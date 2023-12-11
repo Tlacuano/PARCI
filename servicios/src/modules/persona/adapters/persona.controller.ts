@@ -158,7 +158,7 @@ export class PersonaController {
 
       getPersonaInfoByUsuario = async (req: Request, res: Response) => {
         try {
-          const usuario = req.params.usuario;
+          const usuario = req.body;
     
           const repositorio: PersonaRepository = new PersonaStorageGateway();
           const persona = await repositorio.getPersonaInfoByUsuario(usuario);
