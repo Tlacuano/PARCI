@@ -50,57 +50,87 @@ AxiosClient.interceptors.response.use(
                         let titleAlert = "";
                         // Agregar swtich con los mensajes genéricos
                         switch (message) {
-                            case "Missing fields":
-                                messageAlert = "Campos obligatorios";
-                                titleAlert = "Faltan campos obligatorios por llenar";
+                            case "Usuario o contraseña incorrectos":
+                                titleAlert= "Credenciales incorrectas";
+                                messageAlert = "Usuario y/o contraseña erróneos";
                                 break;
-                            case "Incorrect credentials":
-                                messageAlert = "Credenciales incorrectas";
-                                titleAlert = "Usuario y/o contraseña erróneos";
+                            case "Código incorrecto":
+                                titleAlert = "Código incorrecto";
+                                messageAlert = "Código incorrecto";
                                 break;
-                            case "Already exists":
-                                messageAlert = "El registro ya existe o cuenta con campos duplicados en otro registro";
-                                titleAlert = "Registro ya existente";
+                            case "El usuario es requerido":
+                                titleAlert = "El usuario es requerido";
+                                messageAlert = "Usuario requerido";
                                 break;
-                            case "Invalid fields":
-                                messageAlert = "Los campos ingresados son inválidos";
-                                titleAlert = "Campos inválidos";
+                            case "La contraseña es requerida":
+                                titleAlert = "La contraseña es requerida";
+                                messageAlert = "Contraseña requerida";
                                 break;
-                            case "User occupied":                                
-                                messageAlert = "El usuario ingresado ya se encuentra ocupado";
-                                titleAlert = "Usuario no disponible";
+                            case "Formato de contraseña incorrecto":
+                                titleAlert = "Formato de contraseña incorrecto";
+                                messageAlert = "El formato de la contraseña es incorrecto";
                                 break;
-                            case "Email occupied":
-                                messageAlert = "El correo electrónico ingresado ya se encuentra ocupado";
-                                titleAlert = "Correo electrónico no disponible";
+                            case "El nombre es requerido":
+                                titleAlert = "El nombre es requerido";
+                                messageAlert = "No se ha ingresado el nombre";
                                 break;
-                            case 'cannot be deleted':                                
-                                messageAlert = "Por motivos de integridad, la eliminación no es posible";
-                                titleAlert = "Eliminación no permitida";
+                            case "El nombre ya existe":
+                                titleAlert = "El nombre ya existe";
+                                messageAlert = "Ya existe un registro con ese nombre";
                                 break;
-                            case "Bad Request":
-                                messageAlert = "El servidor no pudo dar respuesta a la solicitud.";
-                                titleAlert = "Petición incorrecta";
+                            case "El nombre no debe contener caracteres especiales":
+                                titleAlert = "El nombre no debe contener caracteres especiales";
+                                messageAlert = "El nombre no debe contener caracteres especiales";
                                 break;
-                            case "Invalid sort by fields":
-                                messageAlert = "El ordenamiento por campo ingresado es inválido";
-                                titleAlert = "Ordenamiento por campo inválido";
+                            case "No se pudo modificar la entidad federativa":
+                                titleAlert = "No se pudo modificar la entidad federativa";
+                                messageAlert = "No se pudo modificar la entidad federativa";
                                 break;
+                            case "No se puede dejar una opinion vacia":
+                                titleAlert = "campos incompletos";
+                                messageAlert = "No se puede dejar una opinion vacia";
+                                break;
+                            case "No se pudo registrar la opinion":
+                                titleAlert = "Vaya...";
+                                messageAlert = "No se pudo registrar la opinion";
+                                break;
+                            case "Ya no puedes dar mas opiniones por el dia de hoy":
+                                titleAlert = "Ya no puedes dar mas opiniones por el dia de hoy";
+                                messageAlert = "haz alcanzado el limite de opiniones por dia";
+                                break;
+                            case "El titulo del reporte es requerido":
+                                titleAlert = "campos incompletos";
+                                messageAlert = "El titulo del reporte es requerido";
+                                break;
+                            case "La descripcion del reporte es requerido":
+                                titleAlert = "campos incompletos";
+                                messageAlert = "La descripcion del reporte es requerido";
+                                break;
+                            case "La categoria del reporte es requerido":
+                                titleAlert = "campos incompletos";
+                                messageAlert = "La categoria es requerida";
+                                break;
+                            case "La imagen del reporte es requerido":
+                                titleAlert = "campos incompletos";
+                                messageAlert = "La imagen del reporte es requerido";
+                                break;
+                            case "No se pudo eliminar el reporte":
+                                titleAlert = "Vaya...";
+                                messageAlert = "No se pudo eliminar el reporte, intentalo de nuevo";
+                                break;
+                            
                         }                        
-                        Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning" });
+                        Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning", confirmButtonColor: "var(--color-primary)" });
                         break;
                     }
                     break;
                 }
                 case 401: {
                     Vue.swal.fire({
-                        title: "Credenciales incorrectas",
-                        text: "Usuario y/o contraseña incorrectos",
+                        title: "No autorizado",
+                        text: "La operación no está autorizada",
                         icon: "error",
-                        confirmButtonColor: 'var(--color-secondary)',
                     });
-                    // sessionStorage.removeItem("token");
-                    // router.push('/');
                     break;
                 }
                 case 403: {
@@ -118,24 +148,16 @@ AxiosClient.interceptors.response.use(
                         let titleAlert = "";
                         // Agregar swtich con los mensajes genéricos
                         switch (message) {
-                            case "Not found":
-                                messageAlert = "El recurso solicitado no ha sido encontrado";
-                                titleAlert = "Recurso no encontrado";
-                                break;
-                            case "No match":
-                                messageAlert = "No se encontraron coincidencias";
-                                titleAlert = "Sin coincidencias";
-                                break;
-                            case "Teacher Not found":
+                            case "Usuario no encontrado":
                                 messageAlert = "";
-                                titleAlert = "Docente no encontrado";
+                                titleAlert = "Usuario no encontrado";
                                 break;
-                            case "Training Not found":
-                                messageAlert = "";
-                                titleAlert = "Capacitación no encontrada";
+                            case "No se encontró el reporte solicitado":
+                                titleAlert = "No encontradoo";
+                                messageAlert = "No se encontró el reporte solicitado";
                                 break;
                         }
-                        Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning" });
+                        Vue.swal.fire({ text: messageAlert, title: titleAlert, icon: "warning", confirmButtonColor: "var(--color-primary)" });
                     }
                     break;
                 }

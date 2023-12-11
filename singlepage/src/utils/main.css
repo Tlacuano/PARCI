@@ -1,0 +1,232 @@
+/*.Oscuro {
+    background-color: #222222;
+    color: #fff;
+}
+
+.OscuroNav {
+    background-color: #212020;
+    color: #fff;
+}
+
+.Claro {
+    background-color: #fff;
+    color: #000;
+}
+
+.ClaroNav {
+    background-color: #ffffff;
+    color: #000;
+}
+
+.Chica {
+    font-size: 14px;
+}
+
+.Mediana {
+    font-size: 16px;
+}
+
+.Grande {
+    font-size: 18px;
+}*/
+
+/* VARIABLES */
+
+:root{
+    --background-color: #f7f7f7;
+    --text-color: #000000;
+    --background-component:  #fff;
+    --background-select: #fff;
+    --color-primary: #236b47;
+    --color-secondary: #9e030a;
+    --color-border-component: #ced4da;
+}
+
+html[data-theme="Oscuro"]{
+    --background-color: #090f05;
+    --text-color: #d8d8d8;
+    --background-component:#242526;
+    --background-select: #52585e;
+    --color-border-component: #333333;
+}
+
+html[data-theme="Claro"]{
+    --background-color: #f7f7f7;
+    --text-color: #000;
+    --background-component: #fff;
+    --background-select: #dadada;
+}
+
+html[font="Chica"]{
+    --font-size: 14px !important;
+}
+
+html[font="Mediana"]{
+    --font-size: 16px !important;
+}
+
+html[font="Grande"]{
+    --font-size: 18px !important;
+}
+
+
+/* declaracion de colores en las etiquetas*/
+
+body{
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+    font-size: var(--font-size) !important;
+}
+
+.card{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.custom-select{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
+.b-sidebar-header{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
+.b-sidebar-header .close{
+    color: var(--text-color) !important;
+}
+
+.b-sidebar-body{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
+.custom-select {
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.form-control{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.modal-header{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.modal-header .close{
+    color: var(--text-color) !important;
+}
+
+.modal-footer{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.modal-body{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.table{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.table thead th{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.table tbody td{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.table tbody tr:hover{
+    background-color: var(--background-select) !important;
+}
+
+.table tbody tr:hover td{
+    background-color: var(--background-select) !important;
+}
+
+.pagination .page-item.active .page-link{
+    background-color: var(--background-select) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.pagination .page-item .page-link{
+    background-color: var(--background-component) !important;
+    border: 1px solid var(--color-border-component) !important;
+    color: var(--text-color) !important;
+}
+
+.pagination .page-item .page-link:hover{
+    background-color: var(--background-select) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.custom-datepicker .text-dark{
+    color: var(--text-color) !important;
+}
+
+.bi-calendar{
+    color: var(--text-color) !important;
+}
+
+.dropdown .dropdown-menu{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.dropdown-item{
+    color: var(--text-color) !important;
+
+}
+
+.dropdown-item:hover{
+    background-color: var(--background-select) !important;
+    color: var(--text-color) !important;
+}
+
+.btn-link{
+    color: var(--text-color) !important;
+}
+
+.custom-file-label{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+.custom-file-label::after{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--color-border-component) !important;
+}
+
+h1, h2, h3, h4, h5, h6{
+    color: var(--text-color) !important;
+}
+
+hr{
+    border-top: 1px solid var(--text-color) !important;
+}
+
+.swal2-popup{
+    background-color: var(--background-component) !important;
+    color: var(--text-color) !important;
+}
+
