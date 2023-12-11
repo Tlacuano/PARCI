@@ -5,6 +5,7 @@ import { ModificarInformacionPersonaDTO } from "../adapters/dtos/modificar-infor
 import { Persona } from "../entities/persona";
 import { EliminarPersonaDTO } from "../adapters/dtos/eliminar-persona.dto";
 import { ModificarCuentaPersonaDTO } from "./dtos/modificar-persona.dto";
+import { NombreUsuarioDTO } from "./dtos/nombre-usuaruo.dto";
 
 export class PersonaStorageGateway
 implements PersonaRepository {
@@ -53,16 +54,18 @@ implements PersonaRepository {
         }
     }
 
-    async getPersonaInfoByUsuario(usuario: string): Promise<Persona> {
+    async getPersonaInfoByUsuario(payload: NombreUsuarioDTO): Promise<Persona> {
         try {
           const resultado = await ConexionBD<Persona[]>(
             "SELECT p.nombre, p.apellido_paterno, p.apellido_materno, p.correo_electronico FROM personas p JOIN usuarios u ON p.id_persona = u.fk_idPersona WHERE u.usuario = ?",
-            [usuario]
+            [payload.usuario]
           );
     
           if (resultado.length === 0) {
             throw new Error("No se encontró la persona con el usuario proporcionado");
           }
+
+          console.log("EL RESULTADO ES ESTE ",resultado[0]);
     
           return resultado[0];
         } catch (error) {

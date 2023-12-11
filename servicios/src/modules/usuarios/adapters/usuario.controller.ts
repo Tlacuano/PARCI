@@ -25,7 +25,6 @@ export class UsuarioController {
 
     // REGISTRAR LOCAL
     static registrarUsuario_Local = async (persona: RegistrarPersonaDTO) => {
-        console.log("Se recibio",persona);
         try {
             const repositorio: UsuarioRepository =
                 new UsuarioStorageGateway();
@@ -150,7 +149,6 @@ export class UsuarioController {
     eliminarUsuario = async (req: Request, res: Response) => {
         try {
             const payload = req.body as EliminarUsuarioDTO;
-            console.log(req.body);
             const repositorio: UsuarioRepository =
                 new UsuarioStorageGateway();
             const eliminarUsuarioInteractor = new EliminarUsuarioInteractor(

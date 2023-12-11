@@ -16,7 +16,7 @@ export class ModificarPersonaInteractor
       throw new Error("El campo 'usuario' es requerido para la modificación");
     }
 
-    const personaInfo = await this.repository.getPersonaInfoByUsuario(payload.usuario);
+    const personaInfo = await this.repository.getPersonaInfoByUsuario(payload);
 
 
     const payloadCompleto = {
