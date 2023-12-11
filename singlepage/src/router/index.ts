@@ -44,6 +44,12 @@ const routes: Array<RouteConfig> = [
             component: () =>
               import("../modules/usuarios/adapters/views/Perfil.vue"),
 
+          },
+          {
+            path: "usuarios",
+            name: "Usuarios",
+            component: () =>
+              import("../modules/usuarios/adapters/views/Consultar-usuarios.vue"),
           }
         ],
       },

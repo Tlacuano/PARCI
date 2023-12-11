@@ -15,7 +15,7 @@
                     </b-col>
 
 
-                    <b-col cols="12" v-if="rol === 'Administrador'" class="opcion">
+                    <b-col cols="12" v-if="rol === 'Administrador'" class="opcion" @click="dirigir('/a/usuarios')">
                         <div class="text-start mt-2">
                             <span  ><b-icon icon="people"/>&nbsp;&nbsp;Gestión de Usuarios</span>
                         </div>

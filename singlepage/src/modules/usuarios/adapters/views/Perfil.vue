@@ -8,21 +8,48 @@
         <h5 class="mb-4">Hola {{ usuario }}!</h5>
         <b-tabs v-model="selectedTab" content-class="mt-3" class="text-center">
           <b-tab title="Editar información Usuario" active>
-            <ModificarUsuario />
-          </b-tab>
-          <b-tab title="Editar información Persona">
-            <h5 class="mb-4">Editar información de persona</h5>
-            <div>
-              <p>Nuevo nombre: <b-form-input v-model="nuevoNombre" /></p>
-              <p>Nuevo apellido paterno: <b-form-input v-model="nuevoApellidoPaterno" /></p>
-              <p>Nuevo apellido materno: <b-form-input v-model="nuevoApellidoMaterno" /></p>
-              <p>Nuevo correo electronico: <b-form-input v-model="nuevoCorreo" /></p>
+            <h5 class="mb-4">Editar información de usuario</h5>
+            <div class="d-flex flex-column align-items-center"> <!-- Añadida la clase align-items-center -->
+              <div class="d-flex align-items-center mb-2">
+                <label for="nombreUsuario" class="mr-2"><b>Nombre de Usuario:</b></label>
+                <b-form-input id="nombreUsuario" v-model="nombreUsuario" size="sm" class="small-input" />
+              </div>
+              <div class="d-flex align-items-center mb-2">
+                <label for="contrasena" class="mr-2"><b>Contraseña:</b></label>
+                <b-form-input id="contrasena" type="password" v-model="contrasena" size="sm" class="small-input" />
+              </div>
             </div>
             <div class="d-flex justify-content-center mt-3">
-              <b-button variant="primary" @click="confirmarEdicion">Confirmar</b-button>
-              <b-button variant="secondary" @click="cancelarEdicion">Cancelar</b-button>
+              <b-button variant="primary">Confirmar</b-button>
+              <b-button variant="secondary" class="ml-2">Cancelar</b-button>
             </div>
-            <!-- Fin del contenido de la edición de información de persona -->
+          </b-tab>
+
+
+          <b-tab title="Editar información Persona">
+            <h5 class="mb-4 text-center">Editar información de persona</h5>
+            <div class="d-flex flex-column align-items-center">
+              <div class="d-flex align-items-center mb-2">
+                <p class="mr-2"><b>Nombre:</b></p>
+                <b-form-input v-model="nuevoNombre" size="sm" class="small-input" />
+              </div>
+              <div class="d-flex align-items-center mb-2">
+                <p class="mr-2"><b>Apellido paterno:</b></p>
+                <b-form-input v-model="nuevoApellidoPaterno" size="sm" class="small-input" />
+              </div>
+              <div class="d-flex align-items-center mb-2">
+                <p class="mr-2"><b>Apellido materno:</b></p>
+                <b-form-input v-model="nuevoApellidoMaterno" size="sm" class="small-input" />
+              </div>
+              <div class="d-flex align-items-center mb-2">
+                <p class="mr-2"><b>Correo electrónico:</b></p>
+                <b-form-input v-model="nuevoCorreo" size="sm" class="small-input" />
+              </div>
+            </div>
+            <div class="d-flex justify-content-center mt-3 mb-4">
+              <b-button variant="primary" @click="confirmarEdicion">Confirmar</b-button>
+              <b-button variant="secondary" @click="cancelarEdicion" class="ml-2">Cancelar</b-button>
+            </div>
           </b-tab>
           <b-tab title="Eliminar cuenta" class="eliminar-cuenta-tab">
             <div class="eliminar-cuenta-container">
@@ -47,8 +74,6 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import ModificarUsuario from "./components/ModificarUsuario.vue";
-import ModificarPersona from "./components/ModificarPersona.vue";
 import { UsuarioController } from "../../adapters/usuario.controller";
 import { EliminarUsuarioDTO } from "../../adapters/dtos/eliminar-usuario.dto";
 import { cambioPersonalizacion } from "@/kernel/cambioPersonalizacion";
@@ -200,7 +225,6 @@ export default Vue.extend({
 }
 
 .eliminar-cuenta-container {
-  /* Color de fondo */
   padding: 20px;
   border-radius: 10px;
   margin-top: 20px;
@@ -217,8 +241,12 @@ export default Vue.extend({
 }
 
 .eliminar-cuenta-tab .nav-link.active {
-  color:mediumspringgreen !important;
+  color: mediumspringgreen !important;
 }
 
+
+.small-input {
+  width: 150px;
+}
 </style>
 
