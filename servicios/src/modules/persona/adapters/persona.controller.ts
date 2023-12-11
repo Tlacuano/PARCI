@@ -12,10 +12,16 @@ import { EliminarPersonaDTO } from "./dtos/eliminar-persona.dto";
 import { ModificarInformacionPersonaDTO } from "./dtos/modificar-informacion-persona.dto";
 import { RegistrarPersonaDTO } from "./dtos/registrar-persona.dto";
 import { usuariosBoundary } from "../../../modules/usuarios/adapters/usuario.boundary";
+import { ModificarCuentaPersonaDTO } from "./dtos/modificar-persona.dto";
+import { ModificarPersonaInteractor } from "../use-cases/modificar-persona.interactor";
 
 const personaRouter = Router();
 
+
 export class PersonaController {
+
+
+    
 
      // REGISTRAR
      registrarPersona = async (req: Request, res: Response) => {
@@ -28,17 +34,11 @@ export class PersonaController {
                 repositorio
             );
 
-            const persona: Persona = {
-                nombre: payload.nombre,
-                apellido_paterno: payload.apellido_paterno,
-                apellido_materno: payload.apellido_materno,
-                correo_electronico: payload.correo_electronico,
-                fecha_nacimiento: payload.fecha_nacimiento,
-                fk_idMunicipio: payload.fk_idMunicipio,
-                id_persona: 0
-            };
 
-            await usuariosBoundary.registrarUsuario_Local(persona);
+            const registroResultado = await registrarPersonaInteractor.execute(payload);
+
+            payload.id_persona = registroResultado;
+            await usuariosBoundary.registrarUsuario_Local(payload);
 
             const body: ResponseApi<boolean> = {
                 data: true,
@@ -131,9 +131,62 @@ export class PersonaController {
         }
     };
 
+    modificarPersona = async (req: Request, res: Response) => {
+        try {
+          const payload = req.body as ModificarCuentaPersonaDTO;
+    
+          const repositorio: PersonaRepository = new PersonaStorageGateway();
+          const modificarPersonaInteractor = new ModificarPersonaInteractor(
+            repositorio
+          );
+    
+          await modificarPersonaInteractor.execute(payload);
+    
+          const body: ResponseApi<boolean> = {
+            data: true,
+            message: "Persona modificada correctamente",
+            status: 200,
+            error: false,
+          };
+    
+          res.status(body.status).json(body);
+        } catch (error) {
+          const errorBody = validarError(error as Error);
+          res.status(errorBody.status).json(errorBody);
+        }
+      };
+
+      getPersonaInfoByUsuario = async (req: Request, res: Response) => {
+        try {
+          const usuario = req.body;
+    
+          const repositorio: PersonaRepository = new PersonaStorageGateway();
+          const persona = await repositorio.getPersonaInfoByUsuario(usuario);
+    
+          const body: ResponseApi<Persona> = {
+            data: persona,
+            message: "Persona consultada correctamente",
+            status: 200,
+            error: false,
+          };
+    
+          res.status(body.status).json(body);
+        } catch (error) {
+          const errorBody = validarError(error as Error);
+          res.status(errorBody.status).json(errorBody);
+        }
+      }
+
+    
+
+    
+
 }
 
 const personaController = new PersonaController();
 
 personaRouter.post("/registrar", personaController.registrarPersona);
-export default personaController;
+personaRouter.post("/modificar", personaController.modificarPersona);
+personaRouter.post("/consultar:usuario", personaController.getPersonaInfoByUsuario);
+
+export default personaRouter;

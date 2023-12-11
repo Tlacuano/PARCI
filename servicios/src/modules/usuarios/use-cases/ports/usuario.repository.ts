@@ -3,10 +3,11 @@ import { RegistrarUsuarioDTO } from "../../adapters/dtos/registrar-usuario.dto";
 import { Usuario } from "../../entities/usuario";
 import { EliminarUsuarioDTO } from "../../adapters/dtos/eliminar-usuario.dto";
 import { ModificarInformacionOpinionesDTO } from "../../adapters/dtos/modificar-informacion-opiniones.dto";
+import { RegistrarPersonaDTO } from "../../../persona/adapters/dtos/registrar-persona.dto";
 
 export interface UsuarioRepository {
     getUsuarios(): Promise<Usuario[]>;
-    registrarUsuario(payload: RegistrarUsuarioDTO): Promise<boolean>;
+    registrarUsuario(payload: RegistrarPersonaDTO): Promise<boolean>;
     modificarCuenta(payload: ModificarCuentaDTO): Promise<boolean>;
     eliminarUsuario(payload: EliminarUsuarioDTO): Promise<boolean>;
     getUsuarioById(id_usuario: number): Promise<Usuario>;

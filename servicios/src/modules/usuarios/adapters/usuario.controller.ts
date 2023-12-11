@@ -17,13 +17,14 @@ import { Persona } from "../../../modules/persona/entities/persona";
 import { ModificarInformacionOpinionesInteractor } from "../use-cases/modificar-informacion-opiniones.interactor";
 import { ReiniciarContadorOpinionesInteractor } from '../use-cases/reiniciar-contador-opiniones.interactor';
 import { ModificarInformacionOpinionesDTO } from './dtos/modificar-informacion-opiniones.dto';
+import { RegistrarPersonaDTO } from 'src/modules/persona/adapters/dtos/registrar-persona.dto';
 
 const usuarioRouter = Router();
 
 export class UsuarioController {
 
     // REGISTRAR LOCAL
-    static registrarUsuario_Local = async (persona: Persona) => {
+    static registrarUsuario_Local = async (persona: RegistrarPersonaDTO) => {
         try {
             const repositorio: UsuarioRepository =
                 new UsuarioStorageGateway();
@@ -31,17 +32,7 @@ export class UsuarioController {
                 repositorio
             );
 
-            const payload = {
-                usuario: new String,
-                contrasena: new String,
-                rol: new Number,
-                codigo: new String,
-                fecha_opinion: new Date(),
-                contador_opinion: new Number,
-                fk_idPersona: persona
-            } as RegistrarUsuarioDTO;
-
-            await registrarUsuarioInteractor.execute(payload);
+            await registrarUsuarioInteractor.execute(persona);
 
             return true;
         } catch (error) {
@@ -98,34 +89,6 @@ export class UsuarioController {
 
 
 
-    // REGISTRAR
-    registrarUsuario = async (req: Request, res: Response) => {
-        try {
-            const payload = req.body as RegistrarUsuarioDTO;
-
-            payload.contrasena = await encriptar(payload.contrasena);
-
-            const repositorio: UsuarioRepository =
-                new UsuarioStorageGateway();
-            const registrarUsuarioInteractor = new RegistrarUsuarioInteractor(
-                repositorio
-            );
-
-            await registrarUsuarioInteractor.execute(payload);
-
-            const body: ResponseApi<boolean> = {
-                data: true,
-                message: "Usuario registrado correctamente",
-                status: 200,
-                error: false,
-            };
-
-            res.status(body.status).json(body);
-        } catch (error) {
-            const errorBody = validarError(error as Error);
-            res.status(errorBody.status).json(errorBody);
-        }
-    };
 
     //MODIFICAR   -------------------------------------------
     modificarUsuario = async (req: Request, res: Response) => {
@@ -186,7 +149,6 @@ export class UsuarioController {
     eliminarUsuario = async (req: Request, res: Response) => {
         try {
             const payload = req.body as EliminarUsuarioDTO;
-
             const repositorio: UsuarioRepository =
                 new UsuarioStorageGateway();
             const eliminarUsuarioInteractor = new EliminarUsuarioInteractor(
@@ -206,6 +168,7 @@ export class UsuarioController {
         } catch (error) {
             const errorBody = validarError(error as Error);
             res.status(errorBody.status).json(errorBody);
+            console.log(error);
         }
     };
 
@@ -234,10 +197,9 @@ export class UsuarioController {
 
 const usuarioController = new UsuarioController();
 
-usuarioRouter.post("/registrar", usuarioController.registrarUsuario);
 usuarioRouter.put("/modificar", usuarioController.modificarUsuario);
 usuarioRouter.get("/consultar", usuarioController.getUsuarios);
-usuarioRouter.delete("/eliminar", usuarioController.eliminarUsuario);
+usuarioRouter.post("/eliminar", usuarioController.eliminarUsuario);
 usuarioRouter.get("/consultar/:id_usuario", usuarioController.getUsuarioById);
 
 export default usuarioRouter;

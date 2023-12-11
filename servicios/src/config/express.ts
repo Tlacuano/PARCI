@@ -9,6 +9,7 @@ import personalizacionRouter from "../modules/personalizacion/adapters/personali
 import categoriaRouter from "../modules/categorias/adapters/categoria.controller";
 import opinionRouter from "../modules/opiniones/adapters/opinion.controller";
 import usuarioRouter from "../modules/usuarios/adapters/usuario.controller";
+import personaRouter from "../modules/persona/adapters/persona.controller";
 
 const app = express();
 
@@ -31,5 +32,6 @@ app.use('/parci-api/personalizacion', personalizacionRouter);
 app.use('/parci-api/categorias', categoriaRouter)
 app.use('/parci-api/opiniones', opinionRouter);
 app.use('/parci-api/usuarios', usuarioRouter);
+app.use('/parci-api/personas', personaRouter);
 
 export default app;

@@ -38,6 +38,19 @@ const routes: Array<RouteConfig> = [
             component: () =>
               import("../modules/municipios/adapters/views/Municipios.vue"),
           },
+          {
+            path: "perfil",
+            name: "Perfil",
+            component: () =>
+              import("../modules/usuarios/adapters/views/Perfil.vue"),
+
+          },
+          {
+            path: "usuarios",
+            name: "Usuarios",
+            component: () =>
+              import("../modules/usuarios/adapters/views/Consultar-usuarios.vue"),
+          }
         ],
       },
 
@@ -60,6 +73,13 @@ const routes: Array<RouteConfig> = [
             name: "VerReporte",
             component: () =>
               import("../modules/reporte/adapters/view/VerReporteModerador.vue"),
+          },
+          {
+            path: "perfil",
+            name: "Perfil",
+            component: () =>
+              import("../modules/usuarios/adapters/views/Perfil.vue"),
+
           }
         ],
       },
@@ -84,19 +104,25 @@ const routes: Array<RouteConfig> = [
             component: () =>
               import("../modules/reporte/adapters/view/VerReporteUsuario.vue"),
           },
+          {
+            path: "perfil",
+            name: "Perfil",
+            component: () =>
+              import("../modules/usuarios/adapters/views/Perfil.vue"),
+
+          }
         ],
       },
       {
-        path: "configuracion",
-        name: "Configuracion",
-        component: () =>
-          import(
-            "../modules/personalizacion/adapters/view/Personalizacion.vue"
-          ),
+        path:'configuracion',
+        name:'Configuracion',
+        component:() => import('../modules/personalizacion/adapters/view/Personalizacion.vue')
       },
-    ],
-  },
-];
+      
+    ]
+  }
+
+]
 
 const router = new VueRouter({
   routes,
