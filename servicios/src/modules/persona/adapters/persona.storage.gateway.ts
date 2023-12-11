@@ -64,8 +64,6 @@ implements PersonaRepository {
           if (resultado.length === 0) {
             throw new Error("No se encontró la persona con el usuario proporcionado");
           }
-
-          console.log("EL RESULTADO ES ESTE ",resultado[0]);
     
           return resultado[0];
         } catch (error) {
@@ -75,6 +73,7 @@ implements PersonaRepository {
 
       async modificarPersona(payload: ModificarCuentaPersonaDTO): Promise<boolean> {
         try {
+          console.log(payload);
           const result = await ConexionBD<any>(
             "UPDATE personas SET nombre = ?, apellido_paterno = ?, apellido_materno = ?, correo_electronico = ? WHERE id_persona = (SELECT fk_idPersona FROM usuarios WHERE usuario = ?)",
             [

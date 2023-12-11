@@ -41,7 +41,7 @@ export class PersonaStorageGateway implements PersonaRepository {
     }
 
     async modificarPersona(payload: any): Promise<ResponseApi<boolean>> {
-        const respuesta = await api.doPut("/personas/modificar", payload);
+        const respuesta = await api.doPost("/personas/modificar", payload);
         return {
             ...respuesta.data,
         } as ResponseApi<boolean>;

@@ -136,7 +136,7 @@ export default Vue.extend({
               nombre: this.nuevoNombre,
               apellido_paterno: this.nuevoApellidoPaterno,
               apellido_materno: this.nuevoApellidoMaterno,
-              correo: this.nuevoCorreo,
+              correo_electronico: this.nuevoCorreo,
             };
 
             const respuesta = await controladorPersona.modificarPersona(editarPersonaDto);
