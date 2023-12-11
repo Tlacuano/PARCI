@@ -88,7 +88,7 @@ export class UsuarioController {
     
 
 
-
+ 
 
     //MODIFICAR   -------------------------------------------
     modificarUsuario = async (req: Request, res: Response) => {
