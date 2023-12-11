@@ -115,7 +115,7 @@ export class ReporteStorageGateway implements ReporteRepository {
 
     async modificarReporte(payload: modifyReporteDTO): Promise<boolean> {
         try {
-            const result = await ConexionBD<any>("UPDATE reportes SET titulo = ?, descripcion = ?, imagen = ? WHERE id_reporte = ?",
+            const result = await ConexionBD<any>("UPDATE reportes SET estado = 'Espera', titulo = ?, descripcion = ?, imagen = ? WHERE id_reporte = ?",
             [payload.titulo, payload.descripcion, payload.imagen, payload.id_reporte]);
             return true;
         } catch (error) {

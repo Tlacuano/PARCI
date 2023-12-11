@@ -9,7 +9,8 @@ export class InsertCategoriaInteractor implements UseCase<insertCategoriaDto, bo
     constructor(private readonly categoriaRepository: CategoriaRepository) {}
 
     async execute(payload: insertCategoriaDto): Promise<boolean> {
-        
+        payload.nombre_categoria = payload.nombre_categoria.trim();
+        payload.color = payload.color.trim();
         if(payload.nombre_categoria === ""){
             throw new Error("El nombre de la categoria es requerido");
         }

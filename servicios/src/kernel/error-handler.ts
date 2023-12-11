@@ -50,6 +50,7 @@ const errores: { [x: string]: ResponseApi<undefined> } = {
   "El id de la categoria es requerido": {status: 400, error: true, message: "El id es requerido"},
   "El nombre de la categoria ya existe": {status: 400, error: true, message: "El nombre ya existe"},
   "El color de la categoria ya existe": {status: 400, error: true, message: "El color ya existe"},
+  "El color de la categoria debe de seguir el orden de un codigo hexadecimal": {status: 400, error: true, message: "El color es invalido"},
 
   //opciones
   "No se pudo registrar la opinion" : {status: 400, error: true, message: "No se pudo registrar la opinion"},
