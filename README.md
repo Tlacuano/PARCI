@@ -1,4 +1,4 @@
-#Encriptación de Datos Frontend y Backend utilizando node-forge y Cipher
+# Encriptación de Datos Frontend y Backend utilizando node-forge y Cipher
 
 ---
 
@@ -6,19 +6,19 @@ Este mini proyecto implementa un sistema de encriptación de datos para garantiz
 
 ---
 
-##Métodos de Cifrado Utilizados
+## Métodos de Cifrado Utilizados
 AES (Advanced Encryption Standard)
 AES es un algoritmo de cifrado simétrico ampliamente utilizado que ofrece un alto nivel de seguridad. En este proyecto, se utiliza AES en modo CBC (Cipher Block Chaining) con PKCS5Padding para cifrar y descifrar los datos.
 
 El modo CBC utiliza un vector de inicialización (IV) único para cada mensaje, lo que aumenta la seguridad del cifrado al introducir aleatoriedad en cada cifrado individual. El relleno PKCS5Padding se utiliza para asegurar que los datos a cifrar tengan una longitud compatible con el tamaño del bloque de cifrado.
 
 
-###Frontend
+### Frontend
 En el frontend, se utiliza JavaScript para cifrar los datos antes de enviarlos al servidor y para descifrar los datos recibidos del servidor.
 - Archivo AES.js en utils/security: Este archivo contiene las funciones encrypt y decrypt que implementan el cifrado y descifrado utilizando el algoritmo AES en modo CBC (Cipher Block Chaining). Se utiliza la biblioteca node-forge para manejar la criptografía en el navegador.
 - Archivo HTTP-CLIENT.GATEWAY.js en config: Este archivo configura un interceptor para las solicitudes HTTP salientes y entrantes. En la solicitud saliente, se cifran los datos antes de enviarlos al servidor utilizando la función encrypt. En la respuesta entrante, se descifran los datos recibidos utilizando la función decrypt.
 
-##Backend
+### Backend
 En el backend, se utiliza Java para cifrar y descifrar los datos sensibles antes de almacenarlos en la base de datos y después de recibirlos del cliente.
 - Archivo Encrypt.java en utils: Este archivo proporciona métodos para cifrar y descifrar datos utilizando el algoritmo AES en modo CBC. Se utiliza la clase Cipher de Java para manejar la criptografía en el servidor.
 - Archivo UserService.java en service: Este servicio interactúa con la base de datos y cifra la contraseña del usuario antes de almacenarla utilizando la función encrypt del archivo Encrypt.java.
@@ -37,13 +37,13 @@ npm i node-forge
 
 ---
 
-Se emplea el ##@Component## para indicar que que esa clase debe ser escaneada y administrada por el contenedor de Spring. Esto significa que Spring creará una instancia de la clase y la mantendrá en el contexto de la aplicación, lo que permite la inyección de dependencias en otras partes de la aplicación.
+Se emplea el ## @Component ## para indicar que que esa clase debe ser escaneada y administrada por el contenedor de Spring. Esto significa que Spring creará una instancia de la clase y la mantendrá en el contexto de la aplicación, lo que permite la inyección de dependencias en otras partes de la aplicación.
 
 ---
 
 Para que se pueda tener una clave secreta se necesita crear un archivo .env a nivel raiz del proyecto en frontend, en este se tendra la llave secreta para que esta se pueda comparar con la que hay en el backend, de igual manera en este se configuran las variables de entorno como:
 
-##VITE_API_URL=http://localhost:8080/venta-ropa/api##
+## VITE_API_URL=http://localhost:8080/venta-ropa/api
 
 ---
 
