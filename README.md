@@ -37,7 +37,7 @@ npm i node-forge
 
 ---
 
-Se emplea el ## @Component ## para indicar que que esa clase debe ser escaneada y administrada por el contenedor de Spring. Esto significa que Spring creará una instancia de la clase y la mantendrá en el contexto de la aplicación, lo que permite la inyección de dependencias en otras partes de la aplicación.
+Se emplea el ## @Component para indicar que que esa clase debe ser escaneada y administrada por el contenedor de Spring. Esto significa que Spring creará una instancia de la clase y la mantendrá en el contexto de la aplicación, lo que permite la inyección de dependencias en otras partes de la aplicación.
 
 ---
 
