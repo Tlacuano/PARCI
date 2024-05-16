@@ -120,6 +120,6 @@ Inicialización del cifrador con el IV: Se inicializa el cifrador en modo de des
 
 Descifrado de los datos: Se realiza el proceso de descifrado utilizando el método doFinal del cifrador, pasando los datos decodificados y especificando el rango de bytes a descifrar.
 
-Retorno del resultado descifrado: Finalmente, se convierten los bytes descifrados en una cadena de texto utilizando la codificación UTF-8 y se devuelve como resultado
+Retorno del resultado descifrado: Finalmente, se convierten los bytes descifrados en una cadena de texto utilizando la codificación UTF-8 y se devuelve como resultado.
 
 ---
