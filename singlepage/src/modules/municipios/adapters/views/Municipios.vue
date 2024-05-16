@@ -144,6 +144,7 @@ export default Vue.extend({
 
       currentPage: 1,
       perPage: 10,
+      hpasdjfpoisd: 5
     };
   },
 
